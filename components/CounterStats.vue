@@ -38,7 +38,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <div class="flex justify-center items-center gap-8">
+    <div class="flex flex-col md:flex-row justify-center items-center gap-8">
     <!-- دائرة الزوار -->
     <div class="stat-item">
       <div class="stat-content">
