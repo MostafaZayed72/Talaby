@@ -4,7 +4,9 @@ import { ref, onMounted } from 'vue';
 // القيم الأولية للعدادات
 const visitorsCount = ref(0);
 const customersCount = ref(0);
-
+const navigation = () => {
+navigateTo('/signup')
+}
 // الأرقام النهائية التي نريد الوصول إليها
 const targetVisitors = 12345;
 const targetCustomers = 987;
@@ -35,7 +37,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex justify-center items-center gap-8">
+  <div>
+    <div class="flex justify-center items-center gap-8">
     <!-- دائرة الزوار -->
     <div class="stat-item">
       <div class="stat-content">
@@ -51,6 +54,13 @@ onMounted(() => {
         <div class="text-xl font-bold">{{ $t('Customers') }}</div>
       </div>
     </div>
+
+  </div>
+<div>
+        <h1 @click="navigation"  class="w-[50%] my-10 bg-violet-500 hover:bg-violet-600 delayed text-center text-white py-1 rounded-full mx-auto px-6 font-bold cursor-pointer">{{ $t('Signup with us now') }}</h1>
+
+        <!-- <img class="my-10 h-64 w-[80%] mx-auto rounded-xl" src="/public/imgs/signup.png" alt=""> -->
+</div>
   </div>
 </template>
 

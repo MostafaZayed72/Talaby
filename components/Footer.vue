@@ -5,24 +5,24 @@
             <div class="flex items-center space-x-3">
                 <img src="/imgs/logo.png" alt="Site Logo" class="h-12 w-12 mx-2 rounded-full" />
                 <span class="text-sm md:text-xl">
-                    &copy; {{ new Date().getFullYear() }} {{ $t('All rights reserved to Munira.') }}
+                    &copy; {{ new Date().getFullYear() }} {{ $t('All rights reserved to Talaby.') }}
                 </span>
             </div>
             <h1 >
-                    {{ $t('Mail Us') }} : <a href="mailto:support@example.com" class="underline text-green-300 hover:text-green-400 delayed">Munira@gmail.com</a>
+                    {{ $t('Mail Us') }} : <a href="mailto:support@example.com" class="underline text-green-300 hover:text-green-400 delayed">Talaby@gmail.com</a>
             </h1>
             <!-- الروابط -->
             <nav class="flex space-x-6 md:text-xl">
                 
-                <nuxt-link to="/contact" class="hover:underline hover:text-green-300 mx-6 delayed">
-                    {{ $t('Contact Us') }}
+                <nuxt-link to="/my-profile" class="hover:underline hover:text-green-300 mx-6 delayed">
+                    {{ $t('My profile') }}
                 </nuxt-link>
-                <nuxt-link to="/about" class="hover:underline hover:text-green-300 delayed">
-                    {{ $t('About Us') }}
+                <nuxt-link to="/departments" class="hover:underline hover:text-green-300 delayed">
+                    {{ $t('Departments') }}
                 </nuxt-link>
-                <nuxt-link to="/products" class="hover:underline hover:text-green-300 delayed">
+                <!-- <nuxt-link to="/products" class="hover:underline hover:text-green-300 delayed">
                     {{ $t('Products') }}
-                </nuxt-link>
+                </nuxt-link> -->
                 
             </nav>
         </div>

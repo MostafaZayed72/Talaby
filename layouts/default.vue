@@ -36,7 +36,7 @@
         <NuxtLink
           class="hover:bg-violet-500 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
           to="" active-class="bg-violet-500 text-yellow-400" exact-active-class="bg-violet-500 text-yellow-400">
-          {{ $t('Notifications') }}
+          {{ $t('Departments') }}
         </NuxtLink>
        
 
@@ -82,6 +82,11 @@
           to="/my-profile" active-class="bg-violet-500 text-yellow-400" exact-active-class="bg-violet-500 text-yellow-400">
           {{ $t('My profile') }}
         </NuxtLink>
+        <NuxtLink
+            class="hover:bg-violet-500 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
+            to="" active-class="bg-violet-500 text-yellow-400" exact-active-class="bg-violet-500 text-yellow-400">
+            {{ $t('Departments') }}
+          </NuxtLink>
           <h1 v-if="token" @click="logout"
             class="hover:bg-violet-500 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400">
             {{ $t('Logout') }}
