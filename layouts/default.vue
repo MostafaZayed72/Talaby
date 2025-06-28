@@ -3,7 +3,8 @@
     <img src="/public/22.png" class="fixed top-10  left-[-20px] z-[-1] md:w-[30%]" alt="">
     <img src="/public/11.png" class="fixed bottom-0  left-[-20px] z-[-1] md:w-[30%]" alt="">
     <img src="/public/33.png" class="fixed bottom-0  right-[-20px] z-[-1] w-[50%] md:w-[30%]" alt="">
-    <div class="mb-0 px-4  flex justify-between items-center py-2 shadow-xl sticky top-0 z-10 " style="background-color: #7733bc;">
+    <div class="mb-0 px-4  flex justify-between items-center py-2 shadow-xl sticky top-0 z-10 "
+      style="background-color: #4a3a6e;">
       <div class="flex items-center gap-4">
         <Icon @click="toggleSidebar" name="iconamoon:menu-burger-horizontal"
           class="md:hidden text-xl text-white cursor-pointer" />
@@ -14,31 +15,33 @@
       <!-- الروابط في الشاشات الكبيرة -->
       <div class="links md:flex items-center gap-4 hidden">
         <NuxtLink
-          class="hover:bg-violet-500 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-          to="/" active-class="bg-violet-500 text-yellow-400" exact-active-class="bg-violet-500 text-yellow-400">
+          class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
+          to="/" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
           {{ $t('Home') }}
         </NuxtLink>
         <NuxtLink v-if="!token"
-          class="hover:bg-violet-500 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-          to="/login" active-class="bg-violet-500 text-yellow-400" exact-active-class="bg-violet-500 text-yellow-400">
+          class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
+          to="/login" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
           {{ $t('Login') }}
         </NuxtLink>
         <NuxtLink v-if="token"
-          class="hover:bg-violet-500 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-          to="/my-profile" active-class="bg-violet-500 text-yellow-400" exact-active-class="bg-violet-500 text-yellow-400">
+          class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
+          to="/my-profile" active-class="bg-violet-950 text-yellow-400"
+          exact-active-class="bg-violet-950 text-yellow-400">
           {{ $t('My profile') }}
         </NuxtLink>
         <!-- <NuxtLink
-          class="hover:bg-violet-500 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-          :to="`/yourNurse/${userID}`"  active-class="bg-violet-500 text-yellow-400" exact-active-class="bg-violet-500 text-yellow-400">
+          class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
+          :to="`/yourNurse/${userID}`"  active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
           {{ $t('My profile') }}
         </NuxtLink> -->
         <NuxtLink
-          class="hover:bg-violet-500 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-          to="/departments" active-class="bg-violet-500 text-yellow-400" exact-active-class="bg-violet-500 text-yellow-400">
+          class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
+          to="/departments" active-class="bg-violet-950 text-yellow-400"
+          exact-active-class="bg-violet-950 text-yellow-400">
           {{ $t('Departments') }}
         </NuxtLink>
-       
+
 
 
 
@@ -57,38 +60,41 @@
 
     <!-- Burger Menu Transition for Small Screens -->
     <transition name="slide">
-      <div v-if="isSidebarOpen" class="md:hidden border-t-2 border-violet-600 h-screen fixed z-10" style="background-color: #7733bc;">
+      <div v-if="isSidebarOpen" class="md:hidden border-t-2 border-violet-600 h-screen fixed z-10"
+        style="background-color: #4a3a6e;">
         <div class="flex flex-col p-4">
           <NuxtLink
-            class="hover:bg-violet-500 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-            to="/" active-class="bg-violet-500 text-yellow-400" exact-active-class="bg-violet-500 text-yellow-400">
+            class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
+            to="/" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
             {{ $t('Home') }}
           </NuxtLink>
-         
-          
+
+
           <!-- <NuxtLink
-          class="hover:bg-violet-500 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-          :to="`/yourNurse/${userID}`"  active-class="bg-violet-500 text-yellow-400" exact-active-class="bg-violet-500 text-yellow-400">
+          class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
+          :to="`/yourNurse/${userID}`"  active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
           {{ $t('My profile') }}
         </NuxtLink> -->
-         
+
           <NuxtLink v-if="!token"
-            class="hover:bg-violet-500 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-            to="/login" active-class="bg-violet-500 text-yellow-400" exact-active-class="bg-violet-500 text-yellow-400">
+            class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
+            to="/login" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
             {{ $t('Login') }}
           </NuxtLink>
           <NuxtLink v-if="token"
-          class="hover:bg-violet-500 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-          to="/my-profile" active-class="bg-violet-500 text-yellow-400" exact-active-class="bg-violet-500 text-yellow-400">
-          {{ $t('My profile') }}
-        </NuxtLink>
-        <NuxtLink
-            class="hover:bg-violet-500 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-            to="/departments" active-class="bg-violet-500 text-yellow-400" exact-active-class="bg-violet-500 text-yellow-400">
+            class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
+            to="/my-profile" active-class="bg-violet-950 text-yellow-400"
+            exact-active-class="bg-violet-950 text-yellow-400">
+            {{ $t('My profile') }}
+          </NuxtLink>
+          <NuxtLink
+            class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
+            to="/departments" active-class="bg-violet-950 text-yellow-400"
+            exact-active-class="bg-violet-950 text-yellow-400">
             {{ $t('Departments') }}
           </NuxtLink>
           <h1 v-if="token" @click="logout"
-            class="hover:bg-violet-500 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400">
+            class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400">
             {{ $t('Logout') }}
           </h1>
 
@@ -100,7 +106,7 @@
     <Loader v-if="loading" />
     <main class="p-0">
       <slot />
-      
+
     </main>
   </div>
 </template>

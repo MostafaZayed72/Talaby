@@ -57,7 +57,7 @@ onMounted(() => {
 
   </div>
 <div>
-        <h1 @click="navigation"  class="w-[50%] my-10 bg-violet-500 hover:bg-violet-600 delayed text-center text-white py-1 rounded-full mx-auto px-6 font-bold cursor-pointer">{{ $t('Signup with us now') }}</h1>
+        <h1 @click="navigation" style="background-color: #4a3a6e;" class="w-[50%] my-10  hover:bg-violet-600 delayed text-center text-white py-1 rounded-full mx-auto px-6 font-bold cursor-pointer">{{ $t('Signup with us now') }}</h1>
 
         <!-- <img class="my-10 h-64 w-[80%] mx-auto rounded-xl" src="/public/imgs/signup.png" alt=""> -->
 </div>

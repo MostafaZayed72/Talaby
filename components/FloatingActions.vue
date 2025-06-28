@@ -13,7 +13,7 @@
       <!-- زر الرجوع للأعلى -->
       <button 
         @click="scrollToTop" 
-        class="fixed bottom-4 bg-violet-500 text-white p-3 w-10 h-10 rounded-full shadow-lg flex items-center justify-center hover:bg-violet-600 transition-all duration-300"
+        class="fixed bottom-4 bg-violet-900 text-white p-3 w-10 h-10 rounded-full shadow-lg flex items-center justify-center hover:bg-violet-600 transition-all duration-300"
         :class="locale === 'ar-AR' ? 'right-4' : 'left-4'"
       >
         <i class="fas fa-arrow-up md:text-2xl"></i>

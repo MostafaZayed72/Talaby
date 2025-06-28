@@ -1,5 +1,5 @@
 <template>
-    <footer class=" text-white bg-violet-700" style="background-color: #7733bc;">
+    <footer class=" text-white bg-violet-950" style="background-color: #4a3a6e;">
         <div class="container mx-auto flex flex-col-reverse gap-2 md:flex-row flex-wrap justify-between items-center">
             <!-- شعار الموقع -->
             <div class="flex items-center space-x-3">
@@ -8,12 +8,13 @@
                     &copy; {{ new Date().getFullYear() }} {{ $t('All rights reserved to Talaby.') }}
                 </span>
             </div>
-            <h1 >
-                    {{ $t('Mail Us') }} : <a href="mailto:support@example.com" class="underline text-green-300 hover:text-green-400 delayed">Talaby@gmail.com</a>
+            <h1>
+                {{ $t('Mail Us') }} : <a href="mailto:support@example.com"
+                    class="underline text-green-300 hover:text-green-400 delayed">Talaby@gmail.com</a>
             </h1>
             <!-- الروابط -->
             <nav class="flex space-x-6 md:text-xl">
-                
+
                 <nuxt-link to="/my-profile" class="hover:underline hover:text-green-300 mx-6 delayed">
                     {{ $t('My profile') }}
                 </nuxt-link>
@@ -23,7 +24,7 @@
                 <!-- <nuxt-link to="/products" class="hover:underline hover:text-green-300 delayed">
                     {{ $t('Products') }}
                 </nuxt-link> -->
-                
+
             </nav>
         </div>
     </footer>
