@@ -40,7 +40,7 @@ onMounted(() => {
   <div>
     <div class="flex justify-center items-center gap-8">
     <!-- دائرة الزوار -->
-    <div class="stat-item bg-violet-950">
+    <div class="stat-item">
       <div class="stat-content">
         <div class="text-xl font-bold">{{ visitorsCount }}</div>
         <div class="text-xl font-bold">{{ $t('Visits') }}</div>
@@ -48,7 +48,7 @@ onMounted(() => {
     </div>
 
     <!-- دائرة العملاء -->
-    <div class="stat-item bg-violet-950">
+    <div class="stat-item">
       <div class="stat-content">
         <div class="text-xl font-bold">{{ customersCount }}</div>
         <div class="text-xl font-bold">{{ $t('Customers') }}</div>
@@ -79,7 +79,7 @@ onMounted(() => {
   justify-content: center;
   color: white;
   font-weight: bold;
-  
+  background-color: #4a3a6e;
 }
 
 /* محتوى الدائرة */
