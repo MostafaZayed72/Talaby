@@ -30,17 +30,17 @@ const sections = [
   {
     title: 'مواد البناء والسباكة والكهرباء',
     image: '/imgs/construction.png',
-    link: '/construction'
+    link: '/departments/construction'
   },
   {
     title: 'إلكترونيات',
     image: '/imgs/electronics.png',
-    link: '/electronics'
+    link: '/departments/electronics'
   },
   {
     title: 'أجهزة كهربائية',
     image: '/imgs/electric.png',
-    link: '/electric'
+    link: '/departments/electric'
   }
 ]
 </script>
