@@ -1,6 +1,6 @@
 <template>
   <div class="p-4 md:p-10 flex flex-col justify-center items-center my-auto h-screen">
-    <div class="max-w-md mx-auto p-6  shadow-md rounded-lg my-auto" style="background-color: #7733bc;">
+    <div class="max-w-md mx-auto p-6  shadow-md rounded-lg my-auto" style="background-color: #4a3a6e;">
       <h1 class="text-2xl font-bold mb-6 text-center text-white">{{ $t('Login') }}</h1>
       <form @submit.prevent="loginUser" class="space-y-4">
         <InputText v-model="email" placeholder="البريد الإلكتروني" type="email" required

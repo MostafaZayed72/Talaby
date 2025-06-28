@@ -51,12 +51,14 @@ body {
 
 .p-datatable .p-datatable-thead>tr>th {
   white-space: nowrap !important;
-  text-align: center !important;  
+  text-align: center !important;
 
 }
-.p-datatable-column-header-content{
+
+.p-datatable-column-header-content {
   justify-content: center !important;
 }
+
 .dark .v-data-table {
   background-color: white;
   color: white;
@@ -72,7 +74,7 @@ body {
 
 /* تغيير لون خلفية الصفوف */
 .p-datatable .p-datatable-tbody>tr:nth-child(odd) {
-  background-color: #c8e6ca ;
+  background-color: #c8e6ca;
   /* لون خلفية الصفوف الفردية */
 }
 
@@ -107,7 +109,7 @@ body {
 
 /* تغيير لون خلفية رأس الجدول */
 .p-datatable .p-datatable-thead>tr>th {
-  background-color: #7733bc;
+  background-color: #4a3a6e;
   /* لون خلفية رأس الجدول */
   color: #ffffff;
   /* لون النص في رأس الجدول */
@@ -133,7 +135,7 @@ body {
 }
 
 .p-paginator {
-  background-color: #7733bc !important;
+  background-color: #4a3a6e !important;
 }
 
 .p-paginator-prev {
