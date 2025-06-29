@@ -3,7 +3,6 @@
     <h1 class="text-3xl font-bold text-center mb-10 text-violet-600 dark:text-violet-400">
       {{ $t('Departments') }}
     </h1>
-
     <!-- الأقسام -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-10">
       <div
@@ -11,7 +10,7 @@
         :key="section.id"
         class="text-center"
       >
-        <NuxtLink :to="`/departments/${section.nameEn}`">
+        <NuxtLink :to="`/departments/${section.id}`">
           <img
             :src="section.imageUrl"
             :alt="getTitle(section)"
