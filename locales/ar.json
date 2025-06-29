@@ -80,5 +80,8 @@
     "Save changes":"حفظ التعديلات",
     "Next":"التالي",
     "Previous":"السابق",
-    "Submit an application in this department":"تقديم طلب في هذا القسم"
+    "Submit an application in this department":"تقديم طلب في هذا القسم",
+    "Choose the registration type":"اختر نوع التسجيل",
+    "Register as a client":"سجل كعميل",
+    "Register as a service provider":"سجل كمقدم خدمة"
 }

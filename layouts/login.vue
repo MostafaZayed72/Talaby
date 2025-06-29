@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'dark': isDarkMode }" :style="{ direction: locale === 'ar-AR' ? 'rtl' : 'ltr' }">
+  <div :class="{ 'dark': isDarkMode }" :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr' }">
     <img src="/public/22.png" class="fixed top-10  left-[-20px] z-[-1] md:w-[30%]" alt="">
     <img src="/public/11.png" class="fixed bottom-0  left-[-20px] z-[-1] md:w-[30%]" alt="">
     <img src="/public/33.png" class="fixed bottom-0  right-[-20px] z-[-1] w-[50%] md:w-[30%]" alt="">
