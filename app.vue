@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ direction: locale === 'ar-AR' ? 'rtl' : 'ltr' }">
+  <div :style="{ direction: isRtl ? 'rtl' : 'ltr' }">
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -7,29 +7,29 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
-import { useLocalStorage } from '@vueuse/core';
-import { useI18n } from 'vue-i18n';
+import { ref, watch, computed } from 'vue'
+import { useLocalStorage } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 
-const { locale } = useI18n(); // استخدام useI18n للوصول إلى locale
+const { locale } = useI18n()
+const preferredLanguage = useLocalStorage('preferredLanguage', 'en-US')
 
-const preferredLanguage = useLocalStorage('preferredLanguage', 'en-US'); // القيمة الافتراضية يمكن أن تكون 'en-US'
+// ⬅️ حساب الاتجاه بناءً على اللغة
+const isRtl = computed(() => locale.value.startsWith('ar'))
 
-// استخدام watch لمراقبة تغييرات preferredLanguage
+// ⬅️ تغيير اللغة عند تحديث الـ localStorage
 watch(preferredLanguage, (newValue) => {
-  console.log('Language changed to:', newValue);
-  // تعيين اللغة في i18n
   if (newValue) {
-    locale.value = newValue; // تعيين locale مباشرة
+    locale.value = newValue
   }
-});
+})
 
-// تعيين اللغة الأولى عند التحميل
+// ⬅️ تعيين اللغة الافتراضية عند التحميل
 if (!preferredLanguage.value) {
-  preferredLanguage.value = 'en-US'; // تعيين قيمة افتراضية إذا لم تكن موجودة
+  preferredLanguage.value = 'en-US'
 }
-
 </script>
+
 
 <style>
 .delayed {

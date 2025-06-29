@@ -64,5 +64,20 @@
     "About Us":"من نحن",
     "Delete Product":"حذف المنتج",
     "Departments":"الأقسام",
-    "Signup with us now":"سجل معنا الآن"
+    "Signup with us now":"سجل معنا الآن",
+    "Add new department":"إضافة قسم جديد",
+    "Name in arabic":"الإسم بالعربي",
+    "Name in english":"الإسم بالإنجليزي",
+    "Image is being uploaded":"جاري تحميل الصورة",
+    "Send":"إرسال",
+    "Name (arabic)":"الإسم (عربي)",
+    "Name (english)":"الإسم (إنجليزي)",
+    "Edit/Delete":"التعديل/الحذف",
+    "Edit":"تعديل",
+    "Edit department":"تعديل القسم",
+    "Current image":"الصورة الحالية",
+    "Change image":"تغيير الصورة",
+    "Save changes":"حفظ التعديلات",
+    "Next":"التالي",
+    "Previous":"السابق"
 }

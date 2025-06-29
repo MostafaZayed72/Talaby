@@ -1,12 +1,14 @@
-/** @type {import('tailwindcss').Config} */
+// tailwind.config.js
 export default {
-  darkMode: 'class', // تأكد من إضافة هذا السطر
+  darkMode: 'class', // مهم جدًا
   content: [
-    './pages/**/*.{vue,js,ts,jsx,tsx}',
-    './components/**/*.{vue,js,ts,jsx,tsx}',
+    './components/**/*.{vue,js,ts}',
+    './layouts/**/*.{vue,js,ts}',
+    './pages/**/*.{vue,js,ts}',
+    './app.vue',
   ],
   theme: {
     extend: {},
   },
   plugins: [],
-};
+}

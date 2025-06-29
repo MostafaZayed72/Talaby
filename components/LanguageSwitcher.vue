@@ -15,7 +15,7 @@ const toggleLanguage = () => {
   const langCookie = useCookie('i18n_redirected')
   langCookie.value = newLocale
   locale.value = newLocale
-  location.reload()
+  
 }
 </script>
 
