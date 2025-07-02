@@ -6,14 +6,14 @@
       <form @submit.prevent="loginUser" class="space-y-4">
         <InputText
           v-model="email"
-          placeholder="البريد الإلكتروني"
+          :placeholder="$t('E-mail')"
           type="email"
           required
           class="w-full bg-white py-1 rounded-xl px-4"
         />
         <InputText
           v-model="password"
-          placeholder="كلمة المرور"
+:placeholder="$t('Password')"
           type="password"
           required
           class="w-full bg-white py-1 rounded-xl px-4"
@@ -27,7 +27,7 @@
         </h1>
 
         <h1 class="text-center text-white text-sm delayed underline cursor-pointer hover:text-blue-400"
-            @click="navigateTo('/reset-password')">
+            @click="navigateTo('/forget-password')">
           {{ $t('Forgot password?') }}
         </h1>
 

@@ -1,13 +1,22 @@
-[⚠️ Suspicious Content] <template>
-  <div class="h-screen flex flex-col items-center justify-center">
+<template>
+  <div >
     <div class="max-w-md p-6 shadow-md rounded-lg bg-purple-300 w-full">
       <h1 class="text-2xl font-bold mb-6 text-center text-violet-600">
         {{ $t('Sign up new store') }}
       </h1>
 
       <form @submit.prevent="registerStore" class="space-y-4">
-        <InputText v-model="firstName" :placeholder="$t('First Name')" required class="w-full bg-white" />
-        <InputText v-model="lastName" :placeholder="$t('Last Name')" required class="w-full bg-white" />
+        <!-- رقم السجل التجاري -->
+        <InputText
+          v-model="commercialRegisterNumber"
+          :placeholder="$t('Commercial Register Number')"
+          required
+          class="w-full bg-white"
+            type="number"
+
+        />
+
+        <InputText v-model="firstName" :placeholder="$t('Trade Name')" required class="w-full bg-white" />
         <InputText v-model="email" :placeholder="$t('Email')" type="email" required class="w-full bg-white" />
         <InputText v-model="password" :placeholder="$t('Password')" type="password" required class="w-full bg-white" />
         <InputText v-model="mobile" :placeholder="$t('Mobile Number')" required class="w-full bg-white" />
@@ -28,12 +37,22 @@
           </select>
         </div>
 
-        <Button type="submit" label="تسجيل" class="w-full bg-purple-darken-2 text-white" />
+        <Button
+          type="submit"
+          :label="loading ? 'جاري الإرسال...' : 'تسجيل'"
+          class="w-full bg-purple-darken-2 text-white"
+          :disabled="loading"
+        />
       </form>
 
       <Toast />
       <Loader v-if="loading" />
-      <Dialog v-model:visible="isDialogVisible" :header="$t('Registered Successfully')" modal :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr' }">
+      <Dialog
+        v-model:visible="isDialogVisible"
+        :header="$t('Registered Successfully')"
+        modal
+        :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr' }"
+      >
         <p>{{ $t('A link has been sent to your email to confirm your account') }}</p>
         <Button :label="$t('Ok')" @click="goToHome" />
       </Dialog>
@@ -45,8 +64,10 @@
 import { ref, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
-const { locale } = useI18n();
+import { useLocalStorage } from '@vueuse/core'
+import axios from 'axios'
 
+const { locale } = useI18n()
 const config = useRuntimeConfig()
 const toast = useToast()
 const router = useRouter()
@@ -54,18 +75,20 @@ const router = useRouter()
 const loading = ref(false)
 const isDialogVisible = ref(false)
 
+const commercialRegisterNumber = ref('')
 const firstName = ref('')
-const lastName = ref('')
 const email = ref('')
 const password = ref('')
 const mobile = ref('')
 const location = ref('')
-
 const selectedCategoryId = ref('')
 const commercialImageFile = ref<File | null>(null)
 const commercialRegisterImageUrl = ref('')
-
 const categories = ref<any[]>([])
+
+const token = useLocalStorage('token', '')
+const userID = useLocalStorage('userID', '')
+const roles = useLocalStorage('roles', [])
 
 const handleImageUpload = async (event: Event) => {
   const target = event.target as HTMLInputElement
@@ -102,11 +125,43 @@ onMounted(() => {
   fetchCategories()
 })
 
+const loginUser = async (userEmail: string, userPassword: string) => {
+  try {
+    const response = await axios.post(`${config.public.API_BASE_URL}/identity/login`, {
+      email: userEmail,
+      password: userPassword
+    })
+
+    const { token: newToken, userID: newUserID, roles: newRoles } = response.data
+
+    token.value = newToken
+    userID.value = newUserID
+    roles.value = newRoles || []
+
+    toast.add({ severity: 'success', summary: 'نجاح', detail: 'تم تسجيل الدخول بنجاح' })
+
+  } catch (error: any) {
+    const errorMsg =
+      error.response?.data?.errors?.[Object.keys(error.response.data.errors)[0]]?.[0] ||
+      error.response?.data?.title ||
+      'حدث خطأ أثناء تسجيل الدخول'
+
+    toast.add({ severity: 'error', summary: 'خطأ', detail: errorMsg })
+    console.error('Login Error:', error)
+  }
+}
+
 const registerStore = async () => {
+  if (!commercialRegisterNumber.value || !/^\d+$/.test(commercialRegisterNumber.value)) {
+    toast.add({ severity: 'warn', summary: 'تنبيه', detail: 'يرجى إدخال رقم سجل تجاري صحيح' })
+    return
+  }
+
   if (!commercialRegisterImageUrl.value) {
     toast.add({ severity: 'warn', summary: 'تنبيه', detail: 'يرجى رفع صورة السجل التجاري' })
     return
   }
+
   if (!selectedCategoryId.value) {
     toast.add({ severity: 'warn', summary: 'تنبيه', detail: 'يرجى اختيار تصنيف المتجر' })
     return
@@ -115,8 +170,8 @@ const registerStore = async () => {
   loading.value = true
 
   const payload = {
+    commercialRegisterNumber: commercialRegisterNumber.value.trim(),
     firstName: firstName.value.trim(),
-    lastName: lastName.value.trim(),
     email: email.value.trim(),
     password: password.value,
     mobile: mobile.value.trim(),
@@ -141,7 +196,7 @@ const registerStore = async () => {
       if (res.status === 400 && data.errors) {
         for (const field in data.errors) {
           data.errors[field].forEach((msg: string) => {
-            toast.add({ severity: 'error', summary: 'error', detail: msg })
+            toast.add({ severity: 'error', summary: 'خطأ', detail: msg })
           })
         }
       } else {
@@ -151,6 +206,9 @@ const registerStore = async () => {
     }
 
     toast.add({ severity: 'success', summary: 'تم التسجيل', detail: 'تم إرسال رابط التفعيل إلى البريد الإلكتروني' })
+
+    await loginUser(email.value, password.value)
+
     isDialogVisible.value = true
     resetForm()
   } catch (err) {
@@ -167,8 +225,8 @@ const goToHome = () => {
 }
 
 const resetForm = () => {
+  commercialRegisterNumber.value = ''
   firstName.value = ''
-  lastName.value = ''
   email.value = ''
   password.value = ''
   mobile.value = ''

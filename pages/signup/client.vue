@@ -30,8 +30,10 @@
 import { ref } from 'vue'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
-const { locale } = useI18n();
+import { useLocalStorage } from '@vueuse/core'
+import axios from 'axios'
 
+const { locale } = useI18n()
 const config = useRuntimeConfig()
 const toast = useToast()
 const router = useRouter()
@@ -46,6 +48,12 @@ const password = ref('')
 const mobile = ref('')
 const location = ref('')
 
+// Local Storage for login
+const token = useLocalStorage('token', '')
+const userID = useLocalStorage('userID', '')
+const roles = useLocalStorage('roles', [])
+
+// تسجيل حساب جديد
 const registerClient = async () => {
   loading.value = true
 
@@ -63,7 +71,7 @@ const registerClient = async () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        Accept: 'application/json'
       },
       body: JSON.stringify(payload)
     })
@@ -72,7 +80,6 @@ const registerClient = async () => {
 
     if (!res.ok) {
       if (res.status === 400 && data.errors) {
-        // عرض كل رسائل الـ Validation في Toast
         for (const field in data.errors) {
           const messages = data.errors[field]
           messages.forEach((msg: string) => {
@@ -89,14 +96,53 @@ const registerClient = async () => {
       return
     }
 
-    toast.add({ severity: 'success', summary: 'تم التسجيل', detail: 'تم إرسال رابط التفعيل للبريد الإلكتروني' })
-    isDialogVisible.value = true
+    toast.add({
+      severity: 'success',
+      summary: 'تم التسجيل',
+      detail: 'تم إرسال رابط التفعيل للبريد الإلكتروني'
+    })
+
+    // تسجيل دخول أوتوماتيك بعد النجاح
+    await loginUser(email.value, password.value)
+
     resetForm()
   } catch (err) {
     toast.add({ severity: 'error', summary: 'خطأ داخلي', detail: 'تحقق من الاتصال بالخادم' })
     console.error('Request failed:', err)
   } finally {
     loading.value = false
+  }
+}
+
+// تسجيل الدخول مباشرة بعد التسجيل
+const loginUser = async (userEmail: string, userPassword: string) => {
+  try {
+    const response = await axios.post(`${config.public.API_BASE_URL}/identity/login`, {
+      email: userEmail,
+      password: userPassword
+    })
+
+    const { token: newToken, userID: newUserID, roles: newRoles } = response.data
+
+    token.value = newToken
+    userID.value = newUserID
+    roles.value = newRoles || []
+
+    toast.add({
+      severity: 'success',
+      summary: 'نجاح',
+      detail: 'تم تسجيل الدخول بنجاح'
+    })
+
+    router.push('/')
+  } catch (error: any) {
+    const errorMsg =
+      error.response?.data?.errors?.[Object.keys(error.response.data.errors)[0]]?.[0] ||
+      error.response?.data?.title ||
+      'حدث خطأ أثناء تسجيل الدخول'
+
+    toast.add({ severity: 'error', summary: 'خطأ', detail: errorMsg })
+    console.error('Login Error:', error)
   }
 }
 

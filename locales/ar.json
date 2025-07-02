@@ -83,5 +83,10 @@
     "Submit an application in this department":"تقديم طلب في هذا القسم",
     "Choose the registration type":"اختر نوع التسجيل",
     "Register as a client":"سجل كعميل",
-    "Register as a service provider":"سجل كمقدم خدمة"
+    "Register as a service provider":"سجل كمقدم خدمة",
+    "Reset password":"استعادة كلمة المرور",
+    "E-mail":"البريد الإلكتروني",
+    "Code":"الرمز",
+    "Trade Name":"الإسم التجاري",
+    "Commercial Register Number":"رقم السجل التجاري"
 }
