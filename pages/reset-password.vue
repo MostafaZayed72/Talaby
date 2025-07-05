@@ -3,18 +3,18 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import { useRuntimeConfig } from '#imports'
+import { useI18n } from 'vue-i18n'
 import Dialog from 'primevue/dialog'
 
 const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
 const email = ref('')
 const token = ref('')
-
 const newPassword = ref('')
 const confirmPassword = ref('')
-
 const loading = ref(false)
 const errorMsg = ref('')
 const successDialog = ref(false)
@@ -26,7 +26,7 @@ onMounted(() => {
 
 const resetPassword = async () => {
   if (newPassword.value !== confirmPassword.value) {
-    errorMsg.value = 'كلمتا المرور غير متطابقتين.'
+    errorMsg.value = t('Passwords do not match')
     return
   }
 
@@ -41,13 +41,12 @@ const resetPassword = async () => {
     })
     successDialog.value = true
 
-    // تحويل تلقائي بعد 3 ثوانٍ
     setTimeout(() => {
       router.push('/login')
     }, 3000)
 
   } catch (error) {
-    errorMsg.value = 'فشل في إعادة تعيين كلمة المرور. تحقق من صحة الرابط أو حاول مرة أخرى.'
+    errorMsg.value = t('Failed to reset password. Please check the link or try again.')
   } finally {
     loading.value = false
   }
@@ -56,25 +55,25 @@ const resetPassword = async () => {
 
 <template>
   <div class="container mx-auto max-w-md p-6 mt-24">
-    <h1 class="text-2xl font-bold mb-6 text-center">إعادة تعيين كلمة المرور</h1>
+    <h1 class="text-2xl font-bold mb-6 text-center">{{ t('Reset password') }}</h1>
 
     <div v-if="errorMsg" class="text-red-500 mb-4 text-center">{{ errorMsg }}</div>
 
-    <label class="block mb-2 text-sm font-medium">كلمة المرور الجديدة</label>
+    <label class="block mb-2 text-sm font-medium">{{ t('New password') }}</label>
     <input
       type="password"
       v-model="newPassword"
       class="input-text"
-      placeholder="كلمة المرور الجديدة"
+      :placeholder="$t('Enter new password')"
       :disabled="loading"
     />
 
-    <label class="block mb-2 text-sm font-medium mt-4">تأكيد كلمة المرور</label>
+    <label class="block mb-2 text-sm font-medium mt-4">{{ t('Confirm password') }}</label>
     <input
       type="password"
       v-model="confirmPassword"
       class="input-text"
-      placeholder="تأكيد كلمة المرور"
+      :placeholder="t('Confirm password')"
       :disabled="loading"
     />
 
@@ -83,17 +82,17 @@ const resetPassword = async () => {
       class="btn-green mt-6 flex justify-center items-center gap-2"
       :disabled="loading"
     >
-      <span v-if="!loading">تأكيد</span>
+      <span v-if="!loading" class="text-white">{{ t('Confirm') }}</span>
       <span v-else class="animate-spin border-2 border-t-transparent border-black rounded-full w-5 h-5"></span>
     </button>
 
     <Dialog
       v-model:visible="successDialog"
-      header="تم التغيير"
+      :header="t('Password Changed')"
       :closable="false"
       class="text-center"
     >
-      <p>تم تعيين كلمة المرور بنجاح! سيتم تحويلك إلى صفحة تسجيل الدخول...</p>
+      <p>{{ t('Password successfully changed. You will be redirected to login page...') }}</p>
     </Dialog>
   </div>
 </template>

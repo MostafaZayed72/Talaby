@@ -54,9 +54,6 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { useLocalStorage } from '@vueuse/core'
 
-definePageMeta({
-  layout: 'login'
-})
 
 const config = useRuntimeConfig()
 const email = ref('')

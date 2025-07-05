@@ -13,14 +13,21 @@
         <InputText v-model="mobile" :placeholder="$t('Mobile Number')" required class="w-full bg-white" />
         <InputText v-model="location" :placeholder="$t('City')" required class="w-full bg-white" />
 
-        <Button type="submit" label="تسجيل" class="w-full bg-purple-darken-2 text-white" />
+        <Button type="submit" :label="loading ? $t('Sending...') : $t('Register')" class="w-full bg-purple-darken-2 text-white" :disabled="loading" />
       </form>
 
       <Toast />
       <Loader v-if="loading" />
-      <Dialog v-model:visible="isDialogVisible" :header="$t('Registered Successfully')" modal :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr' }">
+      
+      <!-- Dialog for success -->
+      <Dialog
+        v-model:visible="isDialogVisible"
+        :header="$t('Registered Successfully')"
+        modal
+        :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr' }"
+      >
         <p>{{ $t('A link has been sent to your email to confirm your account') }}</p>
-        <Button :label="$t('Ok')" @click="goToHome" />
+        <Button  class=" w-full" :label="$t('Ok')" @click="goToHome" />
       </Dialog>
     </div>
   </div>
@@ -48,12 +55,35 @@ const password = ref('')
 const mobile = ref('')
 const location = ref('')
 
-// Local Storage for login
 const token = useLocalStorage('token', '')
 const userID = useLocalStorage('userID', '')
 const roles = useLocalStorage('roles', [])
 
-// تسجيل حساب جديد
+const loginUser = async (userEmail: string, userPassword: string) => {
+  try {
+    const response = await axios.post(`${config.public.API_BASE_URL}/identity/login`, {
+      email: userEmail,
+      password: userPassword
+    })
+
+    const { token: newToken, userID: newUserID, roles: newRoles } = response.data
+
+    token.value = newToken
+    userID.value = newUserID
+    roles.value = newRoles || []
+
+    toast.add({ severity: 'success', summary: 'نجاح', detail: 'تم تسجيل الدخول بنجاح' })
+  } catch (error: any) {
+    const errorMsg =
+      error.response?.data?.errors?.[Object.keys(error.response.data.errors)[0]]?.[0] ||
+      error.response?.data?.title ||
+      'حدث خطأ أثناء تسجيل الدخول'
+
+    toast.add({ severity: 'error', summary: 'خطأ', detail: errorMsg })
+    console.error('Login Error:', error)
+  }
+}
+
 const registerClient = async () => {
   loading.value = true
 
@@ -81,68 +111,27 @@ const registerClient = async () => {
     if (!res.ok) {
       if (res.status === 400 && data.errors) {
         for (const field in data.errors) {
-          const messages = data.errors[field]
-          messages.forEach((msg: string) => {
-            toast.add({ severity: 'error', summary: 'error', detail: msg })
+          data.errors[field].forEach((msg: string) => {
+            toast.add({ severity: 'error', summary: 'خطأ', detail: msg })
           })
         }
       } else {
-        toast.add({
-          severity: 'error',
-          summary: 'خطأ في التسجيل',
-          detail: data.title || 'حدث خطأ غير متوقع'
-        })
+        toast.add({ severity: 'error', summary: 'خطأ', detail: data.title || 'حدث خطأ غير متوقع' })
       }
       return
     }
 
-    toast.add({
-      severity: 'success',
-      summary: 'تم التسجيل',
-      detail: 'تم إرسال رابط التفعيل للبريد الإلكتروني'
-    })
+    toast.add({ severity: 'success', summary: 'تم التسجيل', detail: 'تم إرسال رابط التفعيل إلى بريدك الإلكتروني' })
 
-    // تسجيل دخول أوتوماتيك بعد النجاح
     await loginUser(email.value, password.value)
 
+    isDialogVisible.value = true
     resetForm()
   } catch (err) {
     toast.add({ severity: 'error', summary: 'خطأ داخلي', detail: 'تحقق من الاتصال بالخادم' })
-    console.error('Request failed:', err)
+    console.error(err)
   } finally {
     loading.value = false
-  }
-}
-
-// تسجيل الدخول مباشرة بعد التسجيل
-const loginUser = async (userEmail: string, userPassword: string) => {
-  try {
-    const response = await axios.post(`${config.public.API_BASE_URL}/identity/login`, {
-      email: userEmail,
-      password: userPassword
-    })
-
-    const { token: newToken, userID: newUserID, roles: newRoles } = response.data
-
-    token.value = newToken
-    userID.value = newUserID
-    roles.value = newRoles || []
-
-    toast.add({
-      severity: 'success',
-      summary: 'نجاح',
-      detail: 'تم تسجيل الدخول بنجاح'
-    })
-
-    router.push('/')
-  } catch (error: any) {
-    const errorMsg =
-      error.response?.data?.errors?.[Object.keys(error.response.data.errors)[0]]?.[0] ||
-      error.response?.data?.title ||
-      'حدث خطأ أثناء تسجيل الدخول'
-
-    toast.add({ severity: 'error', summary: 'خطأ', detail: errorMsg })
-    console.error('Login Error:', error)
   }
 }
 

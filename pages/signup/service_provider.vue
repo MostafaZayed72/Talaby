@@ -1,6 +1,6 @@
 <template>
-  <div >
-    <div class="max-w-md p-6 shadow-md rounded-lg bg-purple-300 w-full">
+  <div class="h-screen flex flex-col items-center justify-center">
+    <div class="max-w-md p-6 shadow-md rounded-lg bg-purple-300 mx-auto">
       <h1 class="text-2xl font-bold mb-6 text-center text-violet-600">
         {{ $t('Sign up new store') }}
       </h1>
@@ -39,7 +39,8 @@
 
         <Button
           type="submit"
-          :label="loading ? 'جاري الإرسال...' : 'تسجيل'"
+          :label="loading ? $t('Sending...') : $t('Register')"
+
           class="w-full bg-purple-darken-2 text-white"
           :disabled="loading"
         />
@@ -54,7 +55,7 @@
         :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr' }"
       >
         <p>{{ $t('A link has been sent to your email to confirm your account') }}</p>
-        <Button :label="$t('Ok')" @click="goToHome" />
+        <Button class=" w-full" :label="$t('Ok')" @click="goToHome" />
       </Dialog>
     </div>
   </div>
