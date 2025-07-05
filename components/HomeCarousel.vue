@@ -47,24 +47,9 @@ const updateHeight = () => {
   }
 };
 
-// دالة لجلب المنتجات
-const fetchProducts = async () => {
-  try {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/Products/GetAllProducts`);
-    const data = await response.json();
-    products.value = data.data.map(product => ({
-  id: product.id,
-  imageUrl: `${import.meta.env.VITE_API_BASE_URL}/${product.images?.[0]?.url}`, // استخدام أول صورة مع المسار الكامل
-}));
-
-  } catch (error) {
-    console.error("Error fetching products:", error);
-  }
-};
 
 onMounted(() => {
   updateHeight(); // تعيين الارتفاع عند تحميل الصفحة
-  fetchProducts(); // جلب المنتجات عند تحميل الصفحة
 
   // إضافة مستمع للحدث resize لتحديث الارتفاع عند تغيير حجم الشاشة
   window.addEventListener('resize', updateHeight);
