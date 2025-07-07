@@ -2,6 +2,7 @@
     <div>
 <RequestsGet />
 <RequestsAddProposal />
+<RequestsGetProposals />
 
 
     </div>
