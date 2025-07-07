@@ -48,6 +48,10 @@ const fetchReplies = async () => {
     loading.value = false
   }
 }
+// في setup
+defineExpose({
+  fetchReplies
+})
 
 // حذف رد
 const deleteReply = async (id: string) => {

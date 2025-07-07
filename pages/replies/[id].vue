@@ -1,17 +1,20 @@
-<template>
-    <div>
-        <RequestsGetReplies :replies="replies"/>
-        <RequestsAddReply @reply-added="fetchReplies"/>
-    </div>
-</template>
-
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import AddReply from '@/components/AddReply.vue'
-import RepliesList from '@/components/RepliesList.vue'
-import { useReplies } from '@/composables/useReplies'
+import { ref } from 'vue'
 
-const { fetchReplies, replies } = useReplies()
+// نحضر ref لكومبوننت الردود
+const repliesRef = ref<InstanceType<typeof RequestsGetReplies> | null>(null)
 
-onMounted(fetchReplies)
+const handleReplyAdded = () => {
+  repliesRef.value?.fetchReplies()
+}
 </script>
+
+<template>
+  <div>
+    <!-- الكومبوننت اللي يعرض الردود -->
+    <RequestsGetReplies ref="repliesRef" />
+
+    <!-- الكومبوننت اللي يضيف تعليق -->
+    <RequestsAddReply @reply-added="handleReplyAdded" />
+  </div>
+</template>

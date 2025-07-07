@@ -16,7 +16,9 @@ const errorMessage = ref('')
 
 // projectProposalId من مسار الصفحة الحالية
 const proposalId = route.params.id as string
-
+const emit = defineEmits<{
+  (e: 'reply-added'): void
+}>()
 const submitReply = async () => {
   if (!replyContent.value.trim()) return
 
@@ -41,6 +43,8 @@ const submitReply = async () => {
 
     replyContent.value = ''
     successMessage.value = 'تم إرسال التعليق بنجاح'
+    emit('reply-added')
+
   } catch (err: any) {
     errorMessage.value = err.message || 'حدث خطأ أثناء إرسال التعليق'
   } finally {
