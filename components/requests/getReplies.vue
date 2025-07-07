@@ -17,6 +17,10 @@ const totalPages = ref(1)
 const loading = ref(false)
 const error = ref('')
 
+// حالة الرد الجاري تعديله
+const editingReplyId = ref<string | null>(null)
+const editedContent = ref('')
+
 const fetchReplies = async () => {
   loading.value = true
   error.value = ''
@@ -45,6 +49,59 @@ const fetchReplies = async () => {
   }
 }
 
+// حذف رد
+const deleteReply = async (id: string) => {
+  if (!confirm('هل أنت متأكد من حذف هذا الرد؟')) return
+
+  try {
+    const res = await fetch(`${config.public.API_BASE_URL}/proposal-replies/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
+    })
+
+    if (!res.ok) throw new Error('فشل حذف الرد')
+
+    await fetchReplies()
+  } catch (err) {
+    alert('حدث خطأ أثناء حذف الرد')
+  }
+}
+
+// بدء تعديل
+const startEdit = (reply: any) => {
+  editingReplyId.value = reply.id
+  editedContent.value = reply.content
+}
+
+// حفظ التعديل
+const saveEdit = async () => {
+  if (!editedContent.value.trim()) return
+
+  try {
+    const res = await fetch(`${config.public.API_BASE_URL}/proposal-replies`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: editingReplyId.value,
+        content: editedContent.value,
+      }),
+    })
+
+    if (!res.ok) throw new Error('فشل تعديل الرد')
+
+    editingReplyId.value = null
+    editedContent.value = ''
+    await fetchReplies()
+  } catch (err) {
+    alert('حدث خطأ أثناء تعديل الرد')
+  }
+}
+
 onMounted(fetchReplies)
 watch(pageNumber, fetchReplies)
 </script>
@@ -57,33 +114,46 @@ watch(pageNumber, fetchReplies)
     <div v-if="error" class="text-red-500">{{ error }}</div>
     <div v-if="!loading && replies.length === 0" class="text-gray-500">لا توجد ردود بعد.</div>
 
-    <div v-for="reply in replies" :key="reply.id" class="border rounded p-4 mb-4 shadow-sm" style="border-color: #7733bc !important;"> 
-      <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">
-        {{ reply.creatorEmail }}
-        <span class="float-left text-xs text-gray-400">
+    <div
+      v-for="reply in replies"
+      :key="reply.id"
+      class="border rounded p-4 mb-4 shadow-sm "
+      style="border-color: #7733bc !important;"
+    >
+      <div class="text-sm text-gray-600 dark:text-gray-400 mb-1 flex justify-between">
+        <span>{{ reply.creatorEmail }}</span>
+        <span class="text-xs text-gray-400">
           {{ new Date(reply.createdAt).toLocaleString() }}
         </span>
       </div>
-      <div class="text-base text-gray-800 dark:text-white">
+
+      <!-- إذا كان جاري التعديل -->
+      <div v-if="editingReplyId === reply.id">
+        <textarea
+          v-model="editedContent"
+          class="w-full p-2 border border-gray-300 rounded mb-2"
+          rows="3"
+        ></textarea>
+        <div class="flex gap-2">
+          <button @click="saveEdit" class="btn">حفظ</button>
+          <button @click="editingReplyId = null" class="btn bg-gray-400">إلغاء</button>
+        </div>
+      </div>
+      <!-- عرض الرد بشكل عادي -->
+      <div v-else class="text-base text-gray-800 dark:text-white">
         {{ reply.content }}
+      </div>
+
+      <!-- أزرار تعديل وحذف -->
+      <div class="mt-3 flex gap-3 text-sm">
+        <button class="text-blue-600 hover:underline" @click="startEdit(reply)">تعديل</button>
+        <button class="text-red-600 hover:underline" @click="deleteReply(reply.id)">حذف</button>
       </div>
     </div>
 
     <div v-if="totalPages > 1" class="flex justify-center gap-4 mt-6">
-      <button
-        class="btn"
-        :disabled="pageNumber === 1"
-        @click="pageNumber--"
-      >
-        السابق
-      </button>
-      <button
-        class="btn"
-        :disabled="pageNumber === totalPages"
-        @click="pageNumber++"
-      >
-        التالي
-      </button>
+      <button class="btn" :disabled="pageNumber === 1" @click="pageNumber--">السابق</button>
+      <button class="btn" :disabled="pageNumber === totalPages" @click="pageNumber++">التالي</button>
     </div>
   </div>
 </template>
