@@ -1,50 +1,54 @@
 <template>
   <div>
     <div v-if="loading" class="text-center py-20">جاري التحميل...</div>
+
     <div v-else-if="!departmentData" class="text-center py-20">
       <p>القسم غير موجود</p>
     </div>
+
     <div v-else>
-      <!-- الصورة كخلفية -->
+      <!-- صورة القسم -->
       <div
         class="relative h-[20vh] bg-center bg-cover flex items-center justify-center"
         :style="`background-image: url(${departmentData.imageUrl})`"
       >
-        <!-- Overlay (اختياري لتغميق الخلفية) -->
         <div class="absolute inset-0 bg-black/40"></div>
 
-        <!-- النص فوق الخلفية -->
         <div class="relative z-10 text-white text-center">
           <h1 class="text-4xl font-bold mb-4" v-if="locale == 'ar'">{{ departmentData.nameAr }}</h1>
           <h1 class="text-4xl font-bold mb-4" v-else>{{ departmentData.nameEn }}</h1>
-          <!-- <button class="bg-purple-800 hover:bg-purple-900 px-6 py-2 rounded text-white font-semibold">
-{{ $t('Submit an application in this department') }}          </button> -->
- <DepartmentAddRequest />
-        </div>
-      </div>
 
-      <!-- وصف القسم تحت الصورة -->
-      <!-- <div class="max-w-3xl mx-auto px-4 py-8 text-center">
-        <p class="text-gray-700 dark:text-gray-300 text-lg">
-          {{ departmentData.description }}
-        </p>
-      </div> -->
+          <!-- عرض الزر فقط إذا كان الدور Client -->
+          <DepartmentAddRequest v-if="isClient" />
+        </div>
+        
+      </div>
+                <DepartmentGetRequests  />
+
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRuntimeConfig } from '#imports'
-const { locale } = useI18n()
+import { useLocalStorage } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 
+const { locale } = useI18n()
 const config = useRuntimeConfig()
 const route = useRoute()
 
 const departmentParam = route.params.department
 const departmentData = ref<any>(null)
 const loading = ref(true)
+
+// roles من localStorage
+const roles = useLocalStorage<string[]>('roles', [])
+
+// هل المستخدم من نوع Client؟
+const isClient = computed(() => roles.value.includes('Client'))
 
 const fetchDepartment = async () => {
   try {
@@ -61,4 +65,3 @@ const fetchDepartment = async () => {
 
 onMounted(fetchDepartment)
 </script>
-
