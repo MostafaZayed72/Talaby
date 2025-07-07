@@ -65,16 +65,12 @@ watch(pageNumber, fetchProposals)
       لا توجد عروض بعد.
     </div>
 
-    <div
-      v-for="proposal in proposals"
-      :key="proposal.id"
+    <div v-for="proposal in proposals" :key="proposal.id"
       class="border rounded-lg p-4 mb-4 shadow-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
-      @click="navigateTo(`/replies/${proposal.id}`)"
-      style="border-color: #7733bc !important;"
-    >
+      @click="navigateTo(`/replies/${proposal.id}`)" style="border-color: #7733bc !important;">
       <div class="text-sm text-gray-500 mb-1">
-        {{ proposal.creatorEmail }}
-        <span class="float-left text-xs text-gray-400">
+        {{ '*********' + proposal.creatorCommercialRegisterNumber?.slice(-4) }} <span
+          class="float-left text-xs text-gray-400">
           {{ new Date(proposal.createdAt).toLocaleString() }}
         </span>
       </div>
@@ -90,18 +86,10 @@ watch(pageNumber, fetchProposals)
     </div>
 
     <div v-if="totalPages > 1" class="flex justify-center gap-4 mt-6">
-      <button
-        class="btn"
-        :disabled="pageNumber === 1"
-        @click="pageNumber--"
-      >
+      <button class="btn" :disabled="pageNumber === 1" @click="pageNumber--">
         السابق
       </button>
-      <button
-        class="btn"
-        :disabled="pageNumber === totalPages"
-        @click="pageNumber++"
-      >
+      <button class="btn" :disabled="pageNumber === totalPages" @click="pageNumber++">
         التالي
       </button>
     </div>
@@ -115,6 +103,7 @@ watch(pageNumber, fetchProposals)
   padding: 0.4rem 1rem;
   border-radius: 0.375rem;
 }
+
 .btn:disabled {
   background-color: #ccc;
   cursor: not-allowed;
