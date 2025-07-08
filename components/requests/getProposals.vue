@@ -56,7 +56,7 @@ watch(pageNumber, fetchProposals)
 
 <template>
   <div class="mt-8">
-    <h2 class="text-xl font-bold mb-4 text-purple-400 mx-4">العروض المقدمة:</h2>
+    <h2 class="text-xl font-boldnpm mb-4 text-purple-400 mx-4">العروض المقدمة:</h2>
 
     <div v-if="loading">جاري التحميل...</div>
     <div v-if="error" class="text-red-500">{{ error }}</div>
@@ -78,7 +78,7 @@ watch(pageNumber, fetchProposals)
         {{ proposal.content }}
       </div>
       <div class="text-sm font-bold text-purple-400">
-        المبلغ المقترح: {{ proposal.proposedAmount }} {{ $t('OMR') }}
+        المبلغ المقترح: {{ proposal.proposedAmount }} {{ $t('SAR') }}
       </div>
       <div class="text-xs text-gray-500 mt-1">
         عدد الردود: {{ proposal.repliesCount }}
