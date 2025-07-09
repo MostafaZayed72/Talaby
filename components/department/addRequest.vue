@@ -21,9 +21,29 @@ const error = ref('')
 const requestData = ref({
   title: '',
   description: '',
+  imageUrl: '',
   minBudget: 0,
   maxBudget: 0
 })
+
+const handleFileChange = async (event: Event) => {
+  const file = (event.target as HTMLInputElement)?.files?.[0]
+  if (!file) return
+
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('upload_preset', config.public.CLOUDINARY_UPLOAD_PRESET)
+
+  try {
+    const response = await axios.post(
+      `https://api.cloudinary.com/v1_1/${config.public.CLOUDINARY_CLOUD_NAME}/image/upload`,
+      formData
+    )
+    requestData.value.imageUrl = response.data.secure_url
+  } catch (err) {
+    error.value = t('Image upload failed.')
+  }
+}
 
 const submitRequest = async () => {
   if (!storeCategoryId) {
@@ -38,6 +58,8 @@ const submitRequest = async () => {
   try {
     await axios.post(`${config.public.API_BASE_URL}/project-requests`, {
       ...requestData.value,
+      minBudget: 0,
+      maxBudget: 0,
       storeCategoryId: storeCategoryId
     }, {
       headers: {
@@ -51,6 +73,7 @@ const submitRequest = async () => {
     requestData.value = {
       title: '',
       description: '',
+      imageUrl: '',
       minBudget: 0,
       maxBudget: 0
     }
@@ -62,7 +85,6 @@ const submitRequest = async () => {
   }
 }
 </script>
-
 
 <template>
   <div>
@@ -86,14 +108,11 @@ const submitRequest = async () => {
             <textarea v-model="requestData.description" class="input" rows="3"></textarea>
           </div>
 
-          <div class="flex gap-4">
-            <div class="flex-1">
-              <label class="block font-medium">{{ t('Minimum Budget') }}</label>
-              <input v-model.number="requestData.minBudget" type="number" class="input" />
-            </div>
-            <div class="flex-1">
-              <label class="block font-medium">{{ t('Maximum Budget') }}</label>
-              <input v-model.number="requestData.maxBudget" type="number" class="input" />
+          <div>
+            <label class="block font-medium">{{ t('Upload Image') }}</label>
+            <input type="file" class="input" @change="handleFileChange" accept="image/*" />
+            <div v-if="requestData.imageUrl" class="mt-2">
+              <img :src="requestData.imageUrl" alt="Uploaded" class="w-32 h-32 object-cover rounded" />
             </div>
           </div>
         </div>

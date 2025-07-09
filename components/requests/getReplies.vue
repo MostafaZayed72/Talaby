@@ -17,9 +17,33 @@ const totalPages = ref(1)
 const loading = ref(false)
 const error = ref('')
 
-// حالة الرد الجاري تعديله
 const editingReplyId = ref<string | null>(null)
 const editedContent = ref('')
+
+// 🟢 جلب الإيميل من الـ API بدل JWT
+const currentUserEmail = ref('')
+
+const fetchCurrentUser = async () => {
+  try {
+    const res = await fetch(`${config.public.API_BASE_URL}/identity/users/me`, {
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
+    })
+
+    if (!res.ok) throw new Error('فشل تحميل بيانات المستخدم')
+
+    const user = await res.json()
+    currentUserEmail.value = user.email
+  } catch (err) {
+    console.error('فشل الحصول على المستخدم الحالي')
+  }
+}
+
+onMounted(async () => {
+  await fetchCurrentUser()
+  await fetchReplies()
+})
 
 const fetchReplies = async () => {
   loading.value = true
@@ -48,12 +72,9 @@ const fetchReplies = async () => {
     loading.value = false
   }
 }
-// في setup
-defineExpose({
-  fetchReplies
-})
 
-// حذف رد
+defineExpose({ fetchReplies })
+
 const deleteReply = async (id: string) => {
   if (!confirm('هل أنت متأكد من حذف هذا الرد؟')) return
 
@@ -73,13 +94,11 @@ const deleteReply = async (id: string) => {
   }
 }
 
-// بدء تعديل
 const startEdit = (reply: any) => {
   editingReplyId.value = reply.id
   editedContent.value = reply.content
 }
 
-// حفظ التعديل
 const saveEdit = async () => {
   if (!editedContent.value.trim()) return
 
@@ -106,7 +125,6 @@ const saveEdit = async () => {
   }
 }
 
-onMounted(fetchReplies)
 watch(pageNumber, fetchReplies)
 </script>
 
@@ -121,7 +139,7 @@ watch(pageNumber, fetchReplies)
     <div
       v-for="reply in replies"
       :key="reply.id"
-      class="border rounded p-4 mb-4 shadow-sm "
+      class="border rounded p-4 mb-4 shadow-sm"
       style="border-color: #7733bc !important;"
     >
       <div class="text-sm text-gray-600 dark:text-gray-400 mb-1 flex justify-between">
@@ -131,7 +149,7 @@ watch(pageNumber, fetchReplies)
         </span>
       </div>
 
-      <!-- إذا كان جاري التعديل -->
+      <!-- تعديل -->
       <div v-if="editingReplyId === reply.id">
         <textarea
           v-model="editedContent"
@@ -143,13 +161,16 @@ watch(pageNumber, fetchReplies)
           <button @click="editingReplyId = null" class="btn bg-gray-400">إلغاء</button>
         </div>
       </div>
-      <!-- عرض الرد بشكل عادي -->
+      <!-- عرض عادي -->
       <div v-else class="text-base text-gray-800 dark:text-white">
         {{ reply.content }}
       </div>
 
-      <!-- أزرار تعديل وحذف -->
-      <div class="mt-3 flex gap-3 text-sm">
+      <!-- أزرار التعديل والحذف -->
+      <div
+        v-if="reply.creatorEmail === currentUserEmail"
+        class="mt-3 flex gap-3 text-sm"
+      >
         <button class="text-blue-600 hover:underline" @click="startEdit(reply)">تعديل</button>
         <button class="text-red-600 hover:underline" @click="deleteReply(reply.id)">حذف</button>
       </div>
