@@ -106,5 +106,8 @@
     "You can add a photo to illustrate the request":"بإمكانك إضافة صورة لإيضاح الطلب",
     "Request Title":"عنوان الطلب",
     "Add New Request":"إضافة طلب جديد",
-    "Submit Request":"إرسال الطلب"
+    "Submit Request":"إرسال الطلب",
+    "Total price including tax":"مجموع السعر شامل الضريبة",
+    "Offer content includes pricing details":"محتوى العرض شامل تفاصيل الأسعار",
+    "Send offer":"إرسال العرض"
 }

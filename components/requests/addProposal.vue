@@ -96,24 +96,24 @@ onMounted(() => {
 
     <div v-if="showDialog" class="dialog">
       <div class="dialog-content">
-        <h2 class="text-lg font-bold mb-2">إرسال عرض</h2>
+        <h2 class="text-lg font-bold mb-2">{{$t('Send offer')}}</h2>
 
         <textarea
           v-model="content"
-          placeholder="محتوى العرض"
+          :placeholder="$t('Offer content includes pricing details')"
           class="textarea mb-2 text-black"
         ></textarea>
 
         <input
           v-model.number="proposedAmount"
           type="number"
-          placeholder="المبلغ المقترح"
+          :placeholder="$t('Total price including tax')"
           class="input mb-4 text-black"
         />
 
         <div class="flex justify-end gap-2">
-          <button @click="submitProposal" class="btn">إرسال</button>
-          <button @click="showDialog = false" class="btn-cancel">إلغاء</button>
+          <button @click="submitProposal" class="btn">{{ $t('Send') }}</button>
+          <button @click="showDialog = false" class="btn-cancel">{{ $t('Cancel') }}</button>
         </div>
       </div>
     </div>
