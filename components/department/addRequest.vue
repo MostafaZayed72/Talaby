@@ -93,7 +93,8 @@ const submitRequest = async () => {
     <div v-if="showDialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
         <h2 class="text-xl font-bold mb-4">{{ t('Add New Request') }}</h2>
-
+<span class="text-green-600">{{ $t('Dear customer') }}</span>
+<h1 class="mb-4 text-green-600 text-sm">{{$t('Remember: Clear demand = clear supply')}}</h1>
         <div v-if="error" class="text-red-500 mb-2">{{ error }}</div>
         <div v-if="success" class="text-green-600 mb-2">{{ t('Request submitted successfully.') }}</div>
 
@@ -109,7 +110,7 @@ const submitRequest = async () => {
           </div>
 
           <div>
-            <label class="block font-medium">{{ t('Upload Image') }}</label>
+            <label class="block font-medium text-green-600 mb-2">{{ t('You can add a photo to illustrate the request') }}</label>
             <input type="file" class="input" @change="handleFileChange" accept="image/*" />
             <div v-if="requestData.imageUrl" class="mt-2">
               <img :src="requestData.imageUrl" alt="Uploaded" class="w-32 h-32 object-cover rounded" />

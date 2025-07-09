@@ -3,102 +3,55 @@
     <img src="/public/22.png" class="fixed top-10  left-[-20px] z-[-1] md:w-[30%]" alt="">
     <img src="/public/11.png" class="fixed bottom-0  left-[-20px] z-[-1] md:w-[30%]" alt="">
     <img src="/public/33.png" class="fixed bottom-0  right-[-20px] z-[-1] w-[50%] md:w-[30%]" alt="">
-    <div class="mb-0 px-4  flex justify-between items-center py-2 shadow-xl sticky top-0 z-10 "
-      style="background-color: #4a3a6e;">
+
+    <div class="mb-0 px-4 flex justify-between items-center py-2 shadow-xl sticky top-0 z-10" style="background-color: #4a3a6e;">
       <div class="flex items-center gap-4">
-        <Icon @click="toggleSidebar" name="iconamoon:menu-burger-horizontal"
-          class="md:hidden text-xl text-white cursor-pointer" />
-        <img src="/public/imgs/logo.png" class="w-12 h-12 cursor-pointer" alt="" style="border-radius: 50%;"
-          @click="navigateTo('/')">
+        <Icon @click="toggleSidebar" name="iconamoon:menu-burger-horizontal" class="md:hidden text-xl text-white cursor-pointer" />
+        <img src="/public/imgs/logo.png" class="w-12 h-12 cursor-pointer" alt="" style="border-radius: 50%;" @click="() => router.push('/')">
       </div>
 
-      <!-- الروابط في الشاشات الكبيرة -->
       <div class="links md:flex items-center gap-4 hidden">
-        <NuxtLink
-          class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-          to="/" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
+        <NuxtLink to="/" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
           {{ $t('Home') }}
         </NuxtLink>
-        <NuxtLink v-if="!token"
-          class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-          to="/login" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
+        <NuxtLink v-if="!isLoggedIn" to="/login" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
           {{ $t('Login') }}
         </NuxtLink>
-        <NuxtLink v-if="token"
-          class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-          to="/my-profile" active-class="bg-violet-950 text-yellow-400"
-          exact-active-class="bg-violet-950 text-yellow-400">
+        <NuxtLink v-if="isLoggedIn" to="/my-profile" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
           {{ $t('My profile') }}
         </NuxtLink>
-        <!-- <NuxtLink
-          class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-          :to="`/yourNurse/${userID}`"  active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
-          {{ $t('My profile') }}
-        </NuxtLink> -->
-        <NuxtLink
-          class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-          to="/departments" active-class="bg-violet-950 text-yellow-400"
-          exact-active-class="bg-violet-950 text-yellow-400">
+        <NuxtLink to="/departments" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
           {{ $t('Departments') }}
         </NuxtLink>
-
-
-
-
-
       </div>
-      <div class="flex items-center ">
 
-        <Icon class="text-3xl cursor-pointer text-white hidden md:flex" name="ic:twotone-log-out" v-if="token"
-          @click="logout" />
+      <div class="flex items-center">
+        <Icon class="text-3xl cursor-pointer text-white hidden md:flex" name="ic:twotone-log-out" v-if="isLoggedIn" @click="logout" />
         <LanguageSwitcher />
-
         <DarkModeToggle />
         <FloatingActions />
       </div>
     </div>
 
-    <!-- Burger Menu Transition for Small Screens -->
+    <!-- Sidebar for Mobile -->
     <transition name="slide">
-      <div v-if="isSidebarOpen" class="md:hidden border-t-2 border-violet-600 h-screen fixed z-10"
-        style="background-color: #4a3a6e;">
+      <div v-if="isSidebarOpen" class="md:hidden border-t-2 border-violet-600 h-screen fixed z-10" style="background-color: #4a3a6e;">
         <div class="flex flex-col p-4">
-          <NuxtLink
-            class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-            to="/" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
+          <NuxtLink to="/" @click="closeSidebar" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400">
             {{ $t('Home') }}
           </NuxtLink>
-
-
-          <!-- <NuxtLink
-          class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-          :to="`/yourNurse/${userID}`"  active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
-          {{ $t('My profile') }}
-        </NuxtLink> -->
-
-          <NuxtLink v-if="!token"
-            class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-            to="/login" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
+          <NuxtLink v-if="!isLoggedIn" to="/login" @click="closeSidebar" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400">
             {{ $t('Login') }}
           </NuxtLink>
-          <NuxtLink v-if="token"
-            class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-            to="/my-profile" active-class="bg-violet-950 text-yellow-400"
-            exact-active-class="bg-violet-950 text-yellow-400">
+          <NuxtLink v-if="isLoggedIn" to="/my-profile" @click="closeSidebar" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400">
             {{ $t('My profile') }}
           </NuxtLink>
-          <NuxtLink
-            class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-            to="/departments" active-class="bg-violet-950 text-yellow-400"
-            exact-active-class="bg-violet-950 text-yellow-400">
+          <NuxtLink to="/departments" @click="closeSidebar" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400">
             {{ $t('Departments') }}
           </NuxtLink>
-          <h1 v-if="token" @click="logout"
-            class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400">
+          <h1 v-if="isLoggedIn" @click="handleLogoutClick" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400">
             {{ $t('Logout') }}
           </h1>
-
-
         </div>
       </div>
     </transition>
@@ -106,7 +59,6 @@
     <Loader v-if="loading" />
     <main class="p-0">
       <slot />
-
     </main>
   </div>
 </template>
@@ -114,47 +66,41 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useLocalStorage } from '@vueuse/core'; // استيراد useLocalStorage
+import { useLocalStorage } from '@vueuse/core';
 
-const { locale } = useI18n();
-const loading = ref(true);
 const router = useRouter();
+const route = useRoute();
+const { locale } = useI18n();
 
-// استخدام useLocalStorage بدلاً من localStorage مباشرة
-const token = useLocalStorage('token', null); // "token" هو اسم المفتاح و "null" هو القيمة الافتراضية
-const userID = ref()
-const roles = ref()
-// دالة التحقق من التوكن
+const loading = ref(true);
+const token = useLocalStorage('token', null);
+const userID = ref();
+const roles = ref();
+const isSidebarOpen = ref(false);
+const isDropdownOpen = ref(false);
+
+const isLoggedIn = computed(() => !!token.value);
+
+const logout = () => {
+  localStorage.removeItem('userID');
+  localStorage.removeItem('roles');
+  token.value = null; // مهم جدًا لتحديث الحالة
+  router.push('/login'); // التوجيه لصفحة تسجيل الدخول
+};
+
+const handleLogoutClick = () => {
+  logout();
+  closeSidebar();
+};
+
 const checkToken = () => {
   if (!token.value) {
-    // إذا لم يكن هناك توكن في الـ localStorage، يتم تعيين القيمة الافتراضية
     token.value = localStorage.getItem('token');
   }
 };
 
-// تسجيل الخروج
-const logout = () => {
-  localStorage.removeItem('userID');
-  localStorage.removeItem('token');
-  localStorage.removeItem('roles');
-  navigateTo('/login'); // استخدم router.push بدلاً من navigateTo
-};
-
-// مراقبة التوكن وتحديث حالة token بناءً عليه
-watch(token, (newToken) => {
-  if (newToken) {
-    // إذا كان هناك توكن، يمكنك تنفيذ عمليات معينة
-    console.log("تم تسجيل الدخول");
-  } else {
-    // إذا لم يكن هناك توكن، تنفيذ عمليات أخرى مثل توجيه المستخدم إلى صفحة التسجيل
-    console.log("تم تسجيل الخروج");
-  }
-});
-
-// إضافة مستمع لحدث storage في متصفح
 const handleStorageChange = (event) => {
   if (event.key === 'token') {
-    // عند تغيير قيمة التوكن في localStorage
     token.value = event.newValue;
   }
 };
@@ -162,19 +108,17 @@ const handleStorageChange = (event) => {
 onMounted(() => {
   checkToken();
   loading.value = false;
-  userID.value = localStorage.getItem("userID")
-  roles.value = localStorage.getItem("roles")
-
-  // الاستماع إلى تغييرات localStorage
+  userID.value = localStorage.getItem("userID");
+  roles.value = localStorage.getItem("roles");
   window.addEventListener('storage', handleStorageChange);
+  document.addEventListener('click', closeDropdownOnClickOutside);
 });
 
 onBeforeUnmount(() => {
-  // إزالة مستمع الحدث عند إلغاء تحميل الصفحة
   window.removeEventListener('storage', handleStorageChange);
+  document.removeEventListener('click', closeDropdownOnClickOutside);
 });
 
-// التحكم في حالة الـ loading عند التنقل بين الصفحات
 router.beforeEach((to, from, next) => {
   loading.value = true;
   next();
@@ -184,50 +128,38 @@ router.afterEach(() => {
   loading.value = false;
 });
 
-const isSidebarOpen = ref(false);
-const isDropdownOpen = ref(false);
-
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
-}
+};
+
+const closeSidebar = () => {
+  isSidebarOpen.value = false;
+};
 
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
-}
+};
 
-// إغلاق القائمة عند النقر خارجها
 const closeDropdownOnClickOutside = (event) => {
   const dropdown = document.querySelector('.relative');
-  const toggleButton = event.target.closest('h1'); // عنصر النقر لفتح القائمة
+  const toggleButton = event.target.closest('h1');
   if (dropdown && !dropdown.contains(event.target) && !toggleButton) {
     isDropdownOpen.value = false;
   }
 };
 
-onMounted(() => {
-  document.addEventListener('click', closeDropdownOnClickOutside);
-});
-
-onBeforeUnmount(() => {
-  document.removeEventListener('click', closeDropdownOnClickOutside);
-});
-
-const route = useRoute();
-
-// للتحقق إذا كان الرابط الحالي يحتوي على كلمة "signup" وتعيين الـ active
 const isSignupActive = computed(() => route.path.endsWith('signup'));
-
-// للتحقق إذا كان أي مسار يحتوي على "signup"
-const isSignupSectionActive = computed(() => {
-  return route.path.includes('signup');
-});
-
-// للتحقق إذا كان الرابط الحالي هو "yourNurse"
+const isSignupSectionActive = computed(() => route.path.includes('signup'));
 const isYourNurseActive = computed(() => route.path.startsWith('/yourNurse'));
+
+watch(token, (newToken) => {
+  if (newToken) {
+    console.log("تم تسجيل الدخول");
+  } else {
+    console.log("تم تسجيل الخروج");
+  }
+});
 </script>
-
-
-
 
 <style scoped>
 body.dark {

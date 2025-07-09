@@ -63,7 +63,7 @@ onMounted(fetchPostDetails)
         <span class="font-semibold">{{ post.minBudget }}</span>
         إلى
         <span class="font-semibold">{{ post.maxBudget }}</span>
-        جنيه
+       {{ $t('Sar') }}
       </div>
     </div>
   </div>
