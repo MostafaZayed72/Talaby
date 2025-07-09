@@ -58,13 +58,13 @@ onMounted(fetchPostDetails)
         {{ post.description }}
       </div>
 
-      <div class="text-sm text-white mt-4 bg-purple-950 rounded-full p-2 w-fit mx-auto">
+      <!-- <div class="text-sm text-white mt-4 bg-purple-950 rounded-full p-2 w-fit mx-auto">
         الميزانية: من
         <span class="font-semibold">{{ post.minBudget }}</span>
         إلى
         <span class="font-semibold">{{ post.maxBudget }}</span>
        {{ $t('Sar') }}
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
