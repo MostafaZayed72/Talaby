@@ -93,7 +93,7 @@ onMounted(() => {
 
     <div v-if="showDialog" class="dialog">
       <div class="dialog-content">
-        <h2 class="text-lg font-bold mb-2">{{ $t('Send Inquiry') }}</h2>
+        <h2 class="text-lg font-bold mb-2 text-black">{{ $t('Send question') }}</h2>
 
         <textarea
           v-model="content"
