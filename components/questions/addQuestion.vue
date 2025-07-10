@@ -9,10 +9,9 @@ const route = useRoute()
 const token = useLocalStorage('token', '')
 const roles = useLocalStorage('roles', []) // من نوع Array<string>
 
-// الحالة الخاصة بالعرض
+// الحالة الخاصة بالاستفسار
 const showDialog = ref(false)
 const content = ref('')
-const proposedAmount = ref<number | null>(null)
 
 const projectRequestId = route.params.id as string
 
@@ -56,16 +55,15 @@ const fetchUserCategory = async () => {
   }
 }
 
-const submitProposal = async () => {
-  if (!content.value || proposedAmount.value === null) return
+const submitQuestion = async () => {
+  if (!content.value) return
 
   const body = {
     projectRequestId,
-    content: content.value,
-    proposedAmount: proposedAmount.value,
+    content: content.value
   }
 
-  const res = await fetch(`${config.public.API_BASE_URL}/project-proposals`, {
+  const res = await fetch(`${config.public.API_BASE_URL}/project-questions`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token.value}`,
@@ -75,12 +73,11 @@ const submitProposal = async () => {
   })
 
   if (res.ok) {
-    alert('تم إرسال العرض بنجاح!')
+    alert('تم إرسال الاستفسار بنجاح!')
     showDialog.value = false
     content.value = ''
-    proposedAmount.value = null
   } else {
-    alert('حدث خطأ أثناء إرسال العرض')
+    alert('حدث خطأ أثناء إرسال الاستفسار')
   }
 }
 
@@ -92,27 +89,20 @@ onMounted(() => {
 
 <template>
   <div v-if="canSubmit">
-    <button @click="showDialog = true" class="btn p-1 rounded-lg mx-10 text-center">📩 تقديم عرض</button>
+    <button @click="showDialog = true" class="btn p-1 rounded-lg mx-10 text-center">❓استفسار</button>
 
     <div v-if="showDialog" class="dialog">
       <div class="dialog-content">
-        <h2 class="text-lg font-bold mb-2">{{$t('Send offer')}}</h2>
+        <h2 class="text-lg font-bold mb-2">{{ $t('Send Inquiry') }}</h2>
 
         <textarea
           v-model="content"
-          :placeholder="$t('Offer content includes pricing details')"
-          class="textarea mb-2 text-black"
+          :placeholder="$t('Enter your question clearly')"
+          class="textarea mb-4 text-black"
         ></textarea>
 
-        <input
-          v-model.number="proposedAmount"
-          type="number"
-          :placeholder="$t('Total price including tax')"
-          class="input mb-4 text-black"
-        />
-
         <div class="flex justify-end gap-2">
-          <button @click="submitProposal" class="btn p-1 rounded-lg">{{ $t('Send') }}</button>
+          <button @click="submitQuestion" class="btn p-1 rounded-lg">{{ $t('Send') }}</button>
           <button @click="showDialog = false" class="btn-cancel p-1 rounded-lg">{{ $t('Cancel') }}</button>
         </div>
       </div>
@@ -122,7 +112,7 @@ onMounted(() => {
 
 <style scoped>
 .btn {
-  background-color: #3a6e4e;
+  background-color: #6919b4;
   color: white;
 }
 
