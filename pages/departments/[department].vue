@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="loading" class="text-center py-20">جاري التحميل...</div>
+    <div v-if="loading || userLoading" class="text-center py-20">جاري التحميل...</div>
 
     <div v-else-if="!departmentData" class="text-center py-20">
       <p>القسم غير موجود</p>
@@ -15,16 +15,15 @@
         <div class="absolute inset-0 bg-black/40"></div>
 
         <div class="relative z-10 text-white text-center">
-          <h1 class="text-4xl font-bold mb-4" v-if="locale == 'ar'">{{ departmentData.nameAr }}</h1>
+          <h1 class="text-4xl font-bold mb-4" v-if="locale === 'ar'">{{ departmentData.nameAr }}</h1>
           <h1 class="text-4xl font-bold mb-4" v-else>{{ departmentData.nameEn }}</h1>
 
           <!-- عرض الزر فقط إذا كان الدور Client -->
           <DepartmentAddRequest v-if="isClient" />
         </div>
-        
       </div>
-                <DepartmentGetRequests  />
 
+      <DepartmentGetRequests />
     </div>
   </div>
 </template>
@@ -33,8 +32,13 @@
 import { useRoute } from 'vue-router'
 import { ref, onMounted, computed } from 'vue'
 import { useRuntimeConfig } from '#imports'
-import { useLocalStorage } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
+
+// ✅ composable اللي فيه جلب بيانات اليوزر من الـ API
+const { user } = await useCurrentUser()
+const userLoading = ref(!user.value) // في حال كنت حابب تعرض لودينغ لبيانات اليوزر
+
+const isClient = computed(() => user.value?.roles?.includes('Client'))
 
 const { locale } = useI18n()
 const config = useRuntimeConfig()
@@ -43,12 +47,6 @@ const route = useRoute()
 const departmentParam = route.params.department
 const departmentData = ref<any>(null)
 const loading = ref(true)
-
-// roles من localStorage
-const roles = useLocalStorage<string[]>('roles', [])
-
-// هل المستخدم من نوع Client؟
-const isClient = computed(() => roles.value.includes('Client'))
 
 const fetchDepartment = async () => {
   try {

@@ -11,6 +11,7 @@ const route = useRoute()
 const questionId = route.params.id as string
 
 const replies = ref<any[]>([])
+const questionContent = ref('')
 const pageNumber = ref(1)
 const pageSize = ref(5)
 const totalPages = ref(1)
@@ -63,8 +64,11 @@ const fetchReplies = async () => {
     if (!res.ok) throw new Error('فشل تحميل الردود')
 
     const data = await res.json()
-    replies.value = data.items
-    totalPages.value = data.totalPages
+
+    // استخراج السؤال والردود من الهيكل الجديد
+    questionContent.value = data.questionContent
+    replies.value = data.replies.items
+    totalPages.value = data.replies.totalPages
   } catch (err: any) {
     error.value = err.message || 'حدث خطأ أثناء تحميل الردود'
   } finally {
@@ -130,6 +134,14 @@ watch(pageNumber, fetchReplies)
 <template>
   <div class="mt-6 px-2">
     <h2 class="text-xl font-bold mb-4 text-purple-600">الردود على الاستفسار:</h2>
+
+    <!-- عرض السؤال -->
+    <div
+      v-if="questionContent"
+      class="bg-purple-100 text-gray-900 p-4 rounded border-l-4 border-purple-700 mb-6"
+    >
+      {{ questionContent }}
+    </div>
 
     <div v-if="loading">جاري التحميل...</div>
     <div v-if="error" class="text-red-500">{{ error }}</div>

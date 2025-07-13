@@ -16,6 +16,7 @@ const pageSize = ref(5)
 const totalPages = ref(1)
 const loading = ref(false)
 const error = ref('')
+const proposalContent = ref('')
 
 const editingReplyId = ref<string | null>(null)
 const editedContent = ref('')
@@ -64,8 +65,11 @@ const fetchReplies = async () => {
     if (!res.ok) throw new Error('فشل تحميل الردود')
 
     const data = await res.json()
-    replies.value = data.items
-    totalPages.value = data.totalPages
+
+    // 🟡 تحديث بناءً على الشكل الجديد
+    proposalContent.value = data.proposalContent
+    replies.value = data.replies.items
+    totalPages.value = data.replies.totalPages
   } catch (err: any) {
     error.value = err.message || 'حدث خطأ أثناء تحميل الردود'
   } finally {
@@ -130,6 +134,12 @@ watch(pageNumber, fetchReplies)
 
 <template>
   <div class="mt-6 px-2">
+    <h2 class="text-xl font-bold mb-4 text-purple-600">تفاصيل العرض:</h2>
+
+    <div class="bg-purple-100 p-4 rounded text-gray-800 mb-6 border-l-4 border-purple-600">
+      {{ proposalContent }}
+    </div>
+
     <h2 class="text-xl font-bold mb-4 text-purple-600">الردود على العرض:</h2>
 
     <div v-if="loading">جاري التحميل...</div>
