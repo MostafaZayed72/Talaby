@@ -2,7 +2,7 @@
     <div>
         <RequestsGet />
 
-        <div class="flex w-full mx-auto justify-between">
+        <div class="flex w-full mx-auto justify-between text-center">
 
             <div class="w-full">
                 <RequestsAddProposal />

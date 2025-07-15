@@ -1,11 +1,13 @@
 import { useRuntimeConfig } from '#imports'
 import { useLocalStorage } from '@vueuse/core'
 import { useState } from '#app'
+import { ref } from 'vue'
+
 
 export const useCurrentUser = async () => {
   const config = useRuntimeConfig()
   const token = useLocalStorage('token', '')
-  const user = useState('currentUser', () => null)
+  const user = ref(null)
 
   if (user.value) return { user }
 

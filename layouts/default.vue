@@ -80,11 +80,13 @@ const isSidebarOpen = ref(false);
 const isDropdownOpen = ref(false);
 
 const isLoggedIn = computed(() => !!token.value);
+const user = useState('currentUser', () => null)
 
 const logout = () => {
   localStorage.removeItem('userID');
   localStorage.removeItem('roles');
   token.value = null; // مهم جدًا لتحديث الحالة
+  user.value=null
   router.push('/login'); // التوجيه لصفحة تسجيل الدخول
 };
 

@@ -86,12 +86,14 @@ const checkToken = () => {
     token.value = localStorage.getItem('token');
   }
 };
+const user = useState('currentUser', () => null)
 
 // تسجيل الخروج
 const logout = () => {
   localStorage.removeItem('userID');
   localStorage.removeItem('token');
   localStorage.removeItem('roles');
+  user.value=null
   navigateTo('/login'); // استخدم router.push بدلاً من navigateTo
 };
 
