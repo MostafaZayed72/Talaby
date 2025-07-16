@@ -158,9 +158,7 @@ onMounted(async () => {
       <div class="text-sm font-bold text-purple-950 dark:text-purple-400">
         المبلغ المقترح: {{ proposal.proposedAmount }} {{ $t('SAR') }}
       </div>
-      <div class="text-xs text-gray-500 mt-1">
-        عدد الردود: {{ proposal.repliesCount }}
-      </div>
+      
 
       <!-- تم اختيار العرض -->
       <div v-if="proposal.statusValue === 1" class="mt-2">
