@@ -69,20 +69,6 @@ const fetchProposals = async () => {
   }
 }
 
-const navigateTo = (proposal: any) => {
-  const isProposalOwner = proposal.creatorEmail === currentUser.value?.email
-  const isRequestOwner = projectRequest.value?.creatorId === currentUser.value?.id
-  if (isProposalOwner || isRequestOwner) {
-    router.push(`/replies/${proposal.id}`)
-  }
-}
-
-const canNavigate = (proposal: any) => {
-  const isProposalOwner = proposal.creatorEmail === currentUser.value?.email
-  const isRequestOwner = projectRequest.value?.creatorId === currentUser.value?.id
-  return isProposalOwner || isRequestOwner
-}
-
 const isRequestOwner = () => currentUser.value?.id === projectRequest.value?.creatorId
 
 const openSelectDialog = (proposalId: string) => {
@@ -99,14 +85,12 @@ const confirmSelection = async () => {
       'Content-Type': 'application/json',
     }
 
-    // Patch proposal status
     await fetch(`${config.public.API_BASE_URL}/project-proposals/status`, {
       method: 'PATCH',
       headers,
       body: JSON.stringify({ id: selectedProposalId.value, newStatus: 1 }),
     })
 
-    // Patch project request status
     await fetch(`${config.public.API_BASE_URL}/project-requests/status`, {
       method: 'PATCH',
       headers,
@@ -114,19 +98,30 @@ const confirmSelection = async () => {
     })
 
     showDialog.value = false
-    await fetchProposals() // Refresh proposals after update
+    await fetchProposals()
+    await fetchRequest()
   } catch (err) {
     console.error('فشل التحديث', err)
   }
 }
+
+const navigateTo = (proposal: any) => {
+  const isProposalOwner = proposal.creatorEmail === currentUser.value?.email
+  const isRequestOwner = projectRequest.value?.creatorId === currentUser.value?.id
+  const isAcceptedProposal = proposal.statusValue === 1
+
+  if ((isProposalOwner || isRequestOwner) && isAcceptedProposal) {
+    router.push(`/replies/${proposal.id}`)
+  }
+}
+
+watch(pageNumber, fetchProposals)
 
 onMounted(async () => {
   await fetchCurrentUser()
   await fetchRequest()
   await fetchProposals()
 })
-
-watch(pageNumber, fetchProposals)
 </script>
 
 <template>
@@ -144,18 +139,19 @@ watch(pageNumber, fetchProposals)
       v-for="proposal in proposals"
       :key="proposal.id"
       :class="[
-        'border rounded-lg p-4 mb-4 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800',
-        canNavigate(proposal) ? 'cursor-pointer' : 'cursor-default'
+        'border rounded-lg p-4 mb-4 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 relative',
+        'cursor-pointer'
       ]"
       @click="navigateTo(proposal)"
       style="border-color: #7733bc !important;"
     >
       <div class="text-sm text-gray-500 mb-1">
-        {{ '*********' + proposal.creatorCommercialRegisterNumber?.slice(-4) }}
-        <span class="float-left text-xs text-gray-400">
+        {{  proposal.creatorCommercialRegisterNumber }}
+       <h1 class=" text-xs text-gray-400">
           {{ new Date(proposal.createdAt).toLocaleString() }}
-        </span>
+       </h1>
       </div>
+       
       <div class="text-base text-gray-800 dark:text-white mb-2">
         {{ proposal.content }}
       </div>
@@ -166,7 +162,19 @@ watch(pageNumber, fetchProposals)
         عدد الردود: {{ proposal.repliesCount }}
       </div>
 
-      <div v-if="isRequestOwner()" class="mt-2 text-right">
+      <!-- تم اختيار العرض -->
+      <div v-if="proposal.statusValue === 1" class="mt-2">
+        <div class="text-green-700 font-semibold">✔ تم اختيار العرض</div>
+        <button
+          v-if="isRequestOwner()"
+          class="mt-1 bg-purple-700 hover:bg-purple-800 text-white px-3 py-1 rounded text-sm"
+        >
+          مراسلة
+        </button>
+      </div>
+
+      <!-- زر اختيار العرض -->
+      <div v-if="isRequestOwner() && projectRequest?.statusValue === 0" class="mt-2 text-right">
         <button
           class="text-white bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm"
           @click.stop="openSelectDialog(proposal.id)"
