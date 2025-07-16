@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRuntimeConfig } from '#imports'
 import { useLocalStorage } from '@vueuse/core'
@@ -21,7 +21,6 @@ const proposalContent = ref('')
 const editingReplyId = ref<string | null>(null)
 const editedContent = ref('')
 
-// 🟢 جلب الإيميل من الـ API بدل JWT
 const currentUserEmail = ref('')
 
 const fetchCurrentUser = async () => {
@@ -31,9 +30,7 @@ const fetchCurrentUser = async () => {
         Authorization: `Bearer ${token.value}`,
       },
     })
-
     if (!res.ok) throw new Error('فشل تحميل بيانات المستخدم')
-
     const user = await res.json()
     currentUserEmail.value = user.email
   } catch (err) {
@@ -44,6 +41,11 @@ const fetchCurrentUser = async () => {
 onMounted(async () => {
   await fetchCurrentUser()
   await fetchReplies()
+  startPolling() // 👈 نبدأ التحديث التلقائي
+})
+
+onUnmounted(() => {
+  if (pollingInterval.value) clearInterval(pollingInterval.value)
 })
 
 const fetchReplies = async () => {
@@ -65,8 +67,6 @@ const fetchReplies = async () => {
     if (!res.ok) throw new Error('فشل تحميل الردود')
 
     const data = await res.json()
-
-    // 🟡 تحديث بناءً على الشكل الجديد
     proposalContent.value = data.proposalContent
     replies.value = data.replies.items
     totalPages.value = data.replies.totalPages
@@ -130,7 +130,17 @@ const saveEdit = async () => {
 }
 
 watch(pageNumber, fetchReplies)
+
+// ⏱️ تحديث الردود تلقائيًا كل 5 ثوانٍ
+const pollingInterval = ref<any>(null)
+
+const startPolling = () => {
+  pollingInterval.value = setInterval(() => {
+    fetchReplies()
+  }, 5000) // كل 5 ثوانٍ
+}
 </script>
+
 
 <template>
   <div class="mt-6 px-2">
