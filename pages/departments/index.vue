@@ -43,13 +43,15 @@
         {{ $t('Next') }}
       </button>
     </div>
+            <Loader v-if="loader"/>
+
   </div>
 </template>
 
 <script setup lang="ts">
 const config = useRuntimeConfig()
 const locale = useI18n().locale
-
+const loader = ref(false)
 const sections = ref([])
 const page = ref(1)
 const pageSize = 6
@@ -61,6 +63,7 @@ const getTitle = (section: any) => {
 
 const fetchCategories = async () => {
   try {
+    loader.value = true
     const query = new URLSearchParams({
       PageNumber: page.value.toString(),
       PageSize: pageSize.toString()
@@ -71,8 +74,12 @@ const fetchCategories = async () => {
 
     sections.value = data.items || data // إذا كانت النتيجة ملفوفة في `items`
     totalPages.value = data.totalPages || Math.ceil((data.totalCount || 1) / pageSize)
+    
   } catch (err) {
     console.error('فشل في جلب الأقسام:', err)
+  }
+  finally{
+    loader.value = false
   }
 }
 

@@ -7,6 +7,10 @@ const repliesRef = ref<InstanceType<typeof RequestsGetReplies> | null>(null)
 const handleReplyAdded = () => {
   repliesRef.value?.fetchReplies()
 }
+definePageMeta({
+  middleware: ['auth-replies'],
+})
+
 </script>
 
 <template>

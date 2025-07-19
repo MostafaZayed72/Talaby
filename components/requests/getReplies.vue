@@ -137,15 +137,17 @@ const pollingInterval = ref<any>(null)
 const startPolling = () => {
   pollingInterval.value = setInterval(() => {
     fetchReplies()
-  }, 5000) // كل 5 ثوانٍ
+  }, 10000) // كل 5 ثوانٍ
 }
 </script>
 
 
 <template>
   <div class="mt-6 px-2">
-    <h2 class="text-xl font-bold mb-4 text-purple-600">تفاصيل العرض:</h2>
-
+<div class="flex justify-between align-center mb-4">
+      <h2 class="text-xl font-bold  text-purple-600">تفاصيل العرض:</h2>
+<RequestsCancelProposal />
+</div>
     <div class="bg-purple-100 p-4 rounded text-gray-800 mb-6 border-l-4 border-purple-600">
       {{ proposalContent }}
     </div>

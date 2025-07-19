@@ -165,7 +165,7 @@ onMounted(async () => {
         <div class="text-green-700 font-semibold">✔ تم اختيار العرض</div>
         <button
           v-if="isRequestOwner()"
-          class="mt-1 bg-purple-700 hover:bg-purple-800 text-white px-3 py-1 rounded text-sm"
+          class="mt-1 bg-purple-950 hover:bg-purple-900 text-white px-3 py-1 rounded text-sm"
         >
           مراسلة
         </button>
