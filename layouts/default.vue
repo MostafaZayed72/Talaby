@@ -52,6 +52,9 @@
           <NuxtLink to="/departments" @click="closeSidebar" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400">
             {{ $t('Departments') }}
           </NuxtLink>
+          <NuxtLink to="/payment" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
+          {{ $t('Payment') }}
+        </NuxtLink>
           <h1 v-if="isLoggedIn" @click="handleLogoutClick" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400">
             {{ $t('Logout') }}
           </h1>
