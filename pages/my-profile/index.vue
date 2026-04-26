@@ -77,68 +77,166 @@ onMounted(fetchUser)
 </script>
 
 <template>
-  <div class="max-w-4xl text-white text-center mx-auto p-6 mt-12 bg-purple-700 dark:bg-purple-600 rounded-xl shadow">
-    <h1 class="text-2xl font-bold mb-6 text-center">{{ t('My Profile') }}</h1>
+  <div class="min-h-screen pt-24 pb-12 px-6 relative overflow-hidden">
+    <!-- Background Decorations -->
+    <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-600/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 bg-violet-600/20 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2"></div>
 
-    <div v-if="error" class="text-red-500 mb-4 text-center">{{ error }}</div>
-    <div v-if="success" class="text-green-300 mb-4 text-center">{{ t('Profile updated successfully.') }}</div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div v-if="user.firstName">
-        <label class="font-medium block mb-1">{{ t('First Name') }}:</label>
-        <div v-if="editing">
-          <input v-model="user.firstName" class="input" />
+    <div class="max-w-4xl mx-auto relative z-10">
+      <!-- Profile Card -->
+      <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] overflow-hidden shadow-2xl">
+        <!-- Header / Avatar Section -->
+        <div class="relative h-48 bg-gradient-to-r from-indigo-600 to-violet-700 flex items-end justify-center pb-8">
+          <div class="absolute -bottom-16">
+            <div class="relative group">
+              <div class="w-32 h-32 rounded-3xl bg-white p-1 shadow-2xl transform transition-transform group-hover:scale-105 duration-500">
+                <img 
+                  :src="`https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random&size=128`" 
+                  class="w-full h-full rounded-2xl object-cover"
+                  alt="Avatar"
+                />
+              </div>
+              <div class="absolute bottom-2 right-2 bg-yellow-400 w-8 h-8 rounded-xl flex items-center justify-center text-violet-950 shadow-lg border-2 border-white cursor-pointer hover:scale-110 transition-transform">
+                <Icon name="ph:camera-bold" />
+              </div>
+            </div>
+          </div>
         </div>
-        <div v-else>{{ user.firstName }}</div>
-      </div>
 
-      <div v-if="user.lastName">
-        <label class="font-medium block mb-1">{{ t('Last Name') }}:</label>
-        <div v-if="editing">
-          <input v-model="user.lastName" class="input" />
+        <div class="pt-20 pb-12 px-8 md:px-16 text-center">
+          <h1 class="text-3xl font-black text-slate-900 dark:text-white mb-2">
+            {{ user.firstName }} {{ user.lastName }}
+          </h1>
+          <p class="text-indigo-600 dark:text-indigo-400 font-bold mb-10">{{ t('Member Since 2024') }}</p>
+
+          <div v-if="error" class="mb-6 p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 font-bold flex items-center justify-center gap-3">
+             <Icon name="ph:warning-circle-bold" class="text-xl" />
+             {{ error }}
+          </div>
+          
+          <div v-if="success" class="mb-6 p-4 rounded-2xl bg-green-500/10 border border-green-500/20 text-green-500 font-bold flex items-center justify-center gap-3">
+             <Icon name="ph:check-circle-bold" class="text-xl" />
+             {{ t('Profile updated successfully.') }}
+          </div>
+
+          <!-- Info Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-right">
+            <!-- First Name -->
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-bold text-sm uppercase tracking-widest px-2">
+                <Icon name="ph:user-bold" />
+                {{ t('First Name') }}
+              </label>
+              <div v-if="editing" class="relative">
+                <input v-model="user.firstName" class="w-full bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white" />
+              </div>
+              <div v-else class="bg-slate-50 dark:bg-white/5 rounded-2xl px-6 py-4 font-bold text-slate-900 dark:text-white border border-slate-100 dark:border-transparent">
+                {{ user.firstName || '---' }}
+              </div>
+            </div>
+
+            <!-- Last Name -->
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-bold text-sm uppercase tracking-widest px-2">
+                <Icon name="ph:identification-card-bold" />
+                {{ t('Last Name') }}
+              </label>
+              <div v-if="editing" class="relative">
+                <input v-model="user.lastName" class="w-full bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white" />
+              </div>
+              <div v-else class="bg-slate-50 dark:bg-white/5 rounded-2xl px-6 py-4 font-bold text-slate-900 dark:text-white border border-slate-100 dark:border-transparent">
+                {{ user.lastName || '---' }}
+              </div>
+            </div>
+
+            <!-- Mobile -->
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-bold text-sm uppercase tracking-widest px-2">
+                <Icon name="ph:phone-bold" />
+                {{ t('Mobile') }}
+              </label>
+              <div v-if="editing" class="relative">
+                <input v-model="user.mobile" class="w-full bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white" />
+              </div>
+              <div v-else class="bg-slate-50 dark:bg-white/5 rounded-2xl px-6 py-4 font-bold text-slate-900 dark:text-white border border-slate-100 dark:border-transparent">
+                {{ user.mobile || '---' }}
+              </div>
+            </div>
+
+            <!-- Email (Non-editable) -->
+            <div class="space-y-2">
+              <label class="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-bold text-sm uppercase tracking-widest px-2">
+                <Icon name="ph:envelope-simple-bold" />
+                {{ t('Email') }}
+              </label>
+              <div class="bg-slate-50/50 dark:bg-white/5 rounded-2xl px-6 py-4 font-bold text-slate-400 dark:text-slate-500 border border-slate-100 dark:border-transparent">
+                {{ user.email }}
+              </div>
+            </div>
+
+            <!-- Location -->
+            <div class="space-y-2 md:col-span-2">
+              <label class="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-bold text-sm uppercase tracking-widest px-2">
+                <Icon name="ph:map-pin-bold" />
+                {{ t('Location') }}
+              </label>
+              <div v-if="editing" class="relative">
+                <input v-model="user.location" class="w-full bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white" />
+              </div>
+              <div v-else class="bg-slate-50 dark:bg-white/5 rounded-2xl px-6 py-4 font-bold text-slate-900 dark:text-white border border-slate-100 dark:border-transparent text-right">
+                {{ user.location || '---' }}
+              </div>
+            </div>
+
+            <!-- Commercial Register (Conditional) -->
+            <div v-if="user.commercialRegisterNumber || editing" class="space-y-2 md:col-span-2">
+              <label class="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-bold text-sm uppercase tracking-widest px-2">
+                <Icon name="ph:article-bold" />
+                {{ t('Commercial Register Number') }}
+              </label>
+              <div v-if="editing" class="relative">
+                <input v-model="user.commercialRegisterNumber" class="w-full bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 focus:ring-2 focus:ring-indigo-500 outline-none transition-all dark:text-white" />
+              </div>
+              <div v-else class="bg-slate-50 dark:bg-white/5 rounded-2xl px-6 py-4 font-bold text-slate-900 dark:text-white border border-slate-100 dark:border-transparent">
+                {{ user.commercialRegisterNumber }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="mt-12 flex flex-wrap justify-center gap-6">
+            <button 
+              v-if="!editing" 
+              class="group relative bg-indigo-600 hover:bg-indigo-700 text-white font-black px-12 py-5 rounded-2xl transition-all transform hover:scale-105 shadow-2xl active:scale-95 flex items-center gap-3"
+              @click="editing = true"
+            >
+              <Icon name="ph:pencil-simple-line-bold" class="text-xl" />
+              {{ t('Edit Profile') }}
+            </button>
+
+            <button 
+              v-else 
+              class="group relative bg-green-600 hover:bg-green-700 text-white font-black px-12 py-5 rounded-2xl transition-all transform hover:scale-105 shadow-2xl active:scale-95 flex items-center gap-3"
+              :disabled="loading" 
+              @click="updateUser"
+            >
+              <template v-if="!loading">
+                <Icon name="ph:check-bold" class="text-xl" />
+                {{ t('Save Changes') }}
+              </template>
+              <span v-else class="animate-spin border-3 border-t-transparent border-white rounded-full w-6 h-6"></span>
+            </button>
+
+            <button 
+              v-if="editing" 
+              class="bg-slate-200 dark:bg-white/10 text-slate-700 dark:text-white font-black px-12 py-5 rounded-2xl hover:bg-slate-300 dark:hover:bg-white/20 transition-all active:scale-95 flex items-center gap-3"
+              @click="editing = false"
+            >
+              {{ t('Cancel') }}
+            </button>
+          </div>
         </div>
-        <div v-else>{{ user.lastName }}</div>
       </div>
-
-      <div v-if="user.mobile">
-        <label class="font-medium block mb-1">{{ t('Mobile') }}:</label>
-        <div v-if="editing">
-          <input v-model="user.mobile" class="input" />
-        </div>
-        <div v-else>{{ user.mobile }}</div>
-      </div>
-
-      <div v-if="user.email">
-        <label class="font-medium block mb-1">{{ t('Email') }}:</label>
-        <div>{{ user.email }}</div>
-      </div>
-
-      <div v-if="user.location">
-        <label class="font-medium block mb-1">{{ t('Location') }}:</label>
-        <div v-if="editing">
-          <input v-model="user.location" class="input" />
-        </div>
-        <div v-else>{{ user.location }}</div>
-      </div>
-
-      <div v-if="user.commercialRegisterNumber">
-        <label class="font-medium block mb-1">{{ t('Commercial Register Number') }}:</label>
-        <div v-if="editing">
-          <input v-model="user.commercialRegisterNumber" class="input" />
-        </div>
-        <div v-else>{{ user.commercialRegisterNumber }}</div>
-      </div>
-    </div>
-
-    <div class="mt-6 flex flex-wrap justify-center gap-4">
-      <button v-if="!editing" class="btn" @click="editing = true">{{ t('Edit') }}</button>
-
-      <button v-else class="btn" :disabled="loading" @click="updateUser">
-        <span v-if="!loading">{{ t('Save') }}</span>
-        <span v-else class="animate-spin border-2 border-t-transparent border-white rounded-full w-5 h-5"></span>
-      </button>
-
-      <button v-if="editing" class="btn-cancel" @click="editing = false">{{ t('Cancel') }}</button>
     </div>
   </div>
 </template>

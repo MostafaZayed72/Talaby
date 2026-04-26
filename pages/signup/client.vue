@@ -1,35 +1,129 @@
 <template>
-  <div class="h-screen flex flex-col items-center justify-center">
-    <div class="max-w-md p-6 shadow-md rounded-lg bg-purple-300">
-      <h1 class="text-2xl font-bold mb-6 text-center text-violet-600">
-        {{ $t('Sign up new client') }}
-      </h1>
-
-      <form @submit.prevent="registerClient" class="space-y-4">
-        <InputText v-model="firstName" :placeholder="$t('First Name')" required class="w-full bg-white" />
-        <InputText v-model="lastName" :placeholder="$t('Last Name')" required class="w-full bg-white" />
-        <InputText v-model="email" :placeholder="$t('Email')" type="email" required class="w-full bg-white" />
-        <InputText v-model="password" :placeholder="$t('Password')" type="password" required class="w-full bg-white" />
-        <InputText v-model="mobile" :placeholder="$t('Mobile Number')" required class="w-full bg-white" />
-        <InputText v-model="location" :placeholder="$t('City')" required class="w-full bg-white" />
-
-        <Button type="submit" :label="loading ? $t('Sending...') : $t('Register')" class="w-full bg-purple-darken-2 text-white" :disabled="loading" />
-      </form>
-
-      <Toast />
-      <Loader v-if="loading" />
-      
-      <!-- Dialog for success -->
-      <Dialog
-        v-model:visible="isDialogVisible"
-        :header="$t('Registered Successfully')"
-        modal
-        :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr' }"
-      >
-        <p>{{ $t('A link has been sent to your email to confirm your account') }}</p>
-        <Button  class=" w-full" :label="$t('Ok')" @click="goToHome" />
-      </Dialog>
+  <div class="min-h-screen relative flex items-center justify-center p-6 overflow-hidden">
+    <!-- Animated Background -->
+    <div class="absolute inset-0 z-0">
+      <div class="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/20 rounded-full blur-[120px]"></div>
+      <div class="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-violet-600/20 rounded-full blur-[120px]"></div>
     </div>
+
+    <div class="relative z-10 w-full max-w-2xl">
+      <!-- Signup Card -->
+      <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-8 md:p-12 shadow-2xl">
+        <div class="text-center mb-10">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-2xl shadow-xl mb-6">
+            <Icon name="ph:user-plus-bold" class="text-3xl text-white" />
+          </div>
+          <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight italic">
+            {{ $t('Create Client Account') }}
+          </h1>
+          <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium">
+            {{ $t('Join our community and discover professional services.') }}
+          </p>
+        </div>
+
+        <form @submit.prevent="registerClient" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- First Name -->
+            <div class="space-y-2 text-right">
+              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('First Name') }}</label>
+              <div class="relative">
+                <input v-model="firstName" :placeholder="$t('First Name')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
+              </div>
+            </div>
+            <!-- Last Name -->
+            <div class="space-y-2 text-right">
+              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Last Name') }}</label>
+              <div class="relative">
+                <input v-model="lastName" :placeholder="$t('Last Name')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="space-y-2 text-right">
+            <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Email') }}</label>
+            <div class="relative group">
+              <Icon name="ph:envelope-simple-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input v-model="email" :placeholder="$t('Email')" type="email" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="space-y-2 text-right">
+            <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Password') }}</label>
+            <div class="relative group">
+              <Icon name="ph:lock-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input v-model="password" :placeholder="$t('Password')" type="password" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Mobile -->
+            <div class="space-y-2 text-right">
+              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Mobile Number') }}</label>
+              <div class="relative group">
+                <Icon name="ph:phone-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input v-model="mobile" :placeholder="$t('Mobile Number')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
+              </div>
+            </div>
+            <!-- City -->
+            <div class="space-y-2 text-right">
+              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('City') }}</label>
+              <div class="relative group">
+                <Icon name="ph:map-pin-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input v-model="location" :placeholder="$t('City')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
+              </div>
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            :disabled="loading"
+            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl transition-all transform hover:scale-[1.02] shadow-2xl active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50"
+          >
+            <template v-if="!loading">
+              {{ $t('Register Account') }}
+              <Icon name="ph:rocket-launch-bold" />
+            </template>
+            <span v-else class="animate-spin border-3 border-t-transparent border-white rounded-full w-6 h-6"></span>
+          </button>
+        </form>
+
+        <p class="mt-8 text-center text-slate-500 dark:text-slate-400 font-medium">
+          {{ $t('Already have an account?') }}
+          <NuxtLink to="/login" class="text-indigo-600 dark:text-indigo-400 font-black hover:underline px-1">
+            {{ $t('Login Now') }}
+          </NuxtLink>
+        </p>
+      </div>
+    </div>
+
+    <Toast />
+    
+    <!-- Modern Dialog for success -->
+    <Dialog
+      v-model:visible="isDialogVisible"
+      modal
+      :closable="false"
+      class="rounded-3xl overflow-hidden border-none shadow-2xl bg-white dark:bg-slate-900"
+      :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr', width: '90vw', maxWidth: '450px' }"
+    >
+      <div class="text-center p-8">
+        <div class="w-20 h-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Icon name="ph:check-circle-bold" class="text-5xl" />
+        </div>
+        <h3 class="text-2xl font-black text-slate-900 dark:text-white mb-4">{{ $t('Registered Successfully') }}</h3>
+        <p class="text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
+          {{ $t('A link has been sent to your email to confirm your account') }}
+        </p>
+        <button 
+          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl transition-all shadow-xl active:scale-95"
+          @click="goToHome"
+        >
+          {{ $t('Explore Talaby') }}
+        </button>
+      </div>
+    </Dialog>
   </div>
 </template>
 

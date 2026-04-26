@@ -7,7 +7,7 @@
       <div class="flex items-center gap-4">
         <Icon @click="toggleSidebar" name="iconamoon:menu-burger-horizontal"
           class="md:hidden text-xl text-white cursor-pointer" />
-        <img src="/public/imgs/logo.png" class="w-12 h-12 cursor-pointer" alt="" style="border-radius: 50%;"
+        <img src="/imgs/logo.png" class="w-12 h-12 cursor-pointer" alt="" style="border-radius: 50%;"
           @click="navigateTo('/')">
       </div>
 

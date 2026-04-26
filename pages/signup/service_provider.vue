@@ -1,63 +1,167 @@
 <template>
-  <div class="h-screen flex flex-col items-center justify-center">
-    <div class="max-w-md p-6 shadow-md rounded-lg bg-purple-300 mx-auto">
-      <h1 class="text-2xl font-bold mb-6 text-center text-violet-600">
-        {{ $t('Sign up new store') }}
-      </h1>
-
-      <form @submit.prevent="registerStore" class="space-y-4">
-        <!-- رقم السجل التجاري -->
-        <InputText
-          v-model="commercialRegisterNumber"
-          :placeholder="$t('Commercial Register Number')"
-          required
-          class="w-full bg-white"
-            type="number"
-
-        />
-
-        <InputText v-model="firstName" :placeholder="$t('Trade Name')" required class="w-full bg-white" />
-        <InputText v-model="email" :placeholder="$t('Email')" type="email" required class="w-full bg-white" />
-        <InputText v-model="password" :placeholder="$t('Password')" type="password" required class="w-full bg-white" />
-        <InputText v-model="mobile" :placeholder="$t('Mobile Number')" required class="w-full bg-white" />
-        <InputText v-model="location" :placeholder="$t('City')" required class="w-full bg-white" />
-
-        <div>
-          <label class="block text-sm text-black mb-1">{{ $t('Commercial Register Image') }}</label>
-          <input type="file" @change="handleImageUpload" accept="image/*" class="w-full bg-white p-1" />
-        </div>
-
-        <div>
-          <label class="block text-sm text-black mb-1">{{ $t('Select Store Category') }}</label>
-          <select v-model="selectedCategoryId" class="w-full bg-white p-2 rounded">
-            <option disabled value="">-- {{ $t('Select a category') }} --</option>
-            <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-              {{ `${cat.nameEn} / ${cat.nameAr}` }}
-            </option>
-          </select>
-        </div>
-
-        <Button
-          type="submit"
-          :label="loading ? $t('Sending...') : $t('Register')"
-
-          class="w-full bg-purple-darken-2 text-white"
-          :disabled="loading"
-        />
-      </form>
-
-      <Toast />
-      <Loader v-if="loading" />
-      <Dialog
-        v-model:visible="isDialogVisible"
-        :header="$t('Registered Successfully')"
-        modal
-        :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr' }"
-      >
-        <p>{{ $t('A link has been sent to your email to confirm your account') }}</p>
-        <Button class=" w-full" :label="$t('Ok')" @click="goToHome" />
-      </Dialog>
+  <div class="min-h-screen relative flex items-center justify-center p-6 overflow-hidden">
+    <!-- Animated Background -->
+    <div class="absolute inset-0 z-0">
+      <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/20 rounded-full blur-[120px]"></div>
+      <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-violet-600/20 rounded-full blur-[120px]"></div>
     </div>
+
+    <div class="relative z-10 w-full max-w-3xl">
+      <!-- Signup Card -->
+      <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-8 md:p-12 shadow-2xl overflow-hidden">
+        <div class="text-center mb-10">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-yellow-400 rounded-2xl shadow-xl mb-6">
+            <Icon name="ph:briefcase-bold" class="text-3xl text-violet-950" />
+          </div>
+          <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight italic">
+            {{ $t('Sign up as Store') }}
+          </h1>
+          <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium">
+            {{ $t('Join our marketplace and reach thousands of customers.') }}
+          </p>
+        </div>
+
+        <form @submit.prevent="registerStore" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Commercial Register Number -->
+            <div class="space-y-2 text-right">
+              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Commercial Register Number') }}</label>
+              <div class="relative group">
+                <Icon name="ph:hash-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input v-model="commercialRegisterNumber" type="number" :placeholder="$t('Commercial Register Number')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
+              </div>
+            </div>
+
+            <!-- Trade Name -->
+            <div class="space-y-2 text-right">
+              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Trade Name') }}</label>
+              <div class="relative group">
+                <Icon name="ph:storefront-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input v-model="firstName" :placeholder="$t('Trade Name')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="space-y-2 text-right">
+              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Email') }}</label>
+              <div class="relative group">
+                <Icon name="ph:envelope-simple-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input v-model="email" type="email" :placeholder="$t('Email')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
+              </div>
+            </div>
+
+            <!-- Password -->
+            <div class="space-y-2 text-right">
+              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Password') }}</label>
+              <div class="relative group">
+                <Icon name="ph:lock-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input v-model="password" type="password" :placeholder="$t('Password')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
+              </div>
+            </div>
+
+            <!-- Mobile -->
+            <div class="space-y-2 text-right">
+              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Mobile Number') }}</label>
+              <div class="relative group">
+                <Icon name="ph:phone-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input v-model="mobile" :placeholder="$t('Mobile Number')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
+              </div>
+            </div>
+
+            <!-- City -->
+            <div class="space-y-2 text-right">
+              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('City') }}</label>
+              <div class="relative group">
+                <Icon name="ph:map-pin-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input v-model="location" :placeholder="$t('City')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Selection -->
+          <div class="space-y-2 text-right">
+            <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Select Store Category') }}</label>
+            <div class="relative group">
+              <Icon name="ph:grid-four-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+              <select v-model="selectedCategoryId" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white appearance-none">
+                <option disabled value="">-- {{ $t('Select a category') }} --</option>
+                <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                  {{ locale === 'ar' ? cat.nameAr : cat.nameEn }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Commercial Register Image Upload -->
+          <div class="space-y-2 text-right">
+            <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Commercial Register Image') }}</label>
+            <div class="relative">
+              <div class="flex items-center justify-center w-full">
+                <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-200 dark:border-white/10 border-dashed rounded-2xl cursor-pointer bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 transition-all">
+                  <div v-if="!commercialRegisterImageUrl" class="flex flex-col items-center justify-center pt-5 pb-6">
+                    <Icon name="ph:cloud-arrow-up-bold" class="text-3xl text-slate-400 mb-2" />
+                    <p class="text-sm text-slate-500 dark:text-slate-400 font-bold">{{ $t('Click to upload image') }}</p>
+                  </div>
+                  <div v-else class="flex items-center gap-4 p-4">
+                    <img :src="commercialRegisterImageUrl" class="w-16 h-16 rounded-xl object-cover" />
+                    <span class="text-green-500 font-bold flex items-center gap-2">
+                      <Icon name="ph:check-circle-fill" />
+                      {{ $t('Uploaded') }}
+                    </span>
+                  </div>
+                  <input type="file" @change="handleImageUpload" accept="image/*" class="hidden" />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            :disabled="loading"
+            class="w-full bg-violet-800 hover:bg-violet-900 text-white font-black py-4 rounded-2xl transition-all transform hover:scale-[1.02] shadow-2xl active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50"
+          >
+            <template v-if="!loading">
+              {{ $t('Register Store') }}
+              <Icon name="ph:rocket-launch-bold" />
+            </template>
+            <span v-else class="animate-spin border-3 border-t-transparent border-white rounded-full w-6 h-6"></span>
+          </button>
+        </form>
+
+        <p class="mt-8 text-center text-slate-500 dark:text-slate-400 font-medium">
+          {{ $t('Already have an account?') }}
+          <NuxtLink to="/login" class="text-indigo-600 dark:text-indigo-400 font-black hover:underline px-1">
+            {{ $t('Login Now') }}
+          </NuxtLink>
+        </p>
+      </div>
+    </div>
+
+    <Toast />
+    
+    <Dialog
+      v-model:visible="isDialogVisible"
+      modal
+      :closable="false"
+      class="rounded-3xl overflow-hidden border-none shadow-2xl bg-white dark:bg-slate-900"
+      :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr', width: '90vw', maxWidth: '450px' }"
+    >
+      <div class="text-center p-8">
+        <div class="w-20 h-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Icon name="ph:check-circle-bold" class="text-5xl" />
+        </div>
+        <h3 class="text-2xl font-black text-slate-900 dark:text-white mb-4">{{ $t('Registered Successfully') }}</h3>
+        <p class="text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
+          {{ $t('A link has been sent to your email to confirm your account') }}
+        </p>
+        <button 
+          class="w-full bg-violet-800 hover:bg-violet-900 text-white font-black py-4 rounded-2xl transition-all shadow-xl active:scale-95"
+          @click="goToHome"
+        >
+          {{ $t('Go to Dashboard') }}
+        </button>
+      </div>
+    </Dialog>
   </div>
 </template>
 

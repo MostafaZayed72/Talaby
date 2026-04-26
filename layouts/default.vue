@@ -1,63 +1,135 @@
 <template>
   <div :class="{ 'dark': isDarkMode }" :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr' }">
-    <img src="/public/22.png" class="fixed top-10  left-[-20px] z-[-1] md:w-[30%]" alt="">
-    <img src="/public/11.png" class="fixed bottom-0  left-[-20px] z-[-1] md:w-[30%]" alt="">
-    <img src="/public/33.png" class="fixed bottom-0  right-[-20px] z-[-1] w-[50%] md:w-[30%]" alt="">
+    <img src="/22.png" class="fixed top-10  left-[-20px] z-[-1] md:w-[30%]" alt="">
+    <img src="/11.png" class="fixed bottom-0  left-[-20px] z-[-1] md:w-[30%]" alt="">
+    <img src="/33.png" class="fixed bottom-0  right-[-20px] z-[-1] w-[50%] md:w-[30%]" alt="">
 
-    <div class="mb-0 px-4 flex justify-between items-center py-2 shadow-xl sticky top-0 z-10" style="background-color: #4a3a6e;">
-      <div class="flex items-center gap-4">
-        <Icon @click="toggleSidebar" name="iconamoon:menu-burger-horizontal" class="md:hidden text-xl text-white cursor-pointer" />
-        <img src="/public/imgs/logo.png" class="w-12 h-12 cursor-pointer" alt="" style="border-radius: 50%;" @click="() => router.push('/')">
+    <!-- Professional Adaptive Header -->
+    <header 
+      class="sticky top-0 z-50 transition-all duration-500 backdrop-blur-lg border-b border-white/10"
+      :class="{ 
+        'bg-violet-950 shadow-2xl py-2': !isAtTop, 
+        'bg-violet-950/60 py-4': isAtTop 
+      }"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16 md:h-20">
+          <!-- Logo & Mobile Toggle -->
+          <div class="flex items-center gap-4">
+            <button 
+              @click="toggleSidebar" 
+              class="md:hidden p-2 rounded-xl hover:bg-white/10 transition-colors text-white"
+              aria-label="Toggle Menu"
+            >
+              <Icon :name="isSidebarOpen ? 'ph:x-bold' : 'ph:list-bold'" class="text-2xl" />
+            </button>
+            
+            <div 
+              @click="() => router.push('/')" 
+              class="flex items-center gap-3 cursor-pointer group"
+            >
+              <img 
+                src="/imgs/logo.png" 
+                class="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-yellow-400 group-hover:scale-110 transition-transform shadow-xl" 
+                alt="Talaby Logo"
+              >
+              <span class="hidden sm:block text-2xl font-black text-white tracking-tighter italic">
+                TALABY<span class="text-yellow-400">.</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Desktop Navigation -->
+          <nav class="hidden md:flex items-center gap-2">
+            <NuxtLink 
+              v-for="link in navLinks" 
+              :key="link.to"
+              :to="link.to"
+              class="px-5 py-2.5 rounded-xl font-bold text-slate-100 hover:text-yellow-400 hover:bg-white/10 transition-all duration-300 relative group"
+              active-class="text-yellow-400 bg-white/10 shadow-inner"
+            >
+              {{ $t(link.label) }}
+              <span class="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-1 bg-yellow-400 rounded-full transition-all group-hover:w-4 group-[.router-link-active]:w-6"></span>
+            </NuxtLink>
+          </nav>
+
+          <!-- Actions -->
+          <div class="flex items-center gap-2 md:gap-4">
+            <div class="hidden sm:flex items-center gap-1 border-r border-white/20 pr-4 mr-2">
+               <DarkModeToggle />
+               <LanguageSwitcher />
+            </div>
+            
+            <template v-if="isLoggedIn">
+              <NuxtLink to="/my-profile" class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-white transition-all hover:scale-110" title="Profile">
+                <Icon name="ph:user-circle-fill" class="text-2xl" />
+              </NuxtLink>
+              <button @click="logout" class="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white p-2.5 rounded-xl transition-all" title="Logout">
+                <Icon name="ph:sign-out-bold" class="text-2xl" />
+              </button>
+            </template>
+            <NuxtLink v-else to="/login" class="bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black px-6 py-3 rounded-xl transition-all transform hover:scale-105 shadow-[0_10px_20px_rgba(234,179,8,0.3)] active:scale-95 text-sm md:text-base">
+              {{ $t('Login') }}
+            </NuxtLink>
+          </div>
+        </div>
       </div>
+    </header>
 
-      <div class="links md:flex items-center gap-4 hidden">
-        <NuxtLink to="/" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
-          {{ $t('Home') }}
-        </NuxtLink>
-        <NuxtLink v-if="!isLoggedIn" to="/login" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
-          {{ $t('Login') }}
-        </NuxtLink>
-        <NuxtLink v-if="isLoggedIn" to="/my-profile" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
-          {{ $t('My profile') }}
-        </NuxtLink>
-        <NuxtLink to="/departments" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
-          {{ $t('Departments') }}
-        </NuxtLink>
-        <NuxtLink to="/payment" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
-          {{ $t('Payment') }}
-        </NuxtLink>
-      </div>
+    <!-- Professional Sidebar for Mobile -->
+    <transition name="sidebar-slide">
+      <div v-if="isSidebarOpen" class="fixed inset-0 z-[60] md:hidden">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="closeSidebar"></div>
+        
+        <!-- Sidebar Content -->
+        <div 
+          class="absolute top-0 bottom-0 w-80 bg-violet-950 shadow-2xl border-r border-white/10 flex flex-col"
+          :class="locale === 'ar' ? 'right-0' : 'left-0'"
+        >
+          <div class="p-6 border-b border-white/10 flex justify-between items-center bg-violet-900/50">
+            <div class="flex items-center gap-2">
+              <img src="/imgs/logo.png" class="w-10 h-10 rounded-full border border-yellow-400" alt="">
+              <span class="text-xl font-bold text-white tracking-tighter">TALABY</span>
+            </div>
+            <Icon @click="closeSidebar" name="ph:x-bold" class="text-2xl text-white cursor-pointer hover:rotate-90 transition-transform" />
+          </div>
 
-      <div class="flex items-center">
-        <Icon class="text-3xl cursor-pointer text-white hidden md:flex" name="ic:twotone-log-out" v-if="isLoggedIn" @click="logout" />
-        <LanguageSwitcher />
-        <DarkModeToggle />
-        <FloatingActions />
-      </div>
-    </div>
+          <div class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+            <NuxtLink 
+              v-for="link in navLinks" 
+              :key="link.to"
+              :to="link.to"
+              @click="closeSidebar"
+              class="flex items-center gap-4 p-4 rounded-2xl font-bold text-slate-100 hover:bg-white/10 hover:text-yellow-400 transition-all"
+              active-class="bg-white/10 text-yellow-400"
+            >
+              <Icon :name="link.icon" class="text-xl" />
+              {{ $t(link.label) }}
+            </NuxtLink>
+            
+            <div class="pt-4 border-t border-white/10 mt-4 space-y-4">
+               <div class="flex items-center justify-between px-4">
+                  <span class="text-slate-400 font-medium">{{ $t('Appearance') }}</span>
+                  <DarkModeToggle />
+               </div>
+               <div class="flex items-center justify-between px-4">
+                  <span class="text-slate-400 font-medium">{{ $t('Language') }}</span>
+                  <LanguageSwitcher />
+               </div>
+            </div>
+          </div>
 
-    <!-- Sidebar for Mobile -->
-    <transition name="slide">
-      <div v-if="isSidebarOpen" class="md:hidden border-t-2 border-violet-600 h-screen fixed z-10" style="background-color: #4a3a6e;">
-        <div class="flex flex-col p-4">
-          <NuxtLink to="/" @click="closeSidebar" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400">
-            {{ $t('Home') }}
-          </NuxtLink>
-          <NuxtLink v-if="!isLoggedIn" to="/login" @click="closeSidebar" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400">
-            {{ $t('Login') }}
-          </NuxtLink>
-          <NuxtLink v-if="isLoggedIn" to="/my-profile" @click="closeSidebar" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400">
-            {{ $t('My profile') }}
-          </NuxtLink>
-          <NuxtLink to="/departments" @click="closeSidebar" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400">
-            {{ $t('Departments') }}
-          </NuxtLink>
-          <NuxtLink to="/payment" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400" active-class="bg-violet-950 text-yellow-400" exact-active-class="bg-violet-950 text-yellow-400">
-          {{ $t('Payment') }}
-        </NuxtLink>
-          <h1 v-if="isLoggedIn" @click="handleLogoutClick" class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400">
-            {{ $t('Logout') }}
-          </h1>
+          <div class="p-6 border-t border-white/10 bg-violet-900/50">
+            <button v-if="isLoggedIn" @click="handleLogoutClick" class="w-full flex items-center justify-center gap-2 bg-red-500/20 hover:bg-red-500 text-red-500 hover:text-white py-4 rounded-2xl font-bold transition-all">
+              <Icon name="ic:twotone-log-out" class="text-xl" />
+              {{ $t('Logout') }}
+            </button>
+            <NuxtLink v-else to="/login" @click="closeSidebar" class="w-full flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-violet-950 py-4 rounded-2xl font-bold transition-all shadow-lg">
+              <Icon name="ph:sign-in-bold" class="text-xl" />
+              {{ $t('Login') }}
+            </NuxtLink>
+          </div>
         </div>
       </div>
     </transition>
@@ -83,17 +155,23 @@ const token = useLocalStorage('token', null);
 const userID = ref();
 const roles = ref();
 const isSidebarOpen = ref(false);
-const isDropdownOpen = ref(false);
+const isAtTop = ref(true);
+
+const navLinks = [
+  { to: '/', label: 'Home', icon: 'ph:house-fill' },
+  { to: '/departments', label: 'Departments', icon: 'ph:grid-four-fill' },
+  { to: '/payment', label: 'Payment', icon: 'ph:credit-card-fill' },
+];
 
 const isLoggedIn = computed(() => !!token.value);
-const user = useState('currentUser', () => null)
+const user = useState('currentUser', () => null);
 
 const logout = () => {
   localStorage.removeItem('userID');
   localStorage.removeItem('roles');
-  token.value = null; // مهم جدًا لتحديث الحالة
-  user.value=null
-  router.push('/login'); // التوجيه لصفحة تسجيل الدخول
+  token.value = null;
+  user.value = null;
+  router.push('/login');
 };
 
 const handleLogoutClick = () => {
@@ -113,17 +191,23 @@ const handleStorageChange = (event) => {
   }
 };
 
+const handleScroll = () => {
+  isAtTop.value = window.scrollY < 20;
+};
+
 onMounted(() => {
   checkToken();
   loading.value = false;
   userID.value = localStorage.getItem("userID");
   roles.value = localStorage.getItem("roles");
   window.addEventListener('storage', handleStorageChange);
+  window.addEventListener('scroll', handleScroll);
   document.addEventListener('click', closeDropdownOnClickOutside);
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('storage', handleStorageChange);
+  window.removeEventListener('scroll', handleScroll);
   document.removeEventListener('click', closeDropdownOnClickOutside);
 });
 
@@ -169,91 +253,32 @@ watch(token, (newToken) => {
 });
 </script>
 
+<style>
+:root {
+  --header-bg: transparent;
+}
+</style>
+
 <style scoped>
-body.dark {
-  background-color: #1e1e1e;
-  color: white;
+.sidebar-slide-enter-active,
+.sidebar-slide-leave-active {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.slide-enter-active,
-.slide-leave-active {
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-}
-
-.slide-enter,
-.slide-leave-to {
+.sidebar-slide-enter-from,
+.sidebar-slide-leave-to {
   opacity: 0;
   transform: translateX(-100%);
 }
 
-.slide-enter-to,
-.slide-leave {
+[dir="rtl"] .sidebar-slide-enter-from,
+[dir="rtl"] .sidebar-slide-leave-to {
+  transform: translateX(100%);
+}
+
+.sidebar-slide-enter-to,
+.sidebar-slide-leave-from {
   opacity: 1;
   transform: translateX(0);
-}
-
-.slide-enter {
-  opacity: 0;
-  transform: translateX(-20px);
-}
-
-.dark .p-menubar .p-menubar-root-list {
-  color: white;
-}
-
-.p-menuitem {
-  color: black;
-}
-
-.dark .p-menuitem {
-  color: white;
-}
-
-.p-menubar {
-  color: white;
-}
-
-.relative {
-  position: relative;
-}
-
-.absolute {
-  position: absolute;
-}
-
-.z-10 {
-  z-index: 10;
-}
-
-.bg-white {
-  background-color: white;
-}
-
-.text-black {
-  color: black;
-}
-
-.shadow-lg {
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-}
-
-.rounded {
-  border-radius: 0.25rem;
-}
-
-.hover\:bg-gray-100:hover {
-  background-color: #f7fafc;
-}
-
-.w-full {
-  width: 100%;
-}
-
-.mt-2 {
-  margin-top: 0.5rem;
-}
-
-.right-0 {
-  right: 0;
 }
 </style>

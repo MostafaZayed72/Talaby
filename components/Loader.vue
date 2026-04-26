@@ -1,39 +1,29 @@
 <template>
-    <div class="loader">
-      <img src="/public/imgs/logo.png" class="spinner" alt="logo" />
+  <div class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/40 backdrop-blur-md">
+    <div class="relative">
+      <!-- Glow Effect -->
+      <div class="absolute inset-0 bg-indigo-600 rounded-full blur-3xl opacity-20 animate-pulse"></div>
+      
+      <!-- Logo Container -->
+      <div class="relative bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] shadow-2xl border border-white/20 animate-float">
+        <img src="/imgs/logo.png" class="w-24 h-auto" alt="Talaby Logo" />
+      </div>
+      
+      <!-- Progress Ring -->
+      <div class="absolute -inset-4 border-4 border-indigo-600/20 border-t-indigo-600 rounded-full animate-spin"></div>
     </div>
-  </template>
-  
-  <script setup>
-  </script>
-  
-  <style scoped>
-  .loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(10, 91, 138, 0.247);
-    /* خلفية شفافة */
-    z-index: 9999;
-  }
-  
-  
-  
-  .spinner {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    animation: spin 2s linear infinite;
-  }
-  
-  @keyframes spin {
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-  </style>
+  </div>
+</template>
+
+<script setup>
+</script>
+
+<style scoped>
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+</style>

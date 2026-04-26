@@ -1,67 +1,43 @@
 <template>
-  <div :class="{ 'dark': isDarkMode }" :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr' }">
-    <img src="/public/22.png" class="fixed top-10  left-[-20px] z-[-1] md:w-[30%]" alt="">
-    <img src="/public/11.png" class="fixed bottom-0  left-[-20px] z-[-1] md:w-[30%]" alt="">
-    <img src="/public/33.png" class="fixed bottom-0  right-[-20px] z-[-1] w-[50%] md:w-[30%]" alt="">
-    <div class="mb-0 px-4 bg-violet-950 flex justify-between items-center py-2 shadow-xl sticky top-0 z-10 ">
-      <div class="flex items-center gap-4">
-        <!-- <Icon @click="toggleSidebar" name="iconamoon:menu-burger-horizontal"
-            class="md:hidden text-xl text-white cursor-pointer" /> -->
-        <img src="/public/imgs/logo.png" class="w-12 h-12 cursor-pointer" alt="" style="border-radius: 50%;"
-          @click="navigateTo('/')">
-      </div>
+  <div :class="{ 'dark': isDarkMode }" :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr' }" class="bg-slate-50 dark:bg-slate-950 transition-colors duration-500 min-h-screen">
+    <!-- Premium Header -->
+    <header class="fixed top-0 left-0 right-0 z-[100] transition-all duration-500 bg-violet-950/80 backdrop-blur-xl border-b border-white/10">
+      <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div class="flex items-center gap-8">
+          <NuxtLink to="/" class="flex items-center gap-3 group">
+            <div class="bg-white p-1 rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
+              <img src="/imgs/logo.png" class="w-10 h-10" alt="Logo">
+            </div>
+            <span class="text-2xl font-black text-white italic tracking-tighter group-hover:text-yellow-400 transition-colors">TALABY</span>
+          </NuxtLink>
+        </div>
 
-      <!-- الروابط في الشاشات الكبيرة -->
-      <div class="links md:flex items-center gap-4 hidden">
-        <NuxtLink
-          class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-          to="/admin/products" active-class="bg-violet-950 text-yellow-400"
-          exact-active-class="bg-violet-950 text-yellow-400">
-          {{ $t('Products') }}
-        </NuxtLink>
-
-
-
-
-
-      </div>
-      <div class="flex items-center ">
-
-        <Icon class="text-3xl cursor-pointer text-white hidden md:flex" name="ic:twotone-log-out" v-if="token"
-          @click="logout" />
-        <LanguageSwitcher />
-
-        <DarkModeToggle />
-      </div>
-    </div>
-
-    <!-- Burger Menu Transition for Small Screens -->
-    <transition name="slide">
-      <div v-if="isSidebarOpen" class="bg-violet-950 md:hidden border-t-2 border-violet-600 h-screen fixed z-10">
-        <div class="flex flex-col p-4">
-          <NuxtLink
-            class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400"
-            to="/admin/products" active-class="bg-violet-950 text-yellow-400"
-            exact-active-class="bg-violet-950 text-yellow-400">
-            {{ $t('Products') }}
+        <div class="flex items-center gap-4">
+          <LanguageSwitcher />
+          <DarkModeToggle />
+          
+          <NuxtLink 
+            v-if="!token"
+            to="/login" 
+            class="bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black px-6 py-2.5 rounded-2xl shadow-lg transition-all active:scale-95 hidden md:flex"
+          >
+            {{ $t('Login') }}
           </NuxtLink>
 
-
-
-          <h1 v-if="token" @click="logout"
-            class="hover:bg-violet-950 px-4 py-2 rounded-lg delayed cursor-pointer font-bold text-slate-50 hover:text-yellow-400">
-            {{ $t('Logout') }}
-          </h1>
-
-
+          <button 
+            v-if="token"
+            @click="logout"
+            class="bg-white/10 hover:bg-white/20 text-white font-bold p-2.5 rounded-2xl transition-all"
+          >
+            <Icon name="ph:sign-out-bold" class="text-xl" />
+          </button>
         </div>
       </div>
-    </transition>
+    </header>
 
     <Loader v-if="loading" />
-    <main class="p-0">
+    <main>
       <slot />
-
     </main>
   </div>
 </template>

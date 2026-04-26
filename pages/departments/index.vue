@@ -1,50 +1,68 @@
 <template>
-  <div class="py-20 px-4 max-w-6xl mx-auto">
-    <h1 class="text-3xl font-bold text-center mb-10 text-violet-600 dark:text-violet-400">
-      {{ $t('Departments') }}
-    </h1>
-    <!-- الأقسام -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-10">
-      <div
-        v-for="section in sections"
-        :key="section.id"
-        class="text-center"
-      >
-        <NuxtLink :to="`/departments/${section.id}`">
+  <div class="min-h-screen pb-20 px-6 relative overflow-hidden">
+    <!-- Background Decorations -->
+    <div class="absolute top-0 left-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-violet-600/10 rounded-full blur-[120px] translate-x-1/2 translate-y-1/2"></div>
+
+    <div class="max-w-7xl mx-auto relative z-10">
+      <div class="text-center mb-16">
+        <h1 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 tracking-tight italic">
+          {{ $t('Explore Departments') }}
+        </h1>
+        <p class="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto font-medium text-lg leading-relaxed">
+          {{ $t('Browse through our wide range of professional categories and find the perfect service for your needs.') }}
+        </p>
+      </div>
+
+      <!-- Departments Grid -->
+      <div v-if="loader" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div v-for="i in 6" :key="i" class="animate-pulse rounded-[2.5rem] aspect-[4/3] bg-slate-200 dark:bg-white/5"></div>
+      </div>
+
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <NuxtLink 
+          v-for="section in sections" 
+          :key="section.id"
+          :to="`/departments/${section.id}`"
+          class="group relative overflow-hidden rounded-[2.5rem] aspect-[4/3] shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-white/10"
+        >
           <img
-            :src="section.imageUrl"
+            :src="section.imageUrl || 'https://images.unsplash.com/photo-1510511459019-5dee9954889c?q=80&w=600&auto=format&fit=crop'"
             :alt="getTitle(section)"
-            class="w-full h-48 object-cover rounded-xl shadow-lg hover:scale-105 transition-transform duration-300"
+            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
-          <h2 class="mt-4 text-lg font-semibold text-gray-800 dark:text-white hover:text-primary transition">
-            {{ getTitle(section) }}
-          </h2>
+          <div class="absolute inset-0 bg-gradient-to-t from-violet-950/90 via-violet-900/20 to-transparent flex flex-col justify-end p-8">
+            <h2 class="text-2xl font-black text-white group-hover:text-yellow-400 transition-colors">
+              {{ getTitle(section) }}
+            </h2>
+            <div class="h-1 w-0 bg-yellow-400 rounded-full group-hover:w-12 transition-all duration-500 mt-2"></div>
+          </div>
         </NuxtLink>
       </div>
+
+      <!-- Pagination Controls -->
+      <div v-if="totalPages > 1" class="mt-20 flex justify-center items-center gap-6">
+        <button
+          class="p-4 bg-white/10 dark:bg-white/5 backdrop-blur-xl border border-white/20 text-slate-700 dark:text-white rounded-2xl disabled:opacity-30 hover:bg-white dark:hover:bg-white/10 hover:text-indigo-600 transition-all shadow-xl active:scale-90"
+          :disabled="page === 1"
+          @click="page--"
+        >
+          <Icon name="ph:arrow-left-bold" class="text-xl" />
+        </button>
+
+        <div class="bg-white/10 dark:bg-white/5 backdrop-blur-xl border border-white/20 px-8 py-4 rounded-2xl shadow-xl font-black text-slate-900 dark:text-white">
+          {{ page }} <span class="mx-2 text-slate-400 font-medium">/</span> {{ totalPages }}
+        </div>
+
+        <button
+          class="p-4 bg-white/10 dark:bg-white/5 backdrop-blur-xl border border-white/20 text-slate-700 dark:text-white rounded-2xl disabled:opacity-30 hover:bg-white dark:hover:bg-white/10 hover:text-indigo-600 transition-all shadow-xl active:scale-90"
+          :disabled="page === totalPages"
+          @click="page++"
+        >
+          <Icon name="ph:arrow-right-bold" class="text-xl" />
+        </button>
+      </div>
     </div>
-
-    <!-- Pagination Controls -->
-    <div class="flex justify-center items-center gap-4">
-      <button
-        class="px-4 py-2 bg-violet-500 dark:bg-violet-400 text-white rounded disabled:opacity-50"
-        :disabled="page === 1"
-        @click="page--"
-      >
-        {{ $t('Previous') }}
-      </button>
-
-      <span class="text-lg">{{ page }} / {{ totalPages }}</span>
-
-      <button
-        class="px-4 py-2 bg-violet-500 dark:bg-violet-400 text-white rounded disabled:opacity-50"
-        :disabled="page === totalPages"
-        @click="page++"
-      >
-        {{ $t('Next') }}
-      </button>
-    </div>
-            <Loader v-if="loader"/>
-
   </div>
 </template>
 
