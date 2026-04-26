@@ -34,7 +34,7 @@ const fetchUser = async () => {
         Authorization: `Bearer ${token.value}`
       }
     })
-    user.value = res.data
+    user.value = res.data.data
   } catch (err) {
     error.value = t('Failed to fetch user data.')
   } finally {
@@ -77,7 +77,7 @@ onMounted(fetchUser)
 </script>
 
 <template>
-  <div class="min-h-screen pt-24 pb-12 px-6 relative overflow-hidden">
+  <div class="min-h-screen pb-12 px-6 relative overflow-hidden">
     <!-- Background Decorations -->
     <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-600/20 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
     <div class="absolute bottom-0 left-0 w-96 h-96 bg-violet-600/20 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2"></div>
@@ -86,19 +86,10 @@ onMounted(fetchUser)
       <!-- Profile Card -->
       <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] overflow-hidden shadow-2xl">
         <!-- Header / Avatar Section -->
-        <div class="relative h-48 bg-gradient-to-r from-indigo-600 to-violet-700 flex items-end justify-center pb-8">
+        <div class="relative h-40 bg-gradient-to-r from-indigo-600 to-violet-700 flex items-end justify-center pb-8">
           <div class="absolute -bottom-16">
-            <div class="relative group">
-              <div class="w-32 h-32 rounded-3xl bg-white p-1 shadow-2xl transform transition-transform group-hover:scale-105 duration-500">
-                <img 
-                  :src="`https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=random&size=128`" 
-                  class="w-full h-full rounded-2xl object-cover"
-                  alt="Avatar"
-                />
-              </div>
-              <div class="absolute bottom-2 right-2 bg-yellow-400 w-8 h-8 rounded-xl flex items-center justify-center text-violet-950 shadow-lg border-2 border-white cursor-pointer hover:scale-110 transition-transform">
-                <Icon name="ph:camera-bold" />
-              </div>
+            <div class="w-32 h-32 rounded-3xl bg-white dark:bg-slate-800 flex items-center justify-center shadow-2xl border-4 border-indigo-600/10">
+              <Icon name="ph:user-circle-fill" class="text-8xl text-indigo-600 dark:text-indigo-400" />
             </div>
           </div>
         </div>

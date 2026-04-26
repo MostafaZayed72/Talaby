@@ -103,6 +103,7 @@ import { useRouter } from 'vue-router'
 import { useLocalStorage } from '@vueuse/core'
 
 
+const { t } = useI18n()
 const config = useRuntimeConfig()
 const email = ref('')
 const password = ref('')
@@ -123,16 +124,22 @@ const loginUser = async () => {
       password: password.value
     })
 
-    // يفترض هنا إن الريسبونس يحتوي على هذه البيانات (عدّل حسب الاستجابة الحقيقية)
-    const { token: newToken, userID: newUserID, roles: newRoles } = response.data
+    // Extract data from the new response structure (response.data.data)
+    const userData = response.data.data
+    const { token: newToken, roles: newRoles, userTypeName, userTypeValue } = userData
 
     token.value = newToken
-    userID.value = newUserID
+    userID.value = userData.userID || userData.id || '' // Handle different ID keys if necessary
     roles.value = newRoles || []
 
-    toast.add({ severity: 'success', summary: 'نجاح', detail: 'تم تسجيل الدخول بنجاح' })
+    toast.add({ severity: 'success', summary: t('Success'), detail: t('Login successful') })
 
-    router.push('/')
+    // Redirect based on role or type
+    if (newRoles?.includes('Admin') || userTypeName === 'Admin' || userTypeValue === 1) {
+      router.push('/admin/departments')
+    } else {
+      router.push('/')
+    }
   } catch (error: any) {
     const errorMsg =
       error.response?.data?.errors?.[Object.keys(error.response.data.errors)[0]]?.[0] ||

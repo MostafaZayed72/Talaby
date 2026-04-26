@@ -16,20 +16,20 @@
         </NuxtLink>
       </div>
 
-      <div v-if="loading" class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div v-for="i in 4" :key="i" class="animate-pulse rounded-3xl aspect-[4/5] bg-slate-200 dark:bg-slate-700"></div>
+      <div v-if="loading" class="grid grid-cols-1 md:grid-cols-4 gap-10">
+        <div v-for="i in 4" :key="i" class="animate-pulse rounded-[2.5rem] aspect-[16/9] bg-slate-200 dark:bg-slate-700"></div>
       </div>
 
-      <div v-else class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div v-else class="grid grid-cols-1 md:grid-cols-4 gap-10">
         <NuxtLink 
           v-for="service in popularServices" 
           :key="service.id"
           :to="`/department/${service.id}`"
-          class="group relative overflow-hidden rounded-3xl aspect-[4/5] cursor-pointer block"
+          class="group relative overflow-hidden rounded-3xl cursor-pointer block bg-slate-100 dark:bg-slate-900 shadow-lg hover:shadow-2xl transition-all duration-500"
         >
           <img 
             :src="service.image" 
-            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            class="w-full h-auto transition-transform duration-700 group-hover:scale-110"
             alt=""
           />
           <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-6">
@@ -55,7 +55,8 @@ const loading = ref(true);
 const fetchCategories = async () => {
   try {
     const response = await $fetch('https://talaby.premiumasp.net/api/storeCategories?PageNumber=1&PageSize=4');
-    popularServices.value = response.items.map(item => ({
+    const items = response.data?.items || [];
+    popularServices.value = items.map(item => ({
       id: item.id,
       name: locale.value === 'ar' ? item.nameAr : item.nameEn,
       desc: item.description || (locale.value === 'ar' ? 'استكشف المزيد من التفاصيل' : 'Explore more details'),

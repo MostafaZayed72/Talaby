@@ -1,12 +1,13 @@
 <template>
-  <div>
-    <button
-      @click="toggleDarkMode"
-      class="p-2 rounded focus:outline-none"
-    >
-      <i v-if="isDarkMode" class="fas fa-sun text-2xl mt-1 text-white"></i> 
-      <i v-else class="fas fa-moon text-2xl mt-2 text-white"></i> 
-    </button>
+  <div 
+    @click="toggleDarkMode"
+    class="flex items-center justify-center p-2 rounded-xl hover:bg-white/10 transition-all cursor-pointer group"
+    :title="isDarkMode ? $t('Switch to Light Mode') : $t('Switch to Dark Mode')"
+  >
+    <Icon 
+      :name="isDarkMode ? 'ph:sun-bold' : 'ph:moon-bold'" 
+      class="text-2xl text-white transition-transform group-hover:scale-110" 
+    />
   </div>
 </template>
 

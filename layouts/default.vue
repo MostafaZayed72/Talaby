@@ -155,6 +155,7 @@ const token = useLocalStorage('token', null);
 const userID = ref();
 const roles = ref();
 const isSidebarOpen = ref(false);
+const isDropdownOpen = ref(false);
 const isAtTop = ref(true);
 
 const navLinks = [

@@ -74,7 +74,8 @@ const fetchDepartment = async () => {
   try {
     const res = await fetch(`${config.public.API_BASE_URL}/storeCategories/${departmentParam}`)
     if (!res.ok) throw new Error('قسم غير موجود')
-    departmentData.value = await res.json()
+    const response = await res.json()
+    departmentData.value = response.data
   } catch (err) {
     console.error(err)
     departmentData.value = null

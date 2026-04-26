@@ -15,21 +15,21 @@
       </div>
 
       <!-- Departments Grid -->
-      <div v-if="loader" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div v-for="i in 6" :key="i" class="animate-pulse rounded-[2.5rem] aspect-[4/3] bg-slate-200 dark:bg-white/5"></div>
+      <div v-if="loader" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        <div v-for="i in 6" :key="i" class="animate-pulse rounded-[2.5rem] aspect-[16/9] bg-slate-200 dark:bg-white/5"></div>
       </div>
 
-      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
         <NuxtLink 
           v-for="section in sections" 
           :key="section.id"
           :to="`/departments/${section.id}`"
-          class="group relative overflow-hidden rounded-[2.5rem] aspect-[4/3] shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-white/10"
+          class="group relative overflow-hidden rounded-[2.5rem] shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-white/10 bg-slate-50 dark:bg-slate-900"
         >
           <img
             :src="section.imageUrl || 'https://images.unsplash.com/photo-1510511459019-5dee9954889c?q=80&w=600&auto=format&fit=crop'"
             :alt="getTitle(section)"
-            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            class="w-full h-auto transition-transform duration-700 group-hover:scale-110"
           />
           <div class="absolute inset-0 bg-gradient-to-t from-violet-950/90 via-violet-900/20 to-transparent flex flex-col justify-end p-8">
             <h2 class="text-2xl font-black text-white group-hover:text-yellow-400 transition-colors">
@@ -88,10 +88,11 @@ const fetchCategories = async () => {
     })
 
     const res = await fetch(`${config.public.API_BASE_URL}/storeCategories?${query}`)
-    const data = await res.json()
+    const response = await res.json()
+    const data = response.data
 
-    sections.value = data.items || data // إذا كانت النتيجة ملفوفة في `items`
-    totalPages.value = data.totalPages || Math.ceil((data.totalCount || 1) / pageSize)
+    sections.value = data?.items || []
+    totalPages.value = data?.totalPages || 1
     
   } catch (err) {
     console.error('فشل في جلب الأقسام:', err)

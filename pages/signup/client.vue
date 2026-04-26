@@ -90,9 +90,9 @@
         </form>
 
         <p class="mt-8 text-center text-slate-500 dark:text-slate-400 font-medium">
-          {{ $t('Already have an account?') }}
+          {{ $t('already_have_account') }}
           <NuxtLink to="/login" class="text-indigo-600 dark:text-indigo-400 font-black hover:underline px-1">
-            {{ $t('Login Now') }}
+            {{ $t('login_now') }}
           </NuxtLink>
         </p>
       </div>
@@ -140,6 +140,7 @@ const toast = useToast()
 const router = useRouter()
 
 const loading = ref(false)
+const isUploadingImage = ref(false)
 const isDialogVisible = ref(false)
 
 const firstName = ref('')
@@ -160,10 +161,11 @@ const loginUser = async (userEmail: string, userPassword: string) => {
       password: userPassword
     })
 
-    const { token: newToken, userID: newUserID, roles: newRoles } = response.data
+    const userData = response.data.data
+    const { token: newToken, roles: newRoles } = userData
 
     token.value = newToken
-    userID.value = newUserID
+    userID.value = userData.userID || userData.id || ''
     roles.value = newRoles || []
 
     toast.add({ severity: 'success', summary: 'نجاح', detail: 'تم تسجيل الدخول بنجاح' })

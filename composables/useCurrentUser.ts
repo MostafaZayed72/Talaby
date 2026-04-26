@@ -20,7 +20,8 @@ export const useCurrentUser = async () => {
 
     if (!res.ok) throw new Error('Unauthorized')
 
-    user.value = await res.json()
+    const response = await res.json()
+    user.value = response.data
   } catch (error) {
     user.value = null
   }

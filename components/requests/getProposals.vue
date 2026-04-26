@@ -37,7 +37,8 @@ const fetchRequest = async () => {
       },
     })
     if (!res.ok) throw new Error('فشل تحميل الطلب')
-    projectRequest.value = await res.json()
+    const response = await res.json()
+    projectRequest.value = response.data
   } catch (err: any) {
     console.error(err)
   }
@@ -59,9 +60,10 @@ const fetchProposals = async () => {
 
     if (!res.ok) throw new Error('فشل تحميل العروض')
 
-    const data = await res.json()
-    proposals.value = data.items
-    totalPages.value = data.totalPages
+    const response = await res.json()
+    const data = response.data
+    proposals.value = data.items || []
+    totalPages.value = data.totalPages || 1
   } catch (err: any) {
     error.value = err.message || 'حدث خطأ أثناء تحميل العروض'
   } finally {
@@ -125,84 +127,113 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="mt-8">
-    <h2 class="text-xl font-bold mb-4 text-purple-950 dark:text-purple-400 mx-4">العروض :</h2>
-
-    <div v-if="loading">جاري التحميل...</div>
-    <div v-if="error" class="text-red-500">{{ error }}</div>
-
-    <div v-if="!loading && proposals.length === 0" class="text-gray-400">
-      لا توجد عروض بعد.
+  <div class="space-y-8">
+    <div v-if="loading" class="space-y-6">
+       <div v-for="i in 3" :key="i" class="h-32 bg-white/5 animate-pulse rounded-3xl border border-white/10"></div>
+    </div>
+    
+    <div v-if="error" class="bg-red-500/10 border border-red-500/20 p-6 rounded-2xl text-red-500 font-bold text-center">
+       {{ error }}
     </div>
 
-    <div
-      v-for="proposal in proposals"
-      :key="proposal.id"
-      :class="[
-        'border rounded-lg p-4 mb-4 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-800 relative',
-        'cursor-pointer'
-      ]"
-      @click="navigateTo(proposal)"
-      style="border-color: #7733bc !important;"
-    >
-      <div class="text-sm text-gray-500 mb-1">
-        {{  proposal.creatorCommercialRegisterNumber }}
-       <h1 class=" text-xs text-gray-400">
-          {{ new Date(proposal.createdAt).toLocaleString() }}
-       </h1>
-      </div>
-       
-      <div class="text-base text-gray-800 dark:text-white mb-2">
-        {{ proposal.content }}
-      </div>
-      <div class="text-sm font-bold text-purple-950 dark:text-purple-400">
-        المبلغ المقترح: {{ proposal.proposedAmount }} {{ $t('SAR') }}
-      </div>
-      
+    <div v-if="!loading && proposals.length === 0" class="text-center py-12 bg-white/5 rounded-[2.5rem] border border-white/10 border-dashed">
+       <Icon name="ph:folder-open-bold" class="text-5xl text-slate-400 mb-3 opacity-20" />
+       <p class="text-slate-400 font-bold">{{ $t('No proposals yet.') }}</p>
+    </div>
 
-      <!-- تم اختيار العرض -->
-      <div v-if="proposal.statusValue === 1" class="mt-2">
-        <div class="text-green-700 font-semibold">✔ تم اختيار العرض</div>
-        <button
-          v-if="isRequestOwner()"
-          class="mt-1 bg-purple-950 hover:bg-purple-900 text-white px-3 py-1 rounded text-sm"
-        >
-          مراسلة
-        </button>
-      </div>
+    <div class="space-y-6">
+      <div
+        v-for="proposal in proposals"
+        :key="proposal.id"
+        @click="navigateTo(proposal)"
+        class="group relative bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-8 cursor-pointer hover:bg-white/20 transition-all duration-500 shadow-xl overflow-hidden"
+      >
+        <div class="relative z-10 flex flex-col md:flex-row justify-between gap-6">
+          <div class="space-y-4 flex-1">
+            <div class="flex items-center gap-3 text-xs font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+              <Icon name="ph:identification-card-bold" class="text-lg text-indigo-500" />
+              <span>ID: {{ proposal.creatorCommercialRegisterNumber || 'N/A' }}</span>
+              <span class="opacity-30">•</span>
+              <span>{{ new Date(proposal.createdAt).toLocaleDateString() }}</span>
+            </div>
+            
+            <p class="text-lg font-medium text-slate-700 dark:text-slate-200 leading-relaxed">
+              {{ proposal.content }}
+            </p>
 
-      <!-- زر اختيار العرض -->
-      <div v-if="isRequestOwner() && projectRequest?.statusValue === 0" class="mt-2 text-right">
-        <button
-          class="text-white bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm"
-          @click.stop="openSelectDialog(proposal.id)"
-        >
-          اختيار العرض
-        </button>
+            <div class="inline-flex items-center gap-3 px-6 py-3 rounded-2xl bg-indigo-600/10 border border-indigo-600/20 text-indigo-600 dark:text-indigo-400 font-black">
+               <Icon name="ph:money-bold" class="text-xl" />
+               <span>{{ proposal.proposedAmount }} {{ $t('SAR') }}</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col items-end gap-4">
+            <div v-if="proposal.statusValue === 1" class="flex items-center gap-2 px-6 py-2 rounded-full bg-green-500 text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-green-500/20">
+               <Icon name="ph:check-circle-fill" />
+               {{ $t('Accepted') }}
+            </div>
+            
+            <button
+              v-if="proposal.statusValue === 1 && isRequestOwner()"
+              class="w-full md:w-auto px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+            >
+              <Icon name="ph:chat-circle-dots-bold" />
+              {{ $t('Contact') }}
+            </button>
+
+            <button
+              v-if="isRequestOwner() && projectRequest?.statusValue === 0 && proposal.statusValue !== 1"
+              @click.stop="openSelectDialog(proposal.id)"
+              class="w-full md:w-auto px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-xl transition-all active:scale-95"
+            >
+              {{ $t('Select Proposal') }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div v-if="totalPages > 1" class="flex justify-center gap-4 mt-6">
-      <button class="btn" :disabled="pageNumber === 1" @click="pageNumber--">السابق</button>
-      <button class="btn" :disabled="pageNumber === totalPages" @click="pageNumber++">التالي</button>
+    <!-- Pagination -->
+    <div v-if="totalPages > 1" class="flex justify-center gap-4 pt-8">
+      <button 
+        class="p-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl text-white disabled:opacity-30 hover:bg-indigo-600 transition-all shadow-xl" 
+        :disabled="pageNumber === 1" 
+        @click="pageNumber--"
+      >
+        <Icon name="ph:caret-left-bold" />
+      </button>
+      <button 
+        class="p-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl text-white disabled:opacity-30 hover:bg-indigo-600 transition-all shadow-xl" 
+        :disabled="pageNumber === totalPages" 
+        @click="pageNumber++"
+      >
+        <Icon name="ph:caret-right-bold" />
+      </button>
     </div>
 
     <!-- Dialog -->
-    <div v-if="showDialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96">
-        <p class="mb-4 text-center font-semibold">هل أنت متأكد من اختيار هذا العرض؟</p>
-        <div class="flex justify-center gap-4">
+    <div v-if="showDialog" class="fixed inset-0 z-[100] flex items-center justify-center p-6">
+      <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md" @click="showDialog = false"></div>
+      <div class="relative bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-2xl border border-white/10 max-w-md w-full text-center space-y-8">
+        <div class="w-20 h-20 bg-green-500/10 text-green-500 rounded-3xl flex items-center justify-center mx-auto shadow-lg">
+           <Icon name="ph:question-bold" class="text-4xl" />
+        </div>
+        <div class="space-y-2">
+          <h3 class="text-2xl font-black text-slate-900 dark:text-white italic">{{ $t('Confirm Selection') }}</h3>
+          <p class="text-slate-500 dark:text-slate-400 font-medium">{{ $t('Are you sure you want to accept this proposal?') }}</p>
+        </div>
+        <div class="flex gap-4">
           <button
-            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-            @click="confirmSelection"
-          >
-            نعم، تأكيد
-          </button>
-          <button
-            class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded"
+            class="flex-1 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-6 py-4 rounded-2xl font-black transition-all hover:bg-slate-200"
             @click="showDialog = false"
           >
-            إلغاء
+            {{ $t('Cancel') }}
+          </button>
+          <button
+            class="flex-1 bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all active:scale-95"
+            @click="confirmSelection"
+          >
+            {{ $t('Yes, Confirm') }}
           </button>
         </div>
       </div>

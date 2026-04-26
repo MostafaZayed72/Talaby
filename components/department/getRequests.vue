@@ -43,13 +43,14 @@ const fetchRequests = async () => {
 
     if (!res.ok) throw new Error('فشل في تحميل الطلبات')
 
-    const data = await res.json()
+    const response = await res.json()
+    const data = response.data
 
     // فلترة الطلبات الخاصة بالقسم الحالي فقط
-    requests.value = data.items.filter(
+    requests.value = (data.items || []).filter(
       (item: any) => item.storeCategoryId === departmentId
     )
-    totalPages.value = data.totalPages
+    totalPages.value = data.totalPages || 1
   } catch (err: any) {
     error.value = err.message || 'حدث خطأ أثناء تحميل البيانات'
   } finally {
@@ -68,63 +69,107 @@ const goToRequest = (id: string) => {
 </script>
 
 <template>
-  <div class="p-4">
-    <input
-      v-model="searchPhrase"
-      class="input mb-4"
-      placeholder="ابحث عن طلب..."
-    />
+  <div class="space-y-10 animate-fade-in">
+    <!-- Search Bar -->
+    <div class="max-w-xl mx-auto">
+      <div class="relative group">
+        <Icon name="ph:magnifying-glass-bold" class="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors text-xl" />
+        <input
+          v-model="searchPhrase"
+          class="w-full bg-white/10 dark:bg-white/5 backdrop-blur-xl border border-white/20 rounded-[2rem] pl-16 pr-8 py-5 outline-none focus:ring-2 focus:ring-indigo-500 transition-all text-slate-900 dark:text-white placeholder:text-slate-400 shadow-xl"
+          :placeholder="$t('Search for a request...')"
+        />
+      </div>
+    </div>
 
-    <div v-if="loading">جاري التحميل...</div>
-    <div v-if="error" class="text-red-500">{{ error }}</div>
+    <!-- State Views -->
+    <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div v-for="i in 4" :key="i" class="h-48 rounded-[2.5rem] bg-white/5 animate-pulse border border-white/10"></div>
+    </div>
 
-    <ul v-if="requests.length" class="space-y-2">
-      <li
+    <div v-if="error" class="bg-red-500/10 border border-red-500/20 p-8 rounded-[2rem] text-center text-red-500 font-bold">
+      <Icon name="ph:warning-circle-bold" class="text-4xl mb-2" />
+      <p>{{ error }}</p>
+    </div>
+
+    <!-- Requests Grid -->
+    <div v-if="requests.length" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div
         v-for="req in requests"
         :key="req.id"
         @click="goToRequest(req.id)"
-        class="p-3 cursor-pointer border-b border-black dark:border-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        class="group relative bg-white/10 dark:bg-white/5 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-8 cursor-pointer hover:bg-white/20 transition-all duration-500 hover:-translate-y-2 shadow-xl overflow-hidden"
       >
-        {{ req.title }}
-      </li>
-    </ul>
+        <!-- Card Background Highlight -->
+        <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-600/10 rounded-full blur-3xl group-hover:bg-indigo-600/20 transition-colors"></div>
 
-    <div v-if="totalPages > 1" class="mt-4 flex gap-2">
+        <div class="relative z-10 space-y-6">
+          <div class="flex items-start justify-between gap-4">
+            <h3 class="text-2xl font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-yellow-400 transition-colors">
+              {{ req.title }}
+            </h3>
+            <div class="px-4 py-1.5 rounded-full bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 text-xs font-black uppercase tracking-widest border border-indigo-600/20">
+              {{ $t(req.statusName) }}
+            </div>
+          </div>
+
+          <p class="text-slate-600 dark:text-slate-400 font-medium line-clamp-3 leading-relaxed">
+            {{ req.description }}
+          </p>
+
+          <div class="flex items-center justify-between pt-6 border-t border-white/10">
+            <div class="flex items-center gap-3">
+               <div class="w-10 h-10 rounded-full bg-yellow-400/20 flex items-center justify-center text-yellow-600">
+                  <Icon name="ph:calendar-blank-bold" />
+               </div>
+               <span class="text-sm font-bold text-slate-500 dark:text-slate-400">
+                  {{ new Date(req.createdAt).toLocaleDateString() }}
+               </span>
+            </div>
+            <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-black group-hover:gap-4 transition-all">
+               <span>{{ $t('View Details') }}</span>
+               <Icon name="ph:arrow-right-bold" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div v-else-if="!loading" class="text-center py-20 bg-white/5 rounded-[2.5rem] border border-white/10 border-dashed">
+       <Icon name="ph:stack-bold" class="text-6xl text-slate-400 mb-4 opacity-30" />
+       <p class="text-slate-400 font-bold text-xl">{{ $t('No requests found in this department yet.') }}</p>
+    </div>
+
+    <!-- Pagination -->
+    <div v-if="totalPages > 1" class="flex justify-center items-center gap-6 pt-10">
       <button
         :disabled="pageNumber === 1"
         @click="pageNumber--"
-        class="btn"
+        class="p-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl text-slate-600 dark:text-white disabled:opacity-30 hover:bg-indigo-600 hover:text-white transition-all shadow-xl"
       >
-        السابق
+        <Icon name="ph:caret-left-bold" />
       </button>
+      <div class="px-8 py-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl font-black text-slate-900 dark:text-white shadow-xl">
+        {{ pageNumber }} / {{ totalPages }}
+      </div>
       <button
         :disabled="pageNumber === totalPages"
         @click="pageNumber++"
-        class="btn"
+        class="p-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl text-slate-600 dark:text-white disabled:opacity-30 hover:bg-indigo-600 hover:text-white transition-all shadow-xl"
       >
-        التالي
+        <Icon name="ph:caret-right-bold" />
       </button>
     </div>
   </div>
 </template>
 
 <style scoped>
-.input {
-  width: fit;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 0.375rem;
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
-.btn {
-  background-color: #4a3a6e;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-}
-
-.btn:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.animate-fade-in {
+  animation: fade-in 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 </style>

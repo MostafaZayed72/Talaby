@@ -97,19 +97,25 @@
             <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Commercial Register Image') }}</label>
             <div class="relative">
               <div class="flex items-center justify-center w-full">
-                <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-200 dark:border-white/10 border-dashed rounded-2xl cursor-pointer bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 transition-all">
-                  <div v-if="!commercialRegisterImageUrl" class="flex flex-col items-center justify-center pt-5 pb-6">
+                <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-200 dark:border-white/10 border-dashed rounded-2xl cursor-pointer bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 transition-all overflow-hidden relative">
+                  <!-- Loading State -->
+                  <div v-if="isUploadingImage" class="absolute inset-0 bg-slate-900/10 backdrop-blur-[2px] flex flex-col items-center justify-center space-y-2">
+                    <div class="animate-spin border-4 border-violet-600 border-t-transparent rounded-full w-8 h-8"></div>
+                    <p class="text-xs font-black text-violet-600 uppercase tracking-widest">{{ $t('Image is being uploaded') }}</p>
+                  </div>
+                  
+                  <div v-if="!commercialRegisterImageUrl && !isUploadingImage" class="flex flex-col items-center justify-center pt-5 pb-6">
                     <Icon name="ph:cloud-arrow-up-bold" class="text-3xl text-slate-400 mb-2" />
                     <p class="text-sm text-slate-500 dark:text-slate-400 font-bold">{{ $t('Click to upload image') }}</p>
                   </div>
-                  <div v-else class="flex items-center gap-4 p-4">
+                  <div v-else-if="commercialRegisterImageUrl && !isUploadingImage" class="flex items-center gap-4 p-4">
                     <img :src="commercialRegisterImageUrl" class="w-16 h-16 rounded-xl object-cover" />
                     <span class="text-green-500 font-bold flex items-center gap-2">
                       <Icon name="ph:check-circle-fill" />
                       {{ $t('Uploaded') }}
                     </span>
                   </div>
-                  <input type="file" @change="handleImageUpload" accept="image/*" class="hidden" />
+                  <input type="file" @change="handleImageUpload" accept="image/*" class="hidden" :disabled="isUploadingImage" />
                 </label>
               </div>
             </div>
@@ -117,7 +123,7 @@
 
           <button 
             type="submit" 
-            :disabled="loading"
+            :disabled="loading || isUploadingImage"
             class="w-full bg-violet-800 hover:bg-violet-900 text-white font-black py-4 rounded-2xl transition-all transform hover:scale-[1.02] shadow-2xl active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50"
           >
             <template v-if="!loading">
@@ -129,9 +135,9 @@
         </form>
 
         <p class="mt-8 text-center text-slate-500 dark:text-slate-400 font-medium">
-          {{ $t('Already have an account?') }}
+          {{ $t('already_have_account') }}
           <NuxtLink to="/login" class="text-indigo-600 dark:text-indigo-400 font-black hover:underline px-1">
-            {{ $t('Login Now') }}
+            {{ $t('login_now') }}
           </NuxtLink>
         </p>
       </div>
@@ -195,10 +201,13 @@ const token = useLocalStorage('token', '')
 const userID = useLocalStorage('userID', '')
 const roles = useLocalStorage('roles', [])
 
+const isUploadingImage = ref(false)
+
 const handleImageUpload = async (event: Event) => {
   const target = event.target as HTMLInputElement
   if (!target.files || !target.files[0]) return
 
+  isUploadingImage.value = true
   const file = target.files[0]
   const formData = new FormData()
   formData.append('file', file)
@@ -212,15 +221,17 @@ const handleImageUpload = async (event: Event) => {
     const data = await res.json()
     commercialRegisterImageUrl.value = data.secure_url
   } catch (error) {
-    toast.add({ severity: 'error', summary: 'خطأ', detail: 'فشل رفع الصورة' })
+    toast.add({ severity: 'error', summary: locale.value === 'ar' ? 'خطأ' : 'Error', detail: locale.value === 'ar' ? 'فشل رفع الصورة' : 'Image upload failed' })
+  } finally {
+    isUploadingImage.value = false
   }
 }
 
 const fetchCategories = async () => {
   try {
     const res = await fetch(`${config.public.API_BASE_URL}/storeCategories?PageNumber=1&PageSize=100`)
-    const data = await res.json()
-    categories.value = data.items
+    const response = await res.json()
+    categories.value = response.data?.items || []
   } catch (error) {
     toast.add({ severity: 'error', summary: 'خطأ', detail: 'فشل تحميل التصنيفات' })
   }
@@ -237,10 +248,11 @@ const loginUser = async (userEmail: string, userPassword: string) => {
       password: userPassword
     })
 
-    const { token: newToken, userID: newUserID, roles: newRoles } = response.data
+    const userData = response.data.data
+    const { token: newToken, roles: newRoles } = userData
 
     token.value = newToken
-    userID.value = newUserID
+    userID.value = userData.userID || userData.id || ''
     roles.value = newRoles || []
 
     toast.add({ severity: 'success', summary: 'نجاح', detail: 'تم تسجيل الدخول بنجاح' })
@@ -275,11 +287,11 @@ const registerStore = async () => {
   loading.value = true
 
   const payload = {
-    commercialRegisterNumber: commercialRegisterNumber.value.trim(),
+    commercialRegisterNumber: String(commercialRegisterNumber.value).trim(),
     firstName: firstName.value.trim(),
     email: email.value.trim(),
     password: password.value,
-    mobile: mobile.value.trim(),
+    mobile: String(mobile.value).trim(),
     location: location.value.trim(),
     commercialRegisterImageUrl: commercialRegisterImageUrl.value,
     storeCategoryId: parseInt(selectedCategoryId.value)
