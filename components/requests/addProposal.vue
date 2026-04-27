@@ -22,13 +22,15 @@ const projectRequestId = route.params.id as string
 
 const postCategoryId = ref<number | null>(null)
 const userCategoryId = ref<number | null>(null)
+const projectStatusValue = ref<number | null>(null)
 
 const canSubmit = computed(() => {
   return (
     roles.value.includes('Store') &&
     postCategoryId.value !== null &&
     userCategoryId.value !== null &&
-    postCategoryId.value === userCategoryId.value
+    postCategoryId.value === userCategoryId.value &&
+    projectStatusValue.value === 1
   )
 })
 
@@ -43,6 +45,7 @@ const fetchPostCategory = async () => {
   if (res.ok) {
     const response = await res.json()
     postCategoryId.value = response.data.storeCategoryId
+    projectStatusValue.value = response.data.statusValue
   }
 }
 

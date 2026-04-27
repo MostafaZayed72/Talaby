@@ -66,6 +66,8 @@ onMounted(fetchRequests)
 const goToRequest = (id: string) => {
   router.push(`/requests/${id}`)
 }
+
+defineExpose({ fetchRequests })
 </script>
 
 <template>

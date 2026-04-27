@@ -241,9 +241,13 @@
     "Switch to Light Mode": "الوضع النهاري",
     "Switch to Dark Mode": "الوضع الليلي",
     "Open": "مفتوح",
+    "InProgress": "قيد التنفيذ",
+    "InProgress": "قيد التنفيذ",
     "Completed": "مكتمل",
     "Accepted": "مقبول",
     "Pending": "قيد الانتظار",
+    "Cancelled": "ملغى",
+    "Closed": "مغلق",
     "Already have an account?": "لديك حساب بالفعل؟",
     "Login Now": "سجل دخولك الآن",
     "already_have_account": "لديك حساب بالفعل؟",
@@ -255,5 +259,27 @@
     "Failed to update user info.": "فشل في تحديث بيانات المستخدم.",
     "Offer details": "تفاصيل العرض",
     "Total Budget": "الميزانية الإجمالية",
-    "Accept": "قبول"
+    "Accept": "قبول",
+    "Mark as Done": "إتمام المهمة",
+    "Pay Commission": "دفع العمولة",
+    "Sending...": "جاري الإرسال...",
+    "Write your reply here...": "اكتب ردك هنا...",
+    "Add a Reply": "أضف رداً",
+    "Original Proposal Content": "محتوى العرض الأصلي",
+    "Replies on Proposal": "الردود على العرض",
+    "What do you need?": "ماذا تحتاج؟",
+    "Provide details about your request...": "قدم تفاصيل حول طلبك...",
+    "Click to upload image": "اضغط لرفع الصورة",
+    "Request Title": "عنوان الطلب",
+    "Description": "الوصف",
+    "Add New Request": "إضافة طلب جديد",
+    "Submit Request": "إرسال الطلب",
+    "Dear customer": "عزيزي العميل",
+    "Remember: Clear demand = clear supply": "تذكر أن الطلب الواضح يعني عرضاً واضحاً",
+    "You can add a photo to illustrate the request": "بإمكانك إضافة صورة لإيضاح الطلب",
+    "AwaitingCommissionPayment": "مكتمل",
+    "AWAITINGCOMMISSIONPAYMENT": "مكتمل"
+
+
+
 }

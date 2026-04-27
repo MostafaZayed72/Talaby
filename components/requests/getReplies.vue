@@ -22,6 +22,8 @@ const editingReplyId = ref<string | null>(null)
 const editedContent = ref('')
 
 const currentUserEmail = ref('')
+const currentUserId = ref('')
+const proposalData = ref<any>(null)
 
 const fetchCurrentUser = async () => {
   try {
@@ -33,6 +35,7 @@ const fetchCurrentUser = async () => {
     if (!res.ok) throw new Error('فشل تحميل بيانات المستخدم')
     const response = await res.json()
     currentUserEmail.value = response.data.email
+    currentUserId.value = response.data.id
   } catch (err) {
     console.error('فشل الحصول على المستخدم الحالي')
   }
@@ -68,6 +71,7 @@ const fetchReplies = async () => {
 
     const response = await res.json()
     const result = response.data
+    proposalData.value = result // تخزين البيانات كاملة
     proposalContent.value = result.proposalContent
     replies.value = result.replies.items || []
     totalPages.value = result.replies.totalPages || 1
@@ -75,6 +79,52 @@ const fetchReplies = async () => {
     error.value = err.message || 'حدث خطأ أثناء تحميل الردود'
   } finally {
     loading.value = false
+  }
+}
+
+const isMarkingDone = ref(false)
+const markAsDone = async () => {
+  if (!confirm('هل أنت متأكد من إتمام المهمة؟')) return
+  isMarkingDone.value = true
+  try {
+    const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${proposalData.value.projectRequestId}/mark-done`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
+    })
+    if (!res.ok) throw new Error('فشل إتمام المهمة')
+    alert('تم إتمام المهمة بنجاح!')
+    await fetchReplies()
+  } catch (err: any) {
+    alert(err.message)
+  } finally {
+    isMarkingDone.value = false
+  }
+}
+
+const payCommission = async () => {
+  isProcessingPayment.value = true
+  try {
+    // حفظ معرف المشروع للتحقق منه في صفحة النتيجة
+    localStorage.setItem('pending_payment_project_id', proposalData.value.projectRequestId)
+    
+    const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${proposalData.value.projectRequestId}/commission-payment/checkout`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    if (!res.ok) throw new Error('فشل إنشاء طلب الدفع')
+    const response = await res.json()
+    if (response.isSuccess && response.data.checkoutUrl) {
+      window.location.href = response.data.checkoutUrl
+    }
+  } catch (err: any) {
+    alert(err.message)
+  } finally {
+    isProcessingPayment.value = false
   }
 }
 
@@ -154,7 +204,34 @@ const startPolling = () => {
           {{ $t('Replies on Proposal') }}
         </h2>
       </div>
-      <RequestsCancelProposal />
+      
+      <div class="flex items-center gap-4">
+        <!-- زر إتمام المهمة: يظهر لمقدم الخدمة إذا كان العرض مقبولاً والطلب لم ينتهِ بعد -->
+        <button 
+          v-if="proposalData && currentUserId === proposalData.proposalCreatorId && proposalData.proposalStatusValue === 2"
+          @click="markAsDone"
+          :disabled="isMarkingDone"
+          class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center gap-2 disabled:opacity-50"
+        >
+          <Icon v-if="isMarkingDone" name="ph:circle-notch-bold" class="animate-spin" />
+          <Icon v-else name="ph:check-circle-bold" />
+          {{ $t('Mark as Done') }}
+        </button>
+
+        <!-- زر دفع العمولة: يظهر لصاحب الطلب إذا انتهت المهمة -->
+        <button 
+          v-if="proposalData && currentUserId === proposalData.projectRequestCreatorId && proposalData.proposalStatusValue === 2"
+          @click="payCommission"
+          :disabled="isProcessingPayment"
+          class="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center gap-2 disabled:opacity-50"
+        >
+          <Icon v-if="isProcessingPayment" name="ph:circle-notch-bold" class="animate-spin" />
+          <Icon v-else name="ph:credit-card-bold" />
+          {{ $t('Pay Commission') }}
+        </button>
+
+        <RequestsCancelProposal />
+      </div>
     </div>
 
     <!-- عرض العرض الأصلي -->

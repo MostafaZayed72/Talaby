@@ -3,6 +3,9 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRuntimeConfig } from '#imports'
 import { useLocalStorage } from '@vueuse/core'
+import { useCurrentUser } from '~/composables/useCurrentUser'
+
+const { user } = await useCurrentUser()
 
 const config = useRuntimeConfig()
 const route = useRoute()
@@ -16,6 +19,9 @@ const post = ref<null | {
   minBudget: number
   maxBudget: number
   imageUrl: string
+  statusName: string
+  createdAt: string
+  creatorId: string
 }>(null)
 
 const loading = ref(true)
@@ -41,6 +47,30 @@ const fetchPostDetails = async () => {
     error.value = err.message || 'حدث خطأ أثناء تحميل البيانات'
   } finally {
     loading.value = false
+  }
+}
+
+const isProcessingPayment = ref(false)
+const payCommission = async () => {
+  isProcessingPayment.value = true
+  try {
+    localStorage.setItem('pending_payment_project_id', postId)
+    const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${postId}/commission-payment/checkout`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    if (!res.ok) throw new Error('فشل إنشاء طلب الدفع')
+    const response = await res.json()
+    if (response.isSuccess && response.data.checkoutUrl) {
+      window.location.href = response.data.checkoutUrl
+    }
+  } catch (err: any) {
+    alert(err.message)
+  } finally {
+    isProcessingPayment.value = false
   }
 }
 
@@ -82,10 +112,22 @@ onMounted(fetchPostDetails)
               <h1 class="text-4xl md:text-6xl font-black text-slate-900 dark:text-white leading-tight italic tracking-tighter">
                 {{ post.title }}
               </h1>
-              <div class="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-yellow-400 text-violet-950 font-black text-sm uppercase tracking-widest shadow-lg">
-                <Icon name="ph:sparkle-fill" />
-                {{ $t('Active Request') }}
+              <div class="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 border border-indigo-600/30 font-black text-sm uppercase tracking-widest shadow-lg backdrop-blur-md">
+                <Icon name="ph:info-bold" />
+                {{ $t(post.statusName) }}
               </div>
+
+              <!-- زر الدفع لصاحب الطلب -->
+              <button 
+                v-if="user && user.id === post.creatorId && (post.statusName === 'AwaitingCommissionPayment' || post.statusName === 'AWAITINGCOMMISSIONPAYMENT')"
+                @click="payCommission"
+                :disabled="isProcessingPayment"
+                class="inline-flex items-center gap-3 px-8 py-3 rounded-2xl bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black shadow-xl transition-all active:scale-95 disabled:opacity-50"
+              >
+                <Icon v-if="isProcessingPayment" name="ph:circle-notch-bold" class="animate-spin" />
+                <Icon v-else name="ph:credit-card-bold" />
+                {{ $t('Pay Commission') }}
+              </button>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">

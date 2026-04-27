@@ -17,6 +17,14 @@ const preferredLanguage = useLocalStorage('preferredLanguage', 'en-US')
 // ⬅️ حساب الاتجاه بناءً على اللغة
 const isRtl = computed(() => locale.value.startsWith('ar'))
 
+// ⬅️ تحديث سمات HTML لضمان عمل الـ RTL في كل مكان (بما في ذلك الـ Teleport)
+useHead({
+  htmlAttrs: {
+    dir: computed(() => isRtl.value ? 'rtl' : 'ltr'),
+    lang: computed(() => locale.value)
+  }
+})
+
 // ⬅️ تغيير اللغة عند تحديث الـ localStorage
 watch(preferredLanguage, (newValue) => {
   if (newValue) {

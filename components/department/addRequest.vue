@@ -11,6 +11,8 @@ const token = useLocalStorage('token', '')
 const route = useRoute()
 const { t } = useI18n()
 
+const emit = defineEmits(['request-added'])
+
 const storeCategoryId = route.params.department
 
 const showDialog = ref(false)
@@ -69,6 +71,7 @@ const submitRequest = async () => {
 
     success.value = true
     showDialog.value = false
+    emit('request-added')
 
     requestData.value = {
       title: '',
@@ -88,73 +91,148 @@ const submitRequest = async () => {
 
 <template>
   <div>
-    <button class="btn" @click="showDialog = true">{{ t('Add New Request') }}</button>
-    <!-- Dialog -->
-    <div v-if="showDialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-        <h2 class="text-xl font-bold mb-4">{{ t('Add New Request') }}</h2>
-<span class="text-green-600">{{ $t('Dear customer') }}</span>
-<h1 class="mb-4 text-green-600 text-sm">{{$t('Remember: Clear demand = clear supply')}}</h1>
-        <div v-if="error" class="text-red-500 mb-2">{{ error }}</div>
-        <div v-if="success" class="text-green-600 mb-2">{{ t('Request submitted successfully.') }}</div>
+    <button 
+      @click="showDialog = true" 
+      class="px-10 py-4 bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black rounded-2xl transition-all transform hover:scale-[1.05] shadow-xl active:scale-95 flex items-center gap-3"
+    >
+      <Icon name="ph:plus-circle-bold" class="text-xl" />
+      {{ t('Add New Request') }}
+    </button>
 
-        <div class="space-y-4">
-          <div>
-            <label class="block font-medium">{{ t('Request Title') }}</label>
-            <input v-model="requestData.title" class="input" />
-          </div>
+    <Teleport to="body">
+      <transition name="modal">
+        <div v-if="showDialog" class="fixed inset-0 z-[100] flex items-center justify-center p-6">
+          <!-- Backdrop -->
+          <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md" @click="showDialog = false"></div>
+          
+          <!-- Dialog Content -->
+          <div class="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-white/20 p-8 md:p-12 animate-modal-in overflow-hidden max-h-[90vh] flex flex-col">
+            <!-- Decorative Light -->
+            <div class="absolute top-0 right-0 w-48 h-48 bg-indigo-600/10 rounded-full blur-[80px]"></div>
+            
+            <div class="relative z-10 flex flex-col h-full">
+              <!-- Header -->
+              <div class="flex justify-between items-center mb-8">
+                <div>
+                  <h2 class="text-3xl font-black text-slate-900 dark:text-white italic tracking-tight mb-2">{{ t('Add New Request') }}</h2>
+                  <div class="flex items-center gap-2">
+                    <span class="h-1.5 w-12 bg-yellow-400 rounded-full"></span>
+                    <p class="text-xs font-black uppercase tracking-widest text-green-600 dark:text-green-400">{{ $t('Dear customer') }}: {{ $t('Remember: Clear demand = clear supply') }}</p>
+                  </div>
+                </div>
+                <button @click="showDialog = false" class="p-3 rounded-2xl hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
+                  <Icon name="ph:x-bold" class="text-xl dark:text-white" />
+                </button>
+              </div>
 
-          <div>
-            <label class="block font-medium">{{ t('Description') }}</label>
-            <textarea v-model="requestData.description" class="input" rows="3"></textarea>
-          </div>
+              <!-- Body (Scrollable) -->
+              <div class="flex-1 overflow-y-auto pr-2 space-y-8 custom-scrollbar">
+                <div v-if="error" class="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 font-bold flex items-center gap-3">
+                  <Icon name="ph:warning-circle-bold" />
+                  {{ error }}
+                </div>
 
-          <div>
-            <label class="block font-medium text-green-600 mb-2">{{ t('You can add a photo to illustrate the request') }}</label>
-            <input type="file" class="input" @change="handleFileChange" accept="image/*" />
-            <div v-if="requestData.imageUrl" class="mt-2">
-              <img :src="requestData.imageUrl" alt="Uploaded" class="w-32 h-32 object-cover rounded" />
+                <div class="space-y-6">
+                  <!-- Title -->
+                  <div class="space-y-2">
+                    <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ t('Request Title') }}</label>
+                    <input 
+                      v-model="requestData.title" 
+                      :placeholder="t('What do you need?')"
+                      class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white transition-all font-bold" 
+                    />
+                  </div>
+
+                  <!-- Description -->
+                  <div class="space-y-2">
+                    <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ t('Description') }}</label>
+                    <textarea 
+                      v-model="requestData.description" 
+                      :placeholder="t('Provide details about your request...')"
+                      class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white min-h-[150px] resize-none transition-all font-medium" 
+                    ></textarea>
+                  </div>
+
+                  <!-- Image Upload -->
+                  <div class="space-y-2">
+                    <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ t('You can add a photo to illustrate the request') }}</label>
+                    <div class="relative group">
+                      <input 
+                        type="file" 
+                        class="absolute inset-0 opacity-0 cursor-pointer z-20" 
+                        @change="handleFileChange" 
+                        accept="image/*" 
+                      />
+                      <div class="w-full border-2 border-dashed border-slate-200 dark:border-white/10 rounded-[2rem] p-8 flex flex-col items-center justify-center gap-4 group-hover:border-indigo-500 transition-all bg-slate-50/50 dark:bg-white/5">
+                        <div v-if="!requestData.imageUrl" class="text-center">
+                          <Icon name="ph:image-square-bold" class="text-4xl text-slate-400 mb-2" />
+                          <p class="text-sm font-bold text-slate-500">{{ t('Click to upload image') }}</p>
+                        </div>
+                        <div v-else class="relative w-full aspect-video rounded-2xl overflow-hidden">
+                          <img :src="requestData.imageUrl" class="w-full h-full object-cover" />
+                          <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Icon name="ph:arrows-clockwise-bold" class="text-3xl text-white animate-spin-slow" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Footer -->
+              <div class="mt-10 flex gap-4 pt-6 border-t border-slate-100 dark:border-white/5">
+                <button 
+                  class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black py-5 rounded-2xl transition-all transform hover:scale-[1.02] shadow-xl active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50"
+                  :disabled="loading" 
+                  @click="submitRequest"
+                >
+                  <Icon v-if="loading" name="ph:circle-notch-bold" class="animate-spin" />
+                  <Icon v-else name="ph:check-circle-bold" />
+                  {{ t('Submit Request') }}
+                </button>
+                <button 
+                  class="px-10 bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-white font-black rounded-2xl hover:bg-slate-200 dark:hover:bg-white/20 transition-all active:scale-95"
+                  @click="showDialog = false"
+                >
+                  {{ t('Cancel') }}
+                </button>
+              </div>
             </div>
           </div>
         </div>
-
-        <div class="mt-6 flex justify-end gap-3">
-          <button class="btn-cancel" @click="showDialog = false">{{ t('Cancel') }}</button>
-          <button class="btn" :disabled="loading" @click="submitRequest">
-            <span v-if="!loading">{{ t('Submit Request') }}</span>
-            <span v-else class="animate-spin border-2 border-t-transparent border-white rounded-full w-5 h-5 inline-block"></span>
-          </button>
-        </div>
-      </div>
-    </div>
+      </transition>
+    </Teleport>
   </div>
 </template>
 
 <style scoped>
-.input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 0.375rem;
+.modal-enter-active, .modal-leave-active {
+  transition: opacity 0.4s ease;
 }
-.btn {
-  background-color: #4a3a6e;
-  color: white;
-  padding: 0.5rem 1.5rem;
-  border-radius: 9999px;
-  font-weight: bold;
+.modal-enter-from, .modal-leave-to {
+  opacity: 0;
 }
-.btn:hover {
-  background-color: #281750;
+
+@keyframes modal-in {
+  from { transform: scale(0.9) translateY(40px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
 }
-.btn-cancel {
-  background-color: #e5e7eb;
-  color: #111827;
-  padding: 0.5rem 1.5rem;
-  border-radius: 9999px;
-  font-weight: bold;
+.animate-modal-in {
+  animation: modal-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
-.btn-cancel:hover {
-  background-color: #d1d5db;
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(79, 70, 229, 0.2);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 70, 229, 0.4);
 }
 </style>

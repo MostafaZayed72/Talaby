@@ -157,5 +157,36 @@
     "Offer details": "Offer details",
     "Total Budget": "Total Budget",
     "SAR": "SAR",
-    "Accept": "Accept"
+    "Accept": "Accept",
+    "Open": "Open",
+    "InProgress": "In Progress",
+    "InProgress": "In Progress",
+    "Completed": "Completed",
+    "Accepted": "Accepted",
+    "Pending": "Pending",
+    "Cancelled": "Cancelled",
+    "Closed": "Closed",
+    "Mark as Done": "Mark as Done",
+    "Pay Commission": "Pay Commission",
+    "Sending...": "Sending...",
+    "Write your reply here...": "Write your reply here...",
+    "Add a Reply": "Add a Reply",
+    "Original Proposal Content": "Original Proposal Content",
+    "Replies on Proposal": "Replies on Proposal",
+    "What do you need?": "What do you need?",
+    "Provide details about your request...": "Provide details about your request...",
+    "Click to upload image": "Click to upload image",
+    "Request Title": "Request Title",
+    "Description": "Description",
+    "Add New Request": "Add New Request",
+    "Submit Request": "Submit Request",
+    "Dear customer": "Dear customer",
+    "Remember: Clear demand = clear supply": "Remember: Clear demand = clear supply",
+    "You can add a photo to illustrate the request": "You can add a photo to illustrate the request",
+    "AwaitingCommissionPayment": "Completed",
+    "AWAITINGCOMMISSIONPAYMENT": "Completed"
+
+
+
+
 }

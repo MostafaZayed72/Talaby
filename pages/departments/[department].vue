@@ -31,8 +31,8 @@
             </div>
 
             <!-- Action Button -->
-            <div v-if="isClient" class="transform hover:scale-105 transition-transform">
-              <DepartmentAddRequest />
+            <div v-if="isClient" class="flex justify-center transform hover:scale-105 transition-transform">
+              <DepartmentAddRequest @request-added="handleRequestAdded" />
             </div>
           </div>
         </div>
@@ -44,7 +44,7 @@
         <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-600/5 rounded-full blur-3xl"></div>
         <div class="absolute bottom-0 left-0 w-96 h-96 bg-violet-600/5 rounded-full blur-3xl"></div>
         
-        <DepartmentGetRequests />
+        <DepartmentGetRequests ref="requestsRef" />
       </div>
     </div>
   </div>
@@ -69,6 +69,11 @@ const route = useRoute()
 const departmentParam = route.params.department
 const departmentData = ref<any>(null)
 const loading = ref(true)
+const requestsRef = ref<any>(null)
+
+const handleRequestAdded = () => {
+  requestsRef.value?.fetchRequests()
+}
 
 const fetchDepartment = async () => {
   try {
