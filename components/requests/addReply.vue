@@ -54,39 +54,50 @@ const submitReply = async () => {
 </script>
 
 <template>
-  <div class="border rounded p-4 mt-6 shadow-sm  " style="border-color: #7733bc !important;">
-    <h3 class="text-lg font-bold mb-3 text-purple-500">أضف تعليقاً</h3>
+  <div class="mt-8 bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-8 shadow-xl relative overflow-hidden group">
+    <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-600/5 rounded-full blur-3xl group-hover:bg-indigo-600/10 transition-colors"></div>
+    
+    <div class="relative z-10">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-10 h-10 bg-indigo-600/20 rounded-xl flex items-center justify-center text-indigo-600">
+          <Icon name="ph:chat-centered-text-bold" class="text-xl" />
+        </div>
+        <h3 class="text-xl font-black text-slate-900 dark:text-white italic tracking-tight">{{ $t('Add a Reply') }}</h3>
+      </div>
 
-    <textarea
-      v-model="replyContent"
-      rows="4"
-      class="w-full p-2 border rounded mb-3 dark:bg-gray-800 "
-      placeholder="اكتب تعليقك هنا..."
-    ></textarea>
+      <textarea
+        v-model="replyContent"
+        rows="4"
+        class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white transition-all resize-none mb-6"
+        :placeholder="$t('Write your reply here...')"
+      ></textarea>
 
-    <button
-      @click="submitReply"
-      :disabled="submitting || !replyContent.trim()"
-      class="btn"
-    >
-      {{ submitting ? 'جارٍ الإرسال...' : 'أضف تعليق' }}
-    </button>
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <button
+          @click="submitReply"
+          :disabled="submitting || !replyContent.trim()"
+          class="w-full md:w-auto px-10 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-2xl shadow-lg transition-all transform hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-3"
+        >
+          <Icon v-if="submitting" name="ph:circle-notch-bold" class="animate-spin" />
+          <Icon v-else name="ph:paper-plane-tilt-bold" />
+          {{ submitting ? $t('Sending...') : $t('Add Reply') }}
+        </button>
 
-    <p v-if="successMessage" class="text-green-500 mt-2">{{ successMessage }}</p>
-    <p v-if="errorMessage" class="text-red-500 mt-2">{{ errorMessage }}</p>
+        <div class="flex-1 text-right">
+          <p v-if="successMessage" class="text-green-500 font-bold flex items-center gap-2 justify-end">
+            <Icon name="ph:check-circle-bold" />
+            {{ successMessage }}
+          </p>
+          <p v-if="errorMessage" class="text-red-500 font-bold flex items-center gap-2 justify-end">
+            <Icon name="ph:warning-circle-bold" />
+            {{ errorMessage }}
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.btn {
-  background-color: #4a3a6e;
-  color: white;
-  padding: 0.5rem 1.2rem;
-  border-radius: 0.375rem;
-}
-.btn:disabled {
-  background-color: #ccc;
-  color: black;
-  cursor: not-allowed;
-}
+/* Base styles managed by Tailwind */
 </style>

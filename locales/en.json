@@ -151,8 +151,11 @@
     "login_now": "Login Now",
     "Mobile": "Mobile",
     "Location": "Location",
-    "Member Since 2024": "Member Since 2024",
     "Profile updated successfully.": "Profile updated successfully.",
     "Failed to fetch user data.": "Failed to fetch user data.",
-    "Failed to update user info.": "Failed to update user info."
+    "Failed to update user info.": "Failed to update user info.",
+    "Offer details": "Offer details",
+    "Total Budget": "Total Budget",
+    "SAR": "SAR",
+    "Accept": "Accept"
 }

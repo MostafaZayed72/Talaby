@@ -3,11 +3,15 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useLocalStorage } from '@vueuse/core'
 import { useRuntimeConfig } from '#imports'
+import { useI18n } from 'vue-i18n'
 
+const { locale } = useI18n()
 const config = useRuntimeConfig()
 const route = useRoute()
 const token = useLocalStorage('token', '')
 const roles = useLocalStorage('roles', []) // من نوع Array<string>
+
+const emit = defineEmits(['proposal-added'])
 
 // الحالة الخاصة بالعرض
 const showDialog = ref(false)
@@ -79,6 +83,7 @@ const submitProposal = async () => {
       showDialog.value = false
       content.value = ''
       proposedAmount.value = null
+      emit('proposal-added')
     }
   } catch (err) {
     console.error(err)
@@ -109,7 +114,7 @@ onMounted(() => {
           <div class="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-white/20 p-8 md:p-10 animate-modal-in overflow-hidden">
             <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-600/10 rounded-full blur-3xl"></div>
             
-            <div class="relative z-10">
+            <div class="relative z-10" :dir="locale === 'ar' ? 'rtl' : 'ltr'">
               <div class="flex justify-between items-center mb-8">
                 <h2 class="text-2xl font-black text-slate-900 dark:text-white italic tracking-tight">{{ $t('Send offer') }}</h2>
                 <button @click="showDialog = false" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
@@ -130,12 +135,18 @@ onMounted(() => {
                 <div class="space-y-2">
                   <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Total Budget') }}</label>
                   <div class="relative group">
-                    <Icon name="ph:currency-dollar-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
+                    <div 
+                      class="absolute top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors font-bold text-sm"
+                      :class="locale === 'ar' ? 'right-4' : 'left-4'"
+                    >
+                      {{ locale === 'ar' ? 'ر.س' : 'SAR' }}
+                    </div>
                     <input
                       v-model.number="proposedAmount"
                       type="number"
                       :placeholder="$t('Total price including tax')"
-                      class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white transition-all font-bold"
+                      class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white transition-all font-bold"
+                      :class="locale === 'ar' ? 'pr-14 pl-6 text-right' : 'pl-12 pr-6 text-left'"
                     />
                   </div>
                 </div>

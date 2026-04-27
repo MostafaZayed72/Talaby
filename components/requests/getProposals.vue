@@ -90,13 +90,13 @@ const confirmSelection = async () => {
     await fetch(`${config.public.API_BASE_URL}/project-proposals/status`, {
       method: 'PATCH',
       headers,
-      body: JSON.stringify({ id: selectedProposalId.value, newStatus: 1 }),
+      body: JSON.stringify({ id: selectedProposalId.value, newStatus: 2 }),
     })
 
     await fetch(`${config.public.API_BASE_URL}/project-requests/status`, {
       method: 'PATCH',
       headers,
-      body: JSON.stringify({ id: postId, newStatus: 1 }),
+      body: JSON.stringify({ id: postId, newStatus: 2 }),
     })
 
     showDialog.value = false
@@ -109,10 +109,10 @@ const confirmSelection = async () => {
 
 const navigateTo = (proposal: any) => {
   const isProposalOwner = proposal.creatorEmail === currentUser.value?.email
-  const isRequestOwner = projectRequest.value?.creatorId === currentUser.value?.id
-  const isAcceptedProposal = proposal.statusValue === 1
+  const isReqOwner = projectRequest.value?.creatorId === currentUser.value?.id
+  const isAcceptedProposal = proposal.statusValue === 2 || proposal.statusName?.toLowerCase() === 'accepted'
 
-  if ((isProposalOwner || isRequestOwner) && isAcceptedProposal) {
+  if ((isProposalOwner || isReqOwner) && isAcceptedProposal) {
     router.push(`/replies/${proposal.id}`)
   }
 }
@@ -123,7 +123,15 @@ onMounted(async () => {
   await fetchCurrentUser()
   await fetchRequest()
   await fetchProposals()
+  
+  console.log('DEBUG: Current User ID:', currentUser.value?.id)
+  console.log('DEBUG: Request Creator ID:', projectRequest.value?.creatorId)
+  console.log('DEBUG: Project Status Name:', projectRequest.value?.statusName)
+  console.log('DEBUG: Project Status Value:', projectRequest.value?.statusValue)
+  console.log('DEBUG: Proposals:', proposals.value.map(p => ({ id: p.id, statusName: p.statusName, statusValue: p.statusValue })))
 })
+
+defineExpose({ fetchProposals })
 </script>
 
 <template>
@@ -168,25 +176,30 @@ onMounted(async () => {
           </div>
 
           <div class="flex flex-col items-end gap-4">
-            <div v-if="proposal.statusValue === 1" class="flex items-center gap-2 px-6 py-2 rounded-full bg-green-500 text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-green-500/20">
+            <!-- شارة الحالة: تظهر إذا كان العرض مقبولاً -->
+            <div v-if="proposal.statusValue === 2 || proposal.statusName?.toLowerCase() === 'accepted'" class="flex items-center gap-2 px-6 py-2 rounded-full bg-green-500 text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-green-500/20">
                <Icon name="ph:check-circle-fill" />
                {{ $t('Accepted') }}
             </div>
             
+            <!-- زر المراسلة: يظهر فقط للعروض المقبولة -->
             <button
-              v-if="proposal.statusValue === 1 && isRequestOwner()"
+              v-if="(proposal.statusValue === 2 || proposal.statusName?.toLowerCase() === 'accepted') && isRequestOwner()"
+              @click.stop="router.push(`/replies/${proposal.id}`)"
               class="w-full md:w-auto px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
             >
               <Icon name="ph:chat-circle-dots-bold" />
               {{ $t('Contact') }}
             </button>
 
+            <!-- زر القبول: يظهر إذا كان العرض غير مقبول بعد والمستخدم هو صاحب الطلب -->
             <button
-              v-if="isRequestOwner() && projectRequest?.statusValue === 0 && proposal.statusValue !== 1"
+              v-if="isRequestOwner() && proposal.statusValue !== 2 && proposal.statusName?.toLowerCase() !== 'accepted'"
               @click.stop="openSelectDialog(proposal.id)"
-              class="w-full md:w-auto px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-xl transition-all active:scale-95"
+              class="w-full md:w-auto px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
             >
-              {{ $t('Select Proposal') }}
+              <Icon name="ph:check-bold" />
+              {{ $t('Accept') }}
             </button>
           </div>
         </div>

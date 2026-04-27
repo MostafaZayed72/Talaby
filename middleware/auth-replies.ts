@@ -29,11 +29,12 @@ export default defineNuxtRouteMiddleware(async (to) => {
       return navigateTo('/')
     }
 
-    const data = await res.json()
+    const responseData = await res.json()
+    const proposalData = responseData.data
 
     const currentUserId = user.value.id
-    const isProposalOwner = currentUserId === data.proposalCreatorId
-    const isRequestOwner = currentUserId === data.projectRequestCreatorId
+    const isProposalOwner = currentUserId === proposalData.proposalCreatorId
+    const isRequestOwner = currentUserId === proposalData.projectRequestCreatorId
 
     if (!isProposalOwner && !isRequestOwner) {
       return navigateTo('/')

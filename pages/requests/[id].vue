@@ -1,3 +1,18 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const proposalsRef = ref<any>(null)
+const questionsRef = ref<any>(null)
+
+const handleProposalAdded = () => {
+  proposalsRef.value?.fetchProposals()
+}
+
+const handleQuestionAdded = () => {
+  questionsRef.value?.fetchQuestions()
+}
+</script>
+
 <template>
   <div class="min-h-screen pb-20 px-6 relative overflow-hidden">
     <!-- Background Decorations -->
@@ -21,9 +36,9 @@
           </div>
           
           <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-8 shadow-2xl">
-            <RequestsAddProposal />
+            <RequestsAddProposal @proposal-added="handleProposalAdded" />
             <div class="mt-10 border-t border-white/10 pt-10">
-              <RequestsGetProposals />
+              <RequestsGetProposals ref="proposalsRef" />
             </div>
           </div>
         </div>
@@ -38,9 +53,9 @@
           </div>
 
           <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-8 shadow-2xl">
-            <QuestionsAddQuestion />
+            <QuestionsAddQuestion @question-added="handleQuestionAdded" />
             <div class="mt-10 border-t border-white/10 pt-10">
-              <QuestionsGetQuestions />
+              <QuestionsGetQuestions ref="questionsRef" />
             </div>
           </div>
         </div>

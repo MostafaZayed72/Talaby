@@ -24,7 +24,7 @@
         <NuxtLink 
           v-for="service in popularServices" 
           :key="service.id"
-          :to="`/department/${service.id}`"
+          :to="`/departments/${service.id}`"
           class="group relative overflow-hidden rounded-3xl cursor-pointer block bg-slate-100 dark:bg-slate-900 shadow-lg hover:shadow-2xl transition-all duration-500"
         >
           <img 

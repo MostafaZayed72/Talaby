@@ -53,6 +53,8 @@ const navigateTo = (path: string) => {
 
 onMounted(fetchQuestions)
 watch(pageNumber, fetchQuestions)
+
+defineExpose({ fetchQuestions })
 </script>
 
 <template>
