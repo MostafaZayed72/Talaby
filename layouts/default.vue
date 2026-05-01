@@ -158,11 +158,17 @@ const isSidebarOpen = ref(false);
 const isDropdownOpen = ref(false);
 const isAtTop = ref(true);
 
-const navLinks = [
-  { to: '/', label: 'Home', icon: 'ph:house-fill' },
-  { to: '/departments', label: 'Departments', icon: 'ph:grid-four-fill' },
-  { to: '/payment', label: 'Payment', icon: 'ph:credit-card-fill' },
-];
+const navLinks = computed(() => {
+  const links = [
+    { to: '/', label: 'Home', icon: 'ph:house-fill' },
+    { to: '/departments', label: 'Departments', icon: 'ph:grid-four-fill' },
+  ];
+  if (isLoggedIn.value) {
+    links.push({ to: '/dashboard', label: 'Dashboard', icon: 'ph:layout-fill' });
+  }
+  links.push({ to: '/payment', label: 'Payment', icon: 'ph:credit-card-fill' });
+  return links;
+});
 
 const isLoggedIn = computed(() => !!token.value);
 const user = useState('currentUser', () => null);

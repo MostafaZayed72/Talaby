@@ -109,6 +109,7 @@ const isSidebarOpen = ref(false);
 const token = useLocalStorage('token', null);
 
 const adminLinks = [
+  { to: '/admin', label: 'Dashboard', icon: 'ph:layout-bold' },
   { to: '/admin/departments', label: 'Departments', icon: 'ph:grid-four-bold' },
   { to: '/', label: 'Visit Website', icon: 'ph:globe-bold' },
 ];
