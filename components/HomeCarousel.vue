@@ -23,12 +23,9 @@
                 {{ $t('All your services in one place. Fast, reliable, and easy to use.') }}
               </p>
               <div class="flex flex-wrap justify-center md:justify-start gap-6">
-                <button class="bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black py-4 px-10 rounded-2xl transition-all transform hover:scale-105 shadow-[0_20px_50px_rgba(234,179,8,0.3)] active:scale-95">
+                <NuxtLink to="/departments" class="bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black py-4 px-10 rounded-2xl transition-all transform hover:scale-105 shadow-[0_20px_50px_rgba(234,179,8,0.3)] active:scale-95">
                   {{ $t('Order Now') }}
-                </button>
-                <button class="bg-white/10 backdrop-blur-md border-2 border-white/20 text-white hover:bg-white hover:text-violet-950 font-black py-4 px-10 rounded-2xl transition-all shadow-xl active:scale-95">
-                  {{ $t('Learn More') }}
-                </button>
+                </NuxtLink>
               </div>
             </div>
             <div class="hidden md:block flex-1 animate-float">
@@ -52,9 +49,9 @@
               <p class="text-xl md:text-2xl text-slate-200 mb-10 font-medium leading-relaxed">
                 {{ $t('Find the best service providers in your area for any task.') }}
               </p>
-              <button class="bg-white text-violet-950 font-black py-4 px-12 rounded-2xl hover:bg-yellow-400 transition-all shadow-[0_20px_50px_rgba(255,255,255,0.1)] active:scale-95">
+              <NuxtLink to="/departments" class="inline-block bg-white text-violet-950 font-black py-4 px-12 rounded-2xl hover:bg-yellow-400 transition-all shadow-[0_20px_50px_rgba(255,255,255,0.1)] active:scale-95">
                 {{ $t('Browse Services') }}
-              </button>
+              </NuxtLink>
             </div>
             <div class="flex-1 animate-pulse-slow">
               <img src="/imgs/hero2.png" class="w-full max-w-lg mx-auto" alt="Service" />
