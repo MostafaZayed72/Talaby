@@ -12,13 +12,12 @@ import { useLocalStorage } from '@vueuse/core'
 const userRole = ref('')
 const roles = useLocalStorage('roles', [])
 
-onMounted(() => {
+// Set role early for template
+if (process.client) {
   if (roles.value.includes('Store')) {
     userRole.value = 'Store'
-    setPageLayout('provider')
   } else if (roles.value.includes('Client')) {
     userRole.value = 'Client'
-    setPageLayout('client')
   }
-})
+}
 </script>

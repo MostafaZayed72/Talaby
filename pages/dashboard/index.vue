@@ -58,25 +58,31 @@ const error = ref(null)
 const dashboardData = ref(null)
 const role = ref(null)
 
+// Determine role early for template
+if (process.client) {
+  if (roles.value.includes('Admin')) {
+    role.value = 'Admin'
+  } else if (roles.value.includes('Store')) {
+    role.value = 'Store'
+  } else if (roles.value.includes('Client')) {
+    role.value = 'Client'
+  }
+}
+
 const fetchData = async () => {
+  if (!role.value) {
+    if (roles.value.includes('Admin')) role.value = 'Admin'
+    else if (roles.value.includes('Store')) role.value = 'Store'
+    else if (roles.value.includes('Client')) role.value = 'Client'
+    else {
+      loading.value = false
+      return
+    }
+  }
+
   loading.value = true
   error.value = null
   
-  // Determine role
-  if (roles.value.includes('Admin')) {
-    role.value = 'Admin'
-    setPageLayout('admin')
-  } else if (roles.value.includes('Store')) {
-    role.value = 'Store'
-    setPageLayout('provider')
-  } else if (roles.value.includes('Client')) {
-    role.value = 'Client'
-    setPageLayout('client')
-  } else {
-    loading.value = false
-    return
-  }
-
   try {
     const endpoint = role.value === 'Store' ? 'dashboard/store' : 'dashboard/client'
     const res = await fetch(`${config.public.API_BASE_URL}/${endpoint}`, {

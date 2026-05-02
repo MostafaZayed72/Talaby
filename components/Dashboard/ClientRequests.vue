@@ -10,15 +10,25 @@
         <p class="text-slate-500 font-bold mt-1">{{ $t('Manage and track your project requests') }}</p>
       </div>
 
-      <div class="w-full md:w-96 relative group">
-        <Icon name="ph:magnifying-glass-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
-        <input 
-          v-model="filters.SearchPhrase"
-          @input="debounceSearch"
-          type="text" 
-          :placeholder="$t('Search orders...')"
-          class="w-full pl-12 pr-6 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl font-bold shadow-sm focus:ring-4 focus:ring-indigo-600/10 focus:border-indigo-600 transition-all outline-none"
+      <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
+        <NuxtLink 
+          to="/departments" 
+          class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-black px-8 py-4 rounded-2xl shadow-xl transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
         >
+          <Icon name="ph:plus-circle-fill" class="text-2xl" />
+          {{ $t('New Request') }}
+        </NuxtLink>
+
+        <div class="w-full md:w-96 relative group">
+          <Icon name="ph:magnifying-glass-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
+          <input 
+            v-model="filters.SearchPhrase"
+            @input="debounceSearch"
+            type="text" 
+            :placeholder="$t('Search orders...')"
+            class="w-full pl-12 pr-6 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl font-bold shadow-sm focus:ring-4 focus:ring-indigo-600/10 focus:border-indigo-600 transition-all outline-none"
+          >
+        </div>
       </div>
     </div>
 

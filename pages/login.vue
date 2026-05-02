@@ -136,7 +136,7 @@ const loginUser = async () => {
 
     // Redirect based on role or type
     if (newRoles?.includes('Admin') || userTypeName === 'Admin' || userTypeValue === 1) {
-      router.push('/admin/departments')
+      router.push('/admin')
     } else {
       router.push('/')
     }

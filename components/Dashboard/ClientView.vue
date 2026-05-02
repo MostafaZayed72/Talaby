@@ -11,7 +11,7 @@
           <p class="text-slate-500 font-bold">{{ $t('Manage your requests and track your orders.') }}</p>
         </div>
       </div>
-      <NuxtLink to="/requests/add" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-10 py-5 rounded-2xl shadow-xl transition-all transform hover:scale-105 active:scale-95 flex items-center gap-3">
+      <NuxtLink to="/departments" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-10 py-5 rounded-2xl shadow-xl transition-all transform hover:scale-105 active:scale-95 flex items-center gap-3">
         <Icon name="ph:plus-circle-fill" class="text-2xl" />
         {{ $t('New Request') }}
       </NuxtLink>

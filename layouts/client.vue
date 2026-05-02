@@ -20,6 +20,15 @@
 
         <!-- Nav Links -->
         <nav class="flex-1 px-4 py-8 space-y-2">
+          <!-- New Request Button -->
+          <NuxtLink 
+            to="/departments" 
+            class="flex items-center gap-4 p-4 mb-6 rounded-2xl font-black text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-600/20 transition-all transform hover:scale-[1.02] active:scale-95 group"
+          >
+            <Icon name="ph:plus-circle-fill" class="text-2xl group-hover:rotate-90 transition-transform duration-500" />
+            {{ $t('New Request') }}
+          </NuxtLink>
+
           <NuxtLink 
             v-for="link in clientLinks" 
             :key="link.to"
