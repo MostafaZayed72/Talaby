@@ -69,7 +69,9 @@
 
         <div class="flex items-center gap-4">
           <div class="text-right hidden sm:block">
-            <p class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">{{ $t('Client') }}</p>
+            <p class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">
+              {{ currentUser?.firstName }} {{ currentUser?.lastName }}
+            </p>
             <p class="text-xs text-slate-500 dark:text-slate-400">{{ userEmail }}</p>
           </div>
           <div class="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-lg">
@@ -100,6 +102,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useLocalStorage } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
+import { useCurrentUser } from '~/composables/useCurrentUser';
 
 const { locale, t } = useI18n();
 const router = useRouter();
@@ -109,6 +112,7 @@ const loading = ref(true);
 const isSidebarOpen = ref(false);
 const token = useLocalStorage('token', null);
 const userEmail = ref('');
+const currentUser = ref(null);
 
 const clientLinks = [
   { to: '/dashboard', label: 'Statistics', icon: 'ph:chart-bar-bold' },
@@ -128,13 +132,21 @@ const logout = () => {
   router.push('/login');
 };
 
-onMounted(() => {
+onMounted(async () => {
   loading.value = false;
-  const storedUser = localStorage.getItem('user');
-  if (storedUser) {
-    try {
-      userEmail.value = JSON.parse(storedUser).email;
-    } catch (e) {}
+  
+  const { user } = await useCurrentUser();
+  currentUser.value = user.value;
+
+  if (currentUser.value) {
+    userEmail.value = currentUser.value.email;
+  } else {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        userEmail.value = JSON.parse(storedUser).email;
+      } catch (e) {}
+    }
   }
 });
 
