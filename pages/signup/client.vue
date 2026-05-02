@@ -170,12 +170,15 @@ const loginUser = async (userEmail: string, userPassword: string) => {
 
     toast.add({ severity: 'success', summary: 'نجاح', detail: 'تم تسجيل الدخول بنجاح' })
   } catch (error: any) {
-    const errorMsg =
-      error.response?.data?.errors?.[Object.keys(error.response.data.errors)[0]]?.[0] ||
-      error.response?.data?.title ||
-      'حدث خطأ أثناء تسجيل الدخول'
-
-    toast.add({ severity: 'error', summary: 'خطأ', detail: errorMsg })
+    const data = error.response?.data
+    if (data?.errors && Array.isArray(data.errors)) {
+      data.errors.forEach((err: any) => {
+        toast.add({ severity: 'error', summary: 'خطأ', detail: err.message })
+      })
+    } else {
+      const errorMsg = data?.message || data?.title || 'حدث خطأ أثناء تسجيل الدخول'
+      toast.add({ severity: 'error', summary: 'خطأ', detail: errorMsg })
+    }
     console.error('Login Error:', error)
   }
 }
@@ -205,14 +208,12 @@ const registerClient = async () => {
     const data = await res.json()
 
     if (!res.ok) {
-      if (res.status === 400 && data.errors) {
-        for (const field in data.errors) {
-          data.errors[field].forEach((msg: string) => {
-            toast.add({ severity: 'error', summary: 'خطأ', detail: msg })
-          })
-        }
+      if (data.errors && Array.isArray(data.errors)) {
+        data.errors.forEach((err: any) => {
+          toast.add({ severity: 'error', summary: 'خطأ', detail: err.message })
+        })
       } else {
-        toast.add({ severity: 'error', summary: 'خطأ', detail: data.title || 'حدث خطأ غير متوقع' })
+        toast.add({ severity: 'error', summary: 'خطأ', detail: data.message || data.title || 'حدث خطأ غير متوقع' })
       }
       return
     }
