@@ -111,12 +111,14 @@ const token = useLocalStorage('token', null);
 const adminLinks = [
   { to: '/admin', label: 'Dashboard', icon: 'ph:layout-bold' },
   { to: '/admin/departments', label: 'Departments', icon: 'ph:grid-four-bold' },
+  { to: '/admin/policy-violations', label: 'Policy Violations', icon: 'ph:shield-warning-bold' },
   { to: '/', label: 'Visit Website', icon: 'ph:globe-bold' },
 ];
 
 const pageTitle = computed(() => {
   if (route.path.includes('departments')) return t('Departments Management');
   if (route.path.includes('products')) return t('Products Management');
+  if (route.path.includes('policy-violations')) return t('Policy Violations');
   return t('Dashboard');
 });
 
