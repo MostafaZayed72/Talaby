@@ -30,6 +30,7 @@ const fetchRequests = async () => {
     const url = new URL(`${config.public.API_BASE_URL}/project-requests`)
     url.searchParams.set('PageNumber', pageNumber.value.toString())
     url.searchParams.set('PageSize', pageSize.value.toString())
+    url.searchParams.set('StoreCategoryId', departmentId.toString())
     if (searchPhrase.value) {
       url.searchParams.set('SearchPhrase', searchPhrase.value)
     }
@@ -46,10 +47,8 @@ const fetchRequests = async () => {
     const response = await res.json()
     const data = response.data
 
-    // فلترة الطلبات الخاصة بالقسم الحالي فقط
-    requests.value = (data.items || []).filter(
-      (item: any) => item.storeCategoryId === departmentId
-    )
+    // تحديث قائمة الطلبات
+    requests.value = data.items || []
     totalPages.value = data.totalPages || 1
   } catch (err: any) {
     error.value = err.message || 'حدث خطأ أثناء تحميل البيانات'
@@ -111,7 +110,7 @@ defineExpose({ fetchRequests })
               {{ req.title }}
             </h3>
             <div class="px-4 py-1.5 rounded-full bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 text-xs font-black uppercase tracking-widest border border-indigo-600/20">
-              {{ $t(req.statusName) }}
+              {{ $t(String(req.status || 'Open')) }}
             </div>
           </div>
 

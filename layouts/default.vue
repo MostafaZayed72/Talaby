@@ -166,7 +166,6 @@ const navLinks = computed(() => {
   if (isLoggedIn.value) {
     links.push({ to: '/dashboard', label: 'Dashboard', icon: 'ph:layout-fill' });
   }
-  links.push({ to: '/payment', label: 'Payment', icon: 'ph:credit-card-fill' });
   return links;
 });
 
