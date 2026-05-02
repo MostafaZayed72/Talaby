@@ -42,6 +42,7 @@ const fetchPostDetails = async () => {
     if (!res.ok) throw new Error('فشل في تحميل تفاصيل الطلب')
 
     const response = await res.json()
+    console.log('DEBUG: Project Details Data:', response.data)
     post.value = response.data
   } catch (err: any) {
     error.value = err.message || 'حدث خطأ أثناء تحميل البيانات'
@@ -112,9 +113,9 @@ onMounted(fetchPostDetails)
               <h1 class="text-4xl md:text-6xl font-black text-slate-900 dark:text-white leading-tight italic tracking-tighter">
                 {{ post.title }}
               </h1>
-              <div class="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 border border-indigo-600/30 font-black text-sm uppercase tracking-widest shadow-lg backdrop-blur-md">
+              <div v-if="post && post.statusName" class="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 border border-indigo-600/30 font-black text-sm uppercase tracking-widest shadow-lg backdrop-blur-md">
                 <Icon name="ph:info-bold" />
-                {{ $t(post.statusName) }}
+                <span>{{ $t(String(post.statusName)) }}</span>
               </div>
 
               <!-- زر الدفع لصاحب الطلب -->
@@ -131,12 +132,6 @@ onMounted(fetchPostDetails)
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
-               <div class="bg-white/5 p-6 rounded-3xl border border-white/5 space-y-1">
-                  <span class="text-xs font-black text-slate-500 uppercase tracking-widest">{{ $t('Budget Range') }}</span>
-                  <p class="text-2xl font-black text-indigo-600 dark:text-indigo-400 italic">
-                    ${{ post.minBudget }} - ${{ post.maxBudget }}
-                  </p>
-               </div>
                <div class="bg-white/5 p-6 rounded-3xl border border-white/5 space-y-1">
                   <span class="text-xs font-black text-slate-500 uppercase tracking-widest">{{ $t('Created On') }}</span>
                   <p class="text-xl font-bold text-slate-900 dark:text-white">

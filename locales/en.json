@@ -234,5 +234,20 @@
     "totalRevenue": "Total Revenue",
     "paidCount": "Paid Count",
     "pendingCount": "Pending Count",
-    "failedCount": "Failed Count"
+    "failedCount": "Failed Count",
+    "Statistics": "Statistics",
+    "My Proposals": "My Proposals",
+    "Manage and track your project offers": "Manage and track your project offers",
+    "Search projects...": "Search projects...",
+    "My Offer": "My Offer",
+    "Service Provider": "Service Provider",
+    "Provider Dashboard": "Provider Dashboard",
+    "Offer": "Offer",
+    "My Orders": "My Orders",
+    "Client Dashboard": "Client Dashboard",
+    "Manage and track your project requests": "Manage and track your project requests",
+    "Search orders...": "Search orders...",
+    "No requests found": "No requests found",
+    "Create Your First Request": "Create Your First Request",
+    "Offers": "Offers"
 }

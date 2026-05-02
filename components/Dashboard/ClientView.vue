@@ -58,7 +58,11 @@
       <!-- Recent Projects -->
       <div class="lg:col-span-2 bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl rounded-[3rem] border border-white/20 shadow-2xl overflow-hidden">
         <div class="p-8 border-b border-white/10 flex items-center justify-between">
-          <h3 class="text-xl font-black text-slate-900 dark:text-white italic">{{ $t('Recent Projects') }}</h3>
+          <h3 class="text-xl font-black text-slate-900 dark:text-white italic flex items-center gap-3">
+            <Icon name="ph:clock-countdown-fill" class="text-indigo-600" />
+            {{ $t('Recent Projects') }}
+          </h3>
+          <NuxtLink to="/dashboard/requests" class="text-xs font-black text-indigo-600 uppercase tracking-widest hover:underline">{{ $t('View All') }}</NuxtLink>
         </div>
         <div class="p-8 space-y-4">
           <div v-for="project in data.recentProjects" :key="project.id" 

@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 py-12 px-6">
-    <div class="max-w-7xl mx-auto">
-      <div v-if="loading" class="flex flex-col items-center justify-center min-h-[400px] gap-4">
+  <div :class="[role === 'Store' ? '' : 'min-h-screen bg-slate-50 dark:bg-slate-950 py-12 px-6']">
+    <div :class="[role === 'Store' ? '' : 'max-w-7xl mx-auto']">
+      <div v-if="loading && !dashboardData" class="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <Icon name="ph:circle-notch-bold" class="text-6xl text-indigo-600 animate-spin" />
         <p class="text-indigo-600 font-black italic animate-pulse">{{ $t('Loading your space...') }}</p>
       </div>
@@ -46,6 +46,8 @@ definePageMeta({
   middleware: 'auth'
 })
 
+
+
 const config = useRuntimeConfig()
 const router = useRouter()
 const token = useLocalStorage('token', '')
@@ -62,12 +64,14 @@ const fetchData = async () => {
   
   // Determine role
   if (roles.value.includes('Admin')) {
-    router.push('/admin')
-    return
+    role.value = 'Admin'
+    setPageLayout('admin')
   } else if (roles.value.includes('Store')) {
     role.value = 'Store'
+    setPageLayout('provider')
   } else if (roles.value.includes('Client')) {
     role.value = 'Client'
+    setPageLayout('client')
   } else {
     loading.value = false
     return
