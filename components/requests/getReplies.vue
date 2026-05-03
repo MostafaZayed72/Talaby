@@ -25,6 +25,10 @@ const currentUserEmail = ref('')
 const currentUserId = ref('')
 const proposalData = ref<any>(null)
 const showMarkDoneDialog = ref(false)
+const isMarkingDone = ref(false)
+const isProcessingPayment = ref(false)
+const showPaymentConfirmDialog = ref(false)
+const selectedPaymentAmount = ref(0)
 
 const fetchCurrentUser = async () => {
   try {

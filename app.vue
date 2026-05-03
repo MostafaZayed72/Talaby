@@ -71,9 +71,11 @@ body {
 
 /* ===== GLOBAL DARK MODE FIX FOR TELEPORTED MODALS & DIALOGS ===== */
 
-/* Custom modals (Teleported to body) */
+/* Custom modals (Teleported to body + inline fixed overlays) */
 html.dark .modal-dark-content,
-html.dark [class*="animate-modal-in"] {
+html.dark [class*="animate-modal-in"],
+html.dark .fixed [class*="bg-white"],
+html.dark .fixed > div > [class*="bg-white"] {
   background-color: #0f172a !important; /* slate-900 */
   color: #f8fafc !important;
   border-color: rgba(255,255,255,0.1) !important;
