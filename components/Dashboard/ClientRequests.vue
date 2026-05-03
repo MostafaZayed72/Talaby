@@ -252,6 +252,47 @@ const statusClass = (status) => {
   }
 }
 
+const isChatOpen = (item) => {
+  if (!item || !item.status) return false
+  const s = item.status.toLowerCase()
+  return ['accepted', 'completed', 'inprogress'].includes(s)
+}
+
+const goToChat = async (item) => {
+  if (!isChatOpen(item)) return
+
+  // If the API provided the acceptedProposalId directly
+  if (item.acceptedProposalId) {
+    router.push(`/replies/${item.acceptedProposalId}`)
+    return
+  }
+
+  // Otherwise, we fetch the project's proposals to find the accepted one
+  try {
+    const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${item.id}/proposals?pageNumber=1&pageSize=100`, {
+      headers: { Authorization: `Bearer ${token.value}` }
+    })
+    if (!res.ok) throw new Error('Failed to fetch proposals')
+    
+    const response = await res.json()
+    const accepted = response.data.items.find(p => 
+      p.statusValue === 2 || 
+      p.statusValue === 3 || 
+      ['accepted', 'completed'].includes((p.statusName || p.status || '').toLowerCase())
+    )
+    
+    if (accepted) {
+      router.push(`/replies/${accepted.id}`)
+    } else {
+      // Fallback to project details page
+      router.push(`/requests/${item.id}`)
+    }
+  } catch (err) {
+    console.error(err)
+    router.push(`/requests/${item.id}`)
+  }
+}
+
 const displayedPages = computed(() => {
   const pages = []
   const maxPages = 5
