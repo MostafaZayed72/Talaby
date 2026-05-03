@@ -96,9 +96,9 @@ const confirmSelection = async () => {
 }
 
 const navigateTo = (proposal: any) => {
-  const isProposalOwner = proposal.creatorEmail === currentUser.value?.email
+  const isProposalOwner = proposal.creatorEmail?.toLowerCase() === currentUser.value?.email?.toLowerCase()
   const isReqOwner = props.project?.creatorId === currentUser.value?.id
-  const isAcceptedProposal = proposal.statusValue === 2 || proposal.statusName?.toLowerCase() === 'accepted'
+  const isAcceptedProposal = proposal.statusValue === 2 || proposal.statusValue === 3 || (proposal.statusName || proposal.status)?.toLowerCase() === 'accepted' || (proposal.statusName || proposal.status)?.toLowerCase() === 'completed'
 
   if ((isProposalOwner || isReqOwner) && isAcceptedProposal) {
     router.push(`/replies/${proposal.id}`)
@@ -159,15 +159,15 @@ defineExpose({ fetchProposals })
           </div>
 
           <div class="flex flex-col items-end gap-4">
-            <!-- شارة الحالة: تظهر إذا كان العرض مقبولاً -->
-            <div v-if="proposal.statusValue === 2 || proposal.statusName?.toLowerCase() === 'accepted'" class="flex items-center gap-2 px-6 py-2 rounded-full bg-green-500 text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-green-500/20">
+            <!-- شارة الحالة: تظهر إذا كان العرض مقبولاً أو مكتملاً -->
+            <div v-if="proposal.statusValue === 2 || proposal.statusValue === 3 || (proposal.statusName || proposal.status)?.toLowerCase() === 'accepted' || (proposal.statusName || proposal.status)?.toLowerCase() === 'completed'" class="flex items-center gap-2 px-6 py-2 rounded-full bg-green-500 text-white font-black text-xs uppercase tracking-widest shadow-lg shadow-green-500/20">
                <Icon name="ph:check-circle-fill" />
-               {{ $t('Accepted') }}
+               {{ (proposal.statusName || proposal.status)?.toLowerCase() === 'completed' || proposal.statusValue === 3 ? $t('Completed') : $t('Accepted') }}
             </div>
             
-            <!-- زر المراسلة: يظهر فقط للعروض المقبولة -->
+            <!-- زر المراسلة: يظهر لصاحب الطلب أو صاحب العرض المقبول -->
             <button
-              v-if="(proposal.statusValue === 2 || proposal.statusName?.toLowerCase() === 'accepted') && isRequestOwner()"
+              v-if="(proposal.statusValue === 2 || proposal.statusValue === 3 || (proposal.statusName || proposal.status)?.toLowerCase() === 'accepted' || (proposal.statusName || proposal.status)?.toLowerCase() === 'completed') && (isRequestOwner() || proposal.creatorEmail?.toLowerCase() === currentUser?.email?.toLowerCase())"
               @click.stop="router.push(`/replies/${proposal.id}`)"
               class="w-full md:w-auto px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
             >
@@ -175,9 +175,9 @@ defineExpose({ fetchProposals })
               {{ $t('Contact') }}
             </button>
 
-            <!-- زر القبول: يظهر إذا كان العرض غير مقبول بعد والمستخدم هو صاحب الطلب -->
+            <!-- زر القبول: يظهر إذا كان العرض غير مقبول أو مكتمل بعد والمستخدم هو صاحب الطلب -->
             <button
-              v-if="isRequestOwner() && proposal.statusValue !== 2 && proposal.statusName?.toLowerCase() !== 'accepted'"
+              v-if="isRequestOwner() && proposal.statusValue !== 2 && proposal.statusValue !== 3 && (proposal.statusName || proposal.status)?.toLowerCase() !== 'accepted' && (proposal.statusName || proposal.status)?.toLowerCase() !== 'completed'"
               @click.stop="openSelectDialog(proposal.id)"
               class="w-full md:w-auto px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
             >

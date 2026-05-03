@@ -134,7 +134,7 @@
       </div>
     </transition>
 
-    <main class="pt-16 md:pt-20">
+    <main>
       <slot />
     </main>
 

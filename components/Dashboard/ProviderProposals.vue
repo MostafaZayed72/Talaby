@@ -91,8 +91,12 @@
                   </div>
                 </td>
                 <td class="px-4 md:px-8 py-4 md:py-6 text-center">
-                   <div class="flex items-center justify-center gap-2 text-slate-400 group-hover:text-indigo-600 transition-colors">
-                      <Icon name="ph:chat-circle-dots-fill" />
+                   <div 
+                    @click.stop="(item.status.toLowerCase() === 'accepted' || item.status.toLowerCase() === 'completed') ? router.push(`/replies/${item.id}`) : null"
+                    class="flex items-center justify-center gap-2 text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer"
+                    :title="(item.status.toLowerCase() === 'accepted' || item.status.toLowerCase() === 'completed') ? $t('Open Chat') : ''"
+                   >
+                      <Icon name="ph:chat-circle-dots-fill" :class="{'text-indigo-600': item.status.toLowerCase() === 'accepted' || item.status.toLowerCase() === 'completed'}" />
                       <span class="text-xs font-black">{{ item.repliesCount }}</span>
                    </div>
                 </td>
