@@ -16,6 +16,10 @@
         <p class="text-slate-600 dark:text-slate-400 font-bold leading-relaxed">
           {{ $t('Thank you! Your commission payment has been verified successfully. Your request status has been updated.') }}
         </p>
+        <div v-if="paymentInfo" class="mt-4 p-4 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/5 text-sm text-slate-500 dark:text-slate-400 font-bold space-y-1">
+          <p>{{ $t('Payment Status') }}: {{ paymentInfo.paymentStatus }}</p>
+          <p v-if="paymentInfo.paidAt">{{ $t('Paid At') }}: {{ new Date(paymentInfo.paidAt).toLocaleString() }}</p>
+        </div>
       </div>
       <div class="pt-4 flex flex-col gap-4">
         <NuxtLink 
