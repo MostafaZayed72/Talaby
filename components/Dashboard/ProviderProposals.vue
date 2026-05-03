@@ -199,7 +199,7 @@ import { useI18n } from 'vue-i18n'
 const config = useRuntimeConfig()
 const router = useRouter()
 const { locale, t } = useI18n()
-const token = useLocalStorage('token', '')
+const token = useCookie('token')
 
 const loading = ref(true)
 const items = ref([])

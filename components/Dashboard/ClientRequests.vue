@@ -216,6 +216,7 @@ const { locale, t } = useI18n()
 const token = useCookie('token')
 
 const loading = ref(true)
+const items = ref([])
 const totalPages = ref(0)
 const totalItemsCount = ref(0)
 const isProcessingPayment = ref(false)
