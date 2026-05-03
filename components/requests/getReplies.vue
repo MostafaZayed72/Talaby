@@ -122,8 +122,7 @@ const confirmAndPay = async () => {
   showPaymentConfirmDialog.value = false
   isProcessingPayment.value = true
   try {
-    // حفظ معرف المشروع للتحقق منه في صفحة النتيجة
-    localStorage.setItem('pending_payment_project_id', proposalData.value.projectRequestId)
+    // No need to save to localStorage as projectRequestId is passed in the redirect URL
     
     const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${proposalData.value.projectRequestId}/commission-payment/checkout`, {
       method: 'POST',
@@ -236,7 +235,7 @@ const startPolling = () => {
 
         <!-- زر دفع العمولة: يظهر لصاحب الطلب إذا انتهت المهمة -->
         <button 
-          v-if="proposalData && (currentUserId === proposalData.projectRequestCreatorId || currentUserEmail === proposalData.projectRequestCreatorEmail) && (proposalData.proposalStatusValue === 3 || String(proposalData.proposalStatus).toLowerCase() === 'completed')"
+          v-if="proposalData && (currentUserId === proposalData.projectRequestCreatorId || currentUserEmail === proposalData.projectRequestCreatorEmail) && (proposalData.proposalStatusValue !== 3 && String(proposalData.proposalStatus).toLowerCase() !== 'completed' && String(proposalData.proposalStatus).toLowerCase() !== 'finished')"
           @click="payCommission"
           :disabled="isProcessingPayment"
           class="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center gap-2 disabled:opacity-50"
@@ -246,7 +245,7 @@ const startPolling = () => {
           {{ $t('Pay Commission') }}
         </button>
 
-        <RequestsCancelProposal />
+        <RequestsCancelProposal v-if="proposalData && proposalData.proposalStatusValue !== 3 && String(proposalData.proposalStatus).toLowerCase() !== 'completed'" />
       </div>
     </div>
 

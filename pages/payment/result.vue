@@ -88,12 +88,13 @@ const verifyPayment = async () => {
   status.value = 'pending'
   
   const tap_id = route.query.tap_id
-  const pendingPaymentId = useCookie('pending_payment_project_id')
-  requestId.value = pendingPaymentId.value
+  const queryRequestId = route.query.projectRequestId
+  
+  requestId.value = queryRequestId
 
   if (!requestId.value) {
     status.value = 'error'
-    errorMsg.value = 'No pending payment found for this project.'
+    errorMsg.value = 'No project request ID found for verification.'
     loading.value = false
     return
   }
@@ -111,8 +112,6 @@ const verifyPayment = async () => {
     if (data.isSuccess && data.data.isPaid) {
       status.value = 'success'
       paymentInfo.value = data.data
-      // تنظيف الـ Cookie بعد النجاح
-      pendingPaymentId.value = null
     } else {
       status.value = 'error'
       errorMsg.value = data.message || (data.data && !data.data.isPaid ? 'Payment not yet confirmed.' : 'Verification failed.')
