@@ -113,6 +113,11 @@ const sendEmail = async () => {
       :closable="false"
       class="rounded-3xl overflow-hidden border-none shadow-2xl bg-white dark:bg-slate-900"
       :style="{ direction: $i18n.locale === 'ar' ? 'rtl' : 'ltr', width: '90vw', maxWidth: '400px' }"
+      :pt="{
+        root: 'border-none bg-white dark:bg-slate-900',
+        header: 'bg-white dark:bg-slate-900 border-none pt-8',
+        content: 'bg-white dark:bg-slate-900 border-none'
+      }"
     >
       <div class="text-center p-8">
         <div class="w-20 h-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">

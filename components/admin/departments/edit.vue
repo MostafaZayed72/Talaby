@@ -51,7 +51,12 @@
     </div>
 
     <!-- ديالوج التعديل -->
-    <Dialog v-model:visible="showEdit" :header="$t('Edit department')" :modal="true" class="w-[30rem]" :pt="{ root: { dir: isArabic ? 'rtl' : 'ltr' } }">
+    <Dialog v-model:visible="showEdit" :header="$t('Edit department')" :modal="true" class="w-[30rem]" 
+    :pt="{ 
+      root: { dir: isArabic ? 'rtl' : 'ltr', class: 'border-none bg-white dark:bg-slate-900 shadow-2xl rounded-3xl overflow-hidden' },
+      header: 'bg-white dark:bg-slate-900 border-none p-6 text-slate-900 dark:text-white font-black',
+      content: 'bg-white dark:bg-slate-900 border-none p-6'
+    }">
       <form @submit.prevent="submitEdit" class="space-y-4">
         <InputText v-model="form.nameAr" :placeholder="$t('Name (arabic)')" class="w-full" />
         <InputText v-model="form.nameEn" :placeholder="$t('Name (english)')" class="w-full" />

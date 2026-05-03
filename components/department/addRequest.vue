@@ -118,7 +118,7 @@ const submitRequest = async () => {
           <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md" @click="showDialog = false"></div>
           
           <!-- Dialog Content -->
-          <div class="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[1.5rem] md:rounded-[2.5rem] shadow-2xl border border-white/20 p-5 md:p-12 animate-modal-in overflow-hidden max-h-[90vh] flex flex-col mx-4">
+          <div class="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[1.5rem] md:rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-white/10 p-5 md:p-12 animate-modal-in overflow-hidden max-h-[90vh] flex flex-col mx-4 dark:text-white">
             <!-- Decorative Light -->
             <div class="absolute top-0 right-0 w-48 h-48 bg-indigo-600/10 rounded-full blur-[80px]"></div>
             

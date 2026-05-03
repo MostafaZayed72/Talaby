@@ -151,6 +151,11 @@
       :closable="false"
       class="rounded-3xl overflow-hidden border-none shadow-2xl bg-white dark:bg-slate-900"
       :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr', width: '90vw', maxWidth: '450px' }"
+      :pt="{
+        root: 'border-none bg-white dark:bg-slate-900',
+        header: 'bg-white dark:bg-slate-900 border-none pt-8',
+        content: 'bg-white dark:bg-slate-900 border-none'
+      }"
     >
       <div class="text-center p-8">
         <div class="w-20 h-20 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -177,6 +182,11 @@
       class="rounded-3xl overflow-hidden border-none shadow-2xl bg-white dark:bg-slate-900"
       :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr', width: '90vw', maxWidth: '600px' }"
       :header="$t('Privacy Policy & Terms')"
+      :pt="{
+        root: 'border-none bg-white dark:bg-slate-900',
+        header: 'bg-white dark:bg-slate-900 border-none p-6 md:p-8 text-slate-900 dark:text-white font-black',
+        content: 'bg-white dark:bg-slate-900 border-none'
+      }"
     >
       <div class="p-6 md:p-8">
         <div class="max-h-[40vh] overflow-y-auto mb-8 pr-4 space-y-4 text-slate-600 dark:text-slate-400 text-sm leading-relaxed scrollbar-thin scrollbar-thumb-indigo-500">

@@ -90,9 +90,20 @@ const resetPassword = async () => {
       v-model:visible="successDialog"
       :header="t('Password Changed')"
       :closable="false"
-      class="text-center"
+      class="rounded-3xl overflow-hidden border-none shadow-2xl bg-white dark:bg-slate-900"
+      :style="{ direction: $i18n.locale === 'ar' ? 'rtl' : 'ltr', width: '90vw', maxWidth: '400px' }"
+      :pt="{
+        root: 'border-none bg-white dark:bg-slate-900',
+        header: 'bg-white dark:bg-slate-900 border-none pt-8 text-slate-900 dark:text-white font-black',
+        content: 'bg-white dark:bg-slate-900 border-none p-6 text-slate-500 dark:text-slate-400'
+      }"
     >
-      <p>{{ t('Password successfully changed. You will be redirected to login page...') }}</p>
+      <div class="text-center">
+        <div class="w-16 h-16 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Icon name="ph:check-circle-bold" class="text-3xl" />
+        </div>
+        <p>{{ t('Password successfully changed. You will be redirected to login page...') }}</p>
+      </div>
     </Dialog>
   </div>
 </template>

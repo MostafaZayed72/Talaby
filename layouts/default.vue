@@ -159,6 +159,11 @@ const roles = ref();
 const isSidebarOpen = ref(false);
 const isDropdownOpen = ref(false);
 const isAtTop = ref(true);
+const isDarkMode = ref(false);
+
+const syncDarkMode = () => {
+  isDarkMode.value = document.documentElement.classList.contains('dark');
+};
 
 const navLinks = computed(() => {
   const links = [
@@ -198,6 +203,17 @@ onMounted(() => {
   roles.value = localStorage.getItem("roles");
   window.addEventListener('scroll', handleScroll);
   document.addEventListener('click', closeDropdownOnClickOutside);
+  
+  // Sync dark mode state
+  const savedColorMode = localStorage.getItem('colorMode');
+  if (savedColorMode === 'dark') {
+    isDarkMode.value = true;
+    document.documentElement.classList.add('dark');
+  }
+  
+  // Listen for changes (optional but good for consistency)
+  const observer = new MutationObserver(syncDarkMode);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 });
 
 onBeforeUnmount(() => {

@@ -61,7 +61,14 @@
 
     <!-- Dialog لتعديل البيانات -->
     <Dialog v-model:visible="showEditDialog" :header="$t('Edit Data')" :closable="true" :modal="true"
-      class="w-[90%] md:w-[50%] bg-green-lighten-3" :style="$i18n.locale === 'ar-AR' ? 'direction: rtl' : ''">
+      class="w-[90%] md:w-[50%] bg-white dark:bg-slate-900 shadow-2xl rounded-3xl overflow-hidden" 
+      :style="$i18n.locale === 'ar-AR' ? 'direction: rtl' : ''"
+      :pt="{
+        root: 'border-none bg-white dark:bg-slate-900',
+        header: 'bg-white dark:bg-slate-900 border-none p-6 text-slate-900 dark:text-white font-black',
+        content: 'bg-white dark:bg-slate-900 border-none'
+      }"
+    >
       <form @submit.prevent="updateUserData">
         <div class="space-y-4">
           <!-- تعديل بيانات المستخدم -->

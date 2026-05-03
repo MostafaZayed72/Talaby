@@ -3,7 +3,11 @@
     <Button :label="$t('Add new department')" icon="pi pi-plus" class="mb-6 bg-purple-darken-3" @click="visible = true" />
 
     <Dialog v-model:visible="visible" modal :header="$t('Add new department')" 
-    :pt="{ root: { dir: isArabic ? 'rtl' : 'ltr' } }">
+    :pt="{ 
+      root: { dir: isArabic ? 'rtl' : 'ltr', class: 'border-none bg-white dark:bg-slate-900 shadow-2xl rounded-3xl overflow-hidden' },
+      header: 'bg-white dark:bg-slate-900 border-none p-6 text-slate-900 dark:text-white font-black',
+      content: 'bg-white dark:bg-slate-900 border-none p-6'
+    }">
       <form @submit.prevent="submitCategory" class="space-y-4">
         <InputText v-model="form.nameAr" :placeholder="$t('Name in arabic')" class="w-full" />
         <InputText v-model="form.nameEn" :placeholder="$t('Name in english')" class="w-full" />

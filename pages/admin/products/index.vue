@@ -66,6 +66,11 @@
         class="w-[90%] md:w-1/2"
         :closable="false"
         :style="$i18n.locale === 'ar-AR' ? 'direction: rtl' : ''"
+        :pt="{
+          root: 'border-none bg-white dark:bg-slate-900 shadow-2xl rounded-3xl overflow-hidden',
+          header: 'bg-white dark:bg-slate-900 border-none p-6 text-slate-900 dark:text-white font-black',
+          content: 'bg-white dark:bg-slate-900 border-none p-6'
+        }"
       >
         <form @submit.prevent="saveProduct">
           <div class="field mb-4">
@@ -127,6 +132,11 @@
         modal 
         class="w-[90%] md:w-1/3"
         :style="$i18n.locale === 'ar-AR' ? 'direction: rtl' : ''"
+        :pt="{
+          root: 'border-none bg-white dark:bg-slate-900 shadow-2xl rounded-3xl overflow-hidden',
+          header: 'bg-white dark:bg-slate-900 border-none p-6 text-slate-900 dark:text-white font-black',
+          content: 'bg-white dark:bg-slate-900 border-none p-6'
+        }"
       >
         <p>{{ $t('Are you sure you want to delete this product?') }}</p>
         <div class="flex justify-end gap-4 mt-4">
