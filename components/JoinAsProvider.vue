@@ -14,12 +14,13 @@
             {{ $t('Are you a professional service provider? Join Talaby today and expand your reach to thousands of customers in your area.') }}
           </p>
           <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 md:gap-6">
-            <NuxtLink to="/signup" class="bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black px-10 py-5 rounded-2xl transition-all transform hover:scale-105 shadow-2xl flex items-center justify-center gap-3">
-              {{ $t('Register as a Provider') }}
-              <Icon name="ph:user-plus-fill" class="text-xl" />
+            <NuxtLink to="/signup/service_provider" class="bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black px-10 py-5 rounded-2xl transition-all transform hover:scale-105 shadow-2xl flex items-center justify-center gap-3">
+              {{ $t('Register as a service provider') }}
+              <Icon name="ph:briefcase-bold" class="text-xl" />
             </NuxtLink>
-            <NuxtLink to="/about" class="bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-violet-950 font-black px-10 py-5 rounded-2xl transition-all shadow-xl flex items-center justify-center">
-              {{ $t('Learn More') }}
+            <NuxtLink to="/signup/client" class="bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-violet-950 font-black px-10 py-5 rounded-2xl transition-all shadow-xl flex items-center justify-center gap-3">
+              {{ $t('Register as a client') }}
+              <Icon name="ph:user-plus-fill" class="text-xl" />
             </NuxtLink>
           </div>
         </div>
