@@ -17,7 +17,7 @@ const { user } = await useCurrentUser()
 const { locale } = useI18n()
 const config = useRuntimeConfig()
 const route = useRoute()
-const token = useLocalStorage('token', '')
+const token = useCookie('token')
 const roles = useLocalStorage('roles', []) // من نوع Array<string>
 
 const emit = defineEmits(['proposal-added'])

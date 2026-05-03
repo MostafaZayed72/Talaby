@@ -239,15 +239,17 @@ const handleFileUpload = async (event) => {
   
   const formData = new FormData()
   formData.append('file', file)
-  formData.append('upload_preset', config.public.CLOUDINARY_UPLOAD_PRESET)
 
   try {
     const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${config.public.CLOUDINARY_CLOUD_NAME}/image/upload`,
+      `${config.public.API_BASE_URL}/uploads/images`,
       { method: 'POST', body: formData }
     )
-    const data = await res.json()
-    form.value.imageUrl = data.secure_url
+    const response = await res.json()
+    if (response.isSuccess) {
+      const baseUrl = config.public.API_BASE_URL.replace('/api', '')
+      form.value.imageUrl = `${baseUrl}${response.data.url}`
+    }
   } catch (err) {
     alert(t('Upload failed'))
   } finally {

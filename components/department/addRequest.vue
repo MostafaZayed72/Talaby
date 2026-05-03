@@ -38,14 +38,17 @@ const handleFileChange = async (event: Event) => {
 
   const formData = new FormData()
   formData.append('file', file)
-  formData.append('upload_preset', config.public.CLOUDINARY_UPLOAD_PRESET)
 
   try {
-    const response = await axios.post(
-      `https://api.cloudinary.com/v1_1/${config.public.CLOUDINARY_CLOUD_NAME}/image/upload`,
-      formData
-    )
-    requestData.value.imageUrl = response.data.secure_url
+    const res = await fetch(`${config.public.API_BASE_URL}/uploads/images`, {
+      method: 'POST',
+      body: formData
+    })
+    const response = await res.json()
+    if (response.isSuccess) {
+      const baseUrl = config.public.API_BASE_URL.replace('/api', '')
+      requestData.value.imageUrl = `${baseUrl}${response.data.url}`
+    }
   } catch (err) {
     error.value = t('Image upload failed.')
   } finally {

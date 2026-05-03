@@ -107,7 +107,7 @@ const route = useRoute();
 
 const loading = ref(true);
 const isSidebarOpen = ref(false);
-const token = useLocalStorage('token', null);
+const token = useCookie('token');
 const userEmail = ref('');
 
 const providerLinks = [

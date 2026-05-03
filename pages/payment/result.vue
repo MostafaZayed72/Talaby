@@ -81,13 +81,15 @@ const loading = ref(true)
 const status = ref('pending') // success, error
 const errorMsg = ref('')
 const requestId = ref('')
+const paymentInfo = ref(null)
 
 const verifyPayment = async () => {
   loading.value = true
   status.value = 'pending'
   
   const tap_id = route.query.tap_id
-  requestId.value = localStorage.getItem('pending_payment_project_id')
+  const pendingPaymentId = useCookie('pending_payment_project_id')
+  requestId.value = pendingPaymentId.value
 
   if (!requestId.value) {
     status.value = 'error'
@@ -108,8 +110,9 @@ const verifyPayment = async () => {
 
     if (data.isSuccess && data.data.isPaid) {
       status.value = 'success'
-      // تنظيف الـ localStorage بعد النجاح
-      localStorage.removeItem('pending_payment_project_id')
+      paymentInfo.value = data.data
+      // تنظيف الـ Cookie بعد النجاح
+      pendingPaymentId.value = null
     } else {
       status.value = 'error'
       errorMsg.value = data.message || (data.data && !data.data.isPaid ? 'Payment not yet confirmed.' : 'Verification failed.')

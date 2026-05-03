@@ -255,15 +255,17 @@ const handleImageUpload = async (event: Event) => {
   const file = target.files[0]
   const formData = new FormData()
   formData.append('file', file)
-  formData.append('upload_preset', config.public.CLOUDINARY_UPLOAD_PRESET)
 
   try {
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${config.public.CLOUDINARY_CLOUD_NAME}/upload`, {
+    const res = await fetch(`${config.public.API_BASE_URL}/uploads/images`, {
       method: 'POST',
       body: formData
     })
-    const data = await res.json()
-    commercialRegisterImageUrl.value = data.secure_url
+    const response = await res.json()
+    if (response.isSuccess) {
+      const baseUrl = config.public.API_BASE_URL.replace('/api', '')
+      commercialRegisterImageUrl.value = `${baseUrl}${response.data.url}`
+    }
   } catch (error) {
     toast.add({ severity: 'error', summary: locale.value === 'ar' ? 'خطأ' : 'Error', detail: locale.value === 'ar' ? 'فشل رفع الصورة' : 'Image upload failed' })
   } finally {

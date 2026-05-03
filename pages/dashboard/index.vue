@@ -50,8 +50,8 @@ definePageMeta({
 
 const config = useRuntimeConfig()
 const router = useRouter()
-const token = useLocalStorage('token', '')
-const roles = useLocalStorage('roles', [])
+const token = useCookie('token')
+const roles = useCookie('roles')
 
 const loading = ref(true)
 const error = ref(null)

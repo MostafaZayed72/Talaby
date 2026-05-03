@@ -5,7 +5,7 @@ import { useLocalStorage } from '@vueuse/core'
 
 export function useReplies() {
   const config = useRuntimeConfig()
-  const token = useLocalStorage('token', '')
+  const token = useCookie('token')
   const route = useRoute()
 
   const proposalId = route.params.id as string

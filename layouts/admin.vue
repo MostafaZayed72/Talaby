@@ -106,7 +106,7 @@ const route = useRoute();
 
 const loading = ref(true);
 const isSidebarOpen = ref(false);
-const token = useLocalStorage('token', null);
+const token = useCookie('token');
 
 const adminLinks = [
   { to: '/admin', label: 'Dashboard', icon: 'ph:layout-bold' },

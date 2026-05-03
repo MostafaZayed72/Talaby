@@ -20,7 +20,7 @@ const { user } = await useCurrentUser()
 
 const config = useRuntimeConfig()
 const route = useRoute()
-const token = useLocalStorage('token', '')
+const token = useCookie('token')
 
 const postId = route.params.id as string
 

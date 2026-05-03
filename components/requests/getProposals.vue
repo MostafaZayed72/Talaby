@@ -172,7 +172,8 @@ const confirmAndPay = async () => {
   showPaymentConfirmDialog.value = false
   isProcessingPayment.value = true
   try {
-    localStorage.setItem('pending_payment_project_id', selectedPaymentRequestId.value)
+    const pendingPaymentId = useCookie('pending_payment_project_id', { maxAge: 3600 })
+    pendingPaymentId.value = selectedPaymentRequestId.value
     const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${selectedPaymentRequestId.value}/commission-payment/checkout`, {
       method: 'POST',
       headers: {

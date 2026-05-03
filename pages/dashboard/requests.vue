@@ -14,10 +14,10 @@ definePageMeta({
 })
 
 const userRole = ref('')
-const roles = useLocalStorage('roles', [])
+const roles = useCookie('roles')
 
 // Set role early for template
-if (process.client) {
+if (roles.value) {
   if (roles.value.includes('Store')) {
     userRole.value = 'Store'
   } else if (roles.value.includes('Client')) {

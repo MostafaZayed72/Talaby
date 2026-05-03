@@ -8,7 +8,7 @@ import { useI18n } from 'vue-i18n'
 const config = useRuntimeConfig()
 const { t, locale } = useI18n()
 
-const token = useLocalStorage('token', '')
+const token = useCookie('token')
 const loading = ref(false)
 const editing = ref(false)
 const success = ref(false)
@@ -26,7 +26,7 @@ const user = ref({
   storeCategoryId: null as number | null
 })
 
-const roles = useLocalStorage('roles', [])
+const roles = useCookie('roles')
 const categories = ref<any[]>([])
 
 const currentCategoryName = computed(() => {

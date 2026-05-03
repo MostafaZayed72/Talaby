@@ -60,9 +60,12 @@ import { useLocalStorage } from '@vueuse/core'
 // ✅ composable اللي فيه جلب بيانات اليوزر من الـ API
 const { user } = await useCurrentUser()
 const userLoading = ref(!user.value) // في حال كنت حابب تعرض لودينغ لبيانات اليوزر
-const roles = useLocalStorage('roles', [])
+const roles = useCookie('roles')
 
-const isClient = computed(() => roles.value.some((r: any) => String(r).toLowerCase() === 'client'))
+const isClient = computed(() => {
+  if (!roles.value) return false
+  return roles.value.some((r: any) => String(r).toLowerCase() === 'client')
+})
 
 const { locale } = useI18n()
 const config = useRuntimeConfig()

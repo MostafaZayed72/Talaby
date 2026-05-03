@@ -153,7 +153,7 @@ const route = useRoute();
 const { locale } = useI18n();
 
 const loading = ref(true);
-const token = useLocalStorage('token', null);
+const token = useCookie('token');
 const userID = ref();
 const roles = ref();
 const isSidebarOpen = ref(false);
@@ -188,34 +188,19 @@ const handleLogoutClick = () => {
   closeSidebar();
 };
 
-const checkToken = () => {
-  if (!token.value) {
-    token.value = localStorage.getItem('token');
-  }
-};
-
-const handleStorageChange = (event) => {
-  if (event.key === 'token') {
-    token.value = event.newValue;
-  }
-};
-
 const handleScroll = () => {
   isAtTop.value = window.scrollY < 20;
 };
 
 onMounted(() => {
-  checkToken();
   loading.value = false;
   userID.value = localStorage.getItem("userID");
   roles.value = localStorage.getItem("roles");
-  window.addEventListener('storage', handleStorageChange);
   window.addEventListener('scroll', handleScroll);
   document.addEventListener('click', closeDropdownOnClickOutside);
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener('storage', handleStorageChange);
   window.removeEventListener('scroll', handleScroll);
   document.removeEventListener('click', closeDropdownOnClickOutside);
 });

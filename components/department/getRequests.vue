@@ -8,7 +8,7 @@ const config = useRuntimeConfig()
 const route = useRoute()
 const router = useRouter()
 
-const token = useLocalStorage('token', '')
+const token = useCookie('token')
 
 // استخرج departmentId من الرابط وحوله لرقم
 const departmentId = Number(route.params.department)
@@ -33,6 +33,12 @@ const fetchRequests = async () => {
     url.searchParams.set('StoreCategoryId', departmentId.toString())
     if (searchPhrase.value) {
       url.searchParams.set('SearchPhrase', searchPhrase.value)
+    }
+
+    if (!token.value) {
+      console.warn('No token found in cookies, skipping fetch.')
+      loading.value = false
+      return
     }
 
     const res = await fetch(url.toString(), {
