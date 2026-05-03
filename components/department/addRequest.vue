@@ -7,7 +7,7 @@ import { useLocalStorage } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
 const config = useRuntimeConfig()
-const token = useLocalStorage('token', '')
+const token = useCookie('token')
 const route = useRoute()
 const { t } = useI18n()
 
@@ -42,6 +42,9 @@ const handleFileChange = async (event: Event) => {
   try {
     const res = await fetch(`${config.public.API_BASE_URL}/uploads/images`, {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token.value}`
+      },
       body: formData
     })
     const response = await res.json()

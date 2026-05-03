@@ -259,6 +259,9 @@ const handleImageUpload = async (event: Event) => {
   try {
     const res = await fetch(`${config.public.API_BASE_URL}/uploads/images`, {
       method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token.value}`
+      },
       body: formData
     })
     const response = await res.json()

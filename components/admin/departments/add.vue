@@ -26,6 +26,7 @@ import { useRuntimeConfig } from '#imports'
 
 const config = useRuntimeConfig()
 import { useI18n } from 'vue-i18n'
+const token = useCookie('token')
 
 const { locale } = useI18n()
 const isArabic = computed(() => locale.value === 'ar')
@@ -52,7 +53,13 @@ const handleImageUpload = async (event: Event) => {
   try {
     const res = await fetch(
       `${config.public.API_BASE_URL}/uploads/images`,
-      { method: 'POST', body: formData }
+      { 
+        method: 'POST', 
+        headers: {
+          Authorization: `Bearer ${token.value}`
+        },
+        body: formData 
+      }
     )
 
     const response = await res.json()

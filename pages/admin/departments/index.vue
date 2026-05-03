@@ -177,6 +177,7 @@
 <script setup>
 const config = useRuntimeConfig()
 const { t } = useI18n()
+const token = useCookie('token')
 
 // Layout
 definePageMeta({
@@ -243,7 +244,13 @@ const handleFileUpload = async (event) => {
   try {
     const res = await fetch(
       `${config.public.API_BASE_URL}/uploads/images`,
-      { method: 'POST', body: formData }
+      { 
+        method: 'POST', 
+        headers: {
+          Authorization: `Bearer ${token.value}`
+        },
+        body: formData 
+      }
     )
     const response = await res.json()
     if (response.isSuccess) {
