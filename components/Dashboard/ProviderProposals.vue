@@ -161,25 +161,25 @@
     </div>
 
     <!-- Dialog إتمام المهمة الاحترافي -->
-    <div v-if="showMarkDoneDialog" class="fixed inset-0 z-[100] flex items-center justify-center p-6">
-      <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md" @click="showMarkDoneDialog = false"></div>
-      <div class="relative bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-2xl border border-white/10 max-w-md w-full text-center space-y-8 animate-in fade-in zoom-in duration-300">
-        <div class="w-20 h-20 bg-green-500/10 text-green-500 rounded-3xl flex items-center justify-center mx-auto shadow-lg">
+    <div v-if="showMarkDoneDialog" class="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
+      <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" @click="showMarkDoneDialog = false"></div>
+      <div class="relative bg-white dark:bg-slate-900 p-8 md:p-12 rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-white/10 max-w-md w-full text-center space-y-8 animate-in fade-in zoom-in duration-300">
+        <div class="w-20 h-20 bg-green-500/10 text-green-500 rounded-3xl flex items-center justify-center mx-auto shadow-lg border border-green-500/20">
            <Icon name="ph:check-circle-bold" class="text-4xl" />
         </div>
         <div class="space-y-2">
           <h3 class="text-2xl font-black text-slate-900 dark:text-white italic">{{ $t('Complete Request') }}</h3>
-          <p class="text-slate-500 dark:text-slate-400 font-medium">{{ $t('Are you sure you have completed the task and want to mark it as done?') }}</p>
+          <p class="text-slate-600 dark:text-slate-400 font-bold">{{ $t('Are you sure you have completed the task and want to mark it as done?') }}</p>
         </div>
-        <div class="flex gap-4">
+        <div class="flex flex-col sm:flex-row gap-4">
           <button
-            class="flex-1 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-6 py-4 rounded-2xl font-black transition-all hover:bg-slate-200"
+            class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-8 py-4 rounded-2xl font-black transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
             @click="showMarkDoneDialog = false"
           >
             {{ $t('Cancel') }}
           </button>
           <button
-            class="flex-1 bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+            class="flex-1 bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-2xl font-black shadow-xl shadow-green-600/20 transition-all active:scale-95 flex items-center justify-center gap-2"
             @click="confirmMarkAsDone"
           >
             {{ $t('Yes, Done') }}

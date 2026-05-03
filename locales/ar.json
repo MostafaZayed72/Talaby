@@ -447,5 +447,13 @@
     "Commission Payment": "دفع العمولة",
     "The commission amount to be paid is:": "قيمة العمولة المطلوب دفعها هي:",
     "2.5% of the total proposal amount": "2.5% من إجمالي قيمة العرض المقدم",
-    "Confirm & Pay": "تأكيد ودفع"
+    "Confirm & Pay": "تأكيد ودفع",
+    "Verifying Payment...": "جاري التحقق من عملية الدفع...",
+    "Payment Successful!": "تمت عملية الدفع بنجاح!",
+    "Thank you! Your commission payment has been verified successfully. Your request status has been updated.": "شكراً لك! تم التحقق من دفع العمولة بنجاح، وتم تحديث حالة طلبك.",
+    "Go to Request Details": "الذهاب لتفاصيل الطلب",
+    "Back to Dashboard": "العودة للوحة التحكم",
+    "Payment Verification Failed": "فشل التحقق من عملية الدفع",
+    "We could not verify your payment. Please contact support if you believe this is an error.": "لم نتمكن من التحقق من عملية الدفع الخاصة بك. يرجى التواصل مع الدعم الفني إذا كنت تعتقد أن هذا خطأ.",
+    "Try Again": "إعادة المحاولة"
 }

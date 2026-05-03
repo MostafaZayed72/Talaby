@@ -369,29 +369,29 @@ const startPolling = () => {
     </div>
 
     <!-- Dialog تأكيد الدفع الاحترافي -->
-    <div v-if="showPaymentConfirmDialog" class="fixed inset-0 z-[100] flex items-center justify-center p-6">
-      <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md" @click="showPaymentConfirmDialog = false"></div>
-      <div class="relative bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-2xl border border-white/10 max-w-md w-full text-center space-y-8 animate-in fade-in zoom-in duration-300">
-        <div class="w-20 h-20 bg-yellow-400/10 text-yellow-500 rounded-3xl flex items-center justify-center mx-auto shadow-lg">
+    <div v-if="showPaymentConfirmDialog" class="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
+      <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" @click="showPaymentConfirmDialog = false"></div>
+      <div class="relative bg-white dark:bg-slate-900 p-8 md:p-12 rounded-[2.5rem] shadow-2xl border border-slate-200 dark:border-white/10 max-w-md w-full text-center space-y-8 animate-in fade-in zoom-in duration-300">
+        <div class="w-20 h-20 bg-yellow-400/10 text-yellow-500 rounded-3xl flex items-center justify-center mx-auto shadow-lg border border-yellow-400/20">
            <Icon name="ph:credit-card-bold" class="text-4xl" />
         </div>
-        <div class="space-y-2">
+        <div class="space-y-3">
           <h3 class="text-2xl font-black text-slate-900 dark:text-white italic">{{ $t('Commission Payment') }}</h3>
-          <p class="text-slate-500 dark:text-slate-400 font-medium">{{ $t('The commission amount to be paid is:') }}</p>
-          <div class="text-4xl font-black text-indigo-600 py-4">
+          <p class="text-slate-600 dark:text-slate-400 font-bold">{{ $t('The commission amount to be paid is:') }}</p>
+          <div class="text-4xl md:text-5xl font-black text-indigo-600 dark:text-indigo-400 py-4 drop-shadow-sm">
             {{ selectedPaymentAmount.toFixed(2) }} {{ $t('SAR') }}
           </div>
-          <p class="text-xs text-slate-400 italic">{{ $t('2.5% of the total proposal amount') }}</p>
+          <p class="text-[10px] md:text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-widest">{{ $t('2.5% of the total proposal amount') }}</p>
         </div>
-        <div class="flex gap-4">
+        <div class="flex flex-col sm:flex-row gap-4">
           <button
-            class="flex-1 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-6 py-4 rounded-2xl font-black transition-all hover:bg-slate-200"
+            class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-8 py-4 rounded-2xl font-black transition-all hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95"
             @click="showPaymentConfirmDialog = false"
           >
             {{ $t('Cancel') }}
           </button>
           <button
-            class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+            class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-black shadow-xl shadow-indigo-600/20 transition-all active:scale-95 flex items-center justify-center gap-2"
             @click="confirmAndPay"
           >
             {{ $t('Confirm & Pay') }}

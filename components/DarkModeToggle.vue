@@ -22,14 +22,14 @@ onMounted(() => {
   const savedColorMode = localStorage.getItem('colorMode')
   if (savedColorMode === 'dark' || savedColorMode === 'light') {
     isDarkMode.value = savedColorMode === 'dark'
-    document.body.classList.toggle('dark', isDarkMode.value)
+    document.documentElement.classList.toggle('dark', isDarkMode.value)
   }
 })
 
 // دالة لتبديل الوضع الليلي والنهاري
 const toggleDarkMode = () => {
   isDarkMode.value = !isDarkMode.value
-  document.body.classList.toggle('dark', isDarkMode.value)
+  document.documentElement.classList.toggle('dark', isDarkMode.value)
   // حفظ حالة الوضع في التخزين المحلي
   localStorage.setItem('colorMode', isDarkMode.value ? 'dark' : 'light')
 }

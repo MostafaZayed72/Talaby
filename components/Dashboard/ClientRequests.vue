@@ -171,29 +171,34 @@
     </div>
 
     <!-- Dialog تأكيد الدفع الاحترافي -->
-    <div v-if="showPaymentConfirmDialog" class="fixed inset-0 z-[100] flex items-center justify-center p-6">
-      <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md" @click="showPaymentConfirmDialog = false"></div>
-      <div class="relative bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-2xl border border-white/10 max-w-md w-full text-center space-y-8 animate-in fade-in zoom-in duration-300">
-        <div class="w-20 h-20 bg-yellow-400/10 text-yellow-500 rounded-3xl flex items-center justify-center mx-auto shadow-lg">
+    <div v-if="showPaymentConfirmDialog" class="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6">
+      <div class="absolute inset-0" style="background:rgba(2,6,23,0.85);backdrop-filter:blur(4px)" @click="showPaymentConfirmDialog = false"></div>
+      <div
+        class="dialog-card relative p-8 md:p-12 rounded-[2.5rem] shadow-2xl max-w-md w-full text-center space-y-8"
+        :style="isDark ? 'background:#0f172a;border:1px solid rgba(255,255,255,0.08);' : 'background:#ffffff;border:1px solid #e2e8f0;'"
+      >
+        <div class="w-20 h-20 rounded-3xl flex items-center justify-center mx-auto shadow-lg" style="background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.2);color:#eab308;">
            <Icon name="ph:credit-card-bold" class="text-4xl" />
         </div>
-        <div class="space-y-2">
-          <h3 class="text-2xl font-black text-slate-900 dark:text-white italic">{{ $t('Commission Payment') }}</h3>
-          <p class="text-slate-500 dark:text-slate-400 font-medium">{{ $t('The commission amount to be paid is:') }}</p>
-          <div class="text-4xl font-black text-indigo-600 py-4">
+        <div class="space-y-3">
+          <h3 class="text-2xl font-black italic" :style="isDark ? 'color:#f8fafc' : 'color:#0f172a'">{{ $t('Commission Payment') }}</h3>
+          <p class="font-bold" :style="isDark ? 'color:#94a3b8' : 'color:#475569'">{{ $t('The commission amount to be paid is:') }}</p>
+          <div class="text-4xl md:text-5xl font-black py-4" style="color:#6366f1">
             {{ selectedPaymentAmount.toFixed(2) }} {{ $t('SAR') }}
           </div>
-          <p class="text-xs text-slate-400 italic">{{ $t('2.5% of the total proposal amount') }}</p>
+          <p class="text-xs font-bold uppercase tracking-widest" :style="isDark ? 'color:#64748b' : 'color:#94a3b8'">{{ $t('2.5% of the total proposal amount') }}</p>
         </div>
-        <div class="flex gap-4">
+        <div class="flex flex-col sm:flex-row gap-4">
           <button
-            class="flex-1 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-6 py-4 rounded-2xl font-black transition-all hover:bg-slate-200"
+            class="flex-1 px-8 py-4 rounded-2xl font-black transition-all active:scale-95"
+            :style="isDark ? 'background:#1e293b;color:#cbd5e1;' : 'background:#f1f5f9;color:#475569;'"
             @click="showPaymentConfirmDialog = false"
           >
             {{ $t('Cancel') }}
           </button>
           <button
-            class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+            class="flex-1 px-8 py-4 rounded-2xl font-black transition-all active:scale-95 flex items-center justify-center gap-2"
+            style="background:#4f46e5;color:white;"
             @click="confirmAndPay"
           >
             {{ $t('Confirm & Pay') }}
@@ -223,6 +228,19 @@ const isProcessingPayment = ref(false)
 const showPaymentConfirmDialog = ref(false)
 const selectedPaymentAmount = ref(0)
 const selectedPaymentRequestId = ref('')
+
+// Dark mode detection (works regardless of where 'dark' class is placed)
+const isDark = ref(false)
+const updateDarkMode = () => {
+  isDark.value = document.documentElement.classList.contains('dark') || 
+                 document.body.classList.contains('dark')
+}
+onMounted(() => {
+  updateDarkMode()
+  const observer = new MutationObserver(updateDarkMode)
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+  observer.observe(document.body, { attributes: true, attributeFilter: ['class'] })
+})
 
 const filters = reactive({
   SearchPhrase: '',
