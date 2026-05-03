@@ -6,7 +6,7 @@
     <div class="absolute -top-24 -right-24 w-96 h-96 bg-indigo-800/20 rounded-full blur-3xl"></div>
 
     <div class="container mx-auto px-6 relative z-1 text-center md:text-right">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-16">
         <!-- Column 1: Brand Info -->
         <div class="space-y-6">
           <div class="flex items-center justify-center md:justify-start gap-3">
@@ -29,47 +29,32 @@
           </div>
         </div>
 
-        <!-- Column 2: Quick Links -->
-        <div>
-          <h3 class="text-xl font-bold mb-8 text-yellow-400 border-l-4 md:border-l-4 border-yellow-400 pl-4 rtl:border-l-0 rtl:border-r-4 rtl:pl-0 rtl:pr-4 mx-auto md:mx-0 w-fit md:w-full">
+        <!-- Column 2: Navigation (Consistent with Header) -->
+        <div class="flex flex-col items-center md:items-start">
+          <h3 class="text-xl font-bold mb-8 text-yellow-400 border-l-4 md:border-l-4 border-yellow-400 pl-4 rtl:border-l-0 rtl:border-r-4 rtl:pl-0 rtl:pr-4 w-fit">
             {{ $t('Quick Links') }}
           </h3>
-          <ul class="space-y-4 flex flex-col items-center md:items-start">
-            <li v-for="link in quickLinks" :key="link.to">
-              <NuxtLink :to="link.to" class="text-slate-300 hover:text-white hover:translate-x-2 flex items-center gap-2 transition-all duration-300">
-                <Icon name="ph:caret-right-bold" class="text-sm text-yellow-400" />
-                {{ $t(link.label) }}
+          <ul class="space-y-4 flex flex-col items-start w-fit">
+            <li v-for="link in navLinks" :key="link.to">
+              <NuxtLink :to="link.to" class="text-slate-300 hover:text-white hover:translate-x-2 flex items-center gap-3 transition-all duration-300 group">
+                <Icon name="ph:caret-right-bold" class="text-sm text-yellow-400 rtl:rotate-180 flex-shrink-0" />
+                <span class="font-bold">{{ $t(link.label) }}</span>
               </NuxtLink>
             </li>
           </ul>
         </div>
 
-        <!-- Column 3: Services -->
-        <div>
-          <h3 class="text-xl font-bold mb-8 text-yellow-400 border-l-4 md:border-l-4 border-yellow-400 pl-4 rtl:border-l-0 rtl:border-r-4 rtl:pl-0 rtl:pr-4 mx-auto md:mx-0 w-fit md:w-full">
-            {{ $t('Our Services') }}
-          </h3>
-          <ul class="space-y-4 flex flex-col items-center md:items-start">
-            <li v-for="service in services" :key="service.label">
-              <a href="#" class="text-slate-300 hover:text-white hover:translate-x-2 flex items-center gap-2 transition-all duration-300">
-                <Icon name="ph:check-circle-fill" class="text-sm text-yellow-400" />
-                {{ $t(service.label) }}
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Column 4: Contact -->
-        <div>
-          <h3 class="text-xl font-bold mb-8 text-yellow-400 border-l-4 md:border-l-4 border-yellow-400 pl-4 rtl:border-l-0 rtl:border-r-4 rtl:pl-0 rtl:pr-4 mx-auto md:mx-0 w-fit md:w-full">
+        <!-- Column 3: Contact -->
+        <div class="flex flex-col items-center md:items-start">
+          <h3 class="text-xl font-bold mb-8 text-yellow-400 border-l-4 md:border-l-4 border-yellow-400 pl-4 rtl:border-l-0 rtl:border-r-4 rtl:pl-0 rtl:pr-4 w-fit">
             {{ $t('Contact Us') }}
           </h3>
-          <div class="space-y-6 flex flex-col items-center md:items-start">
+          <div class="space-y-6 flex flex-col items-start w-fit">
             <div class="flex flex-col md:flex-row items-center md:items-start gap-4">
               <div class="bg-yellow-400/10 p-3 rounded-lg">
                 <Icon name="ph:envelope-simple-fill" class="text-xl text-yellow-400" />
               </div>
-              <div>
+              <div class="text-center md:text-right">
                 <p class="text-sm text-slate-400">{{ $t('Email Address') }}</p>
                 <a href="mailto:Talaby@gmail.com" class="text-slate-200 hover:text-yellow-400 font-bold transition-colors">Talaby@gmail.com</a>
               </div>
@@ -78,9 +63,9 @@
               <div class="bg-yellow-400/10 p-3 rounded-lg">
                 <Icon name="ph:phone-call-fill" class="text-xl text-yellow-400" />
               </div>
-              <div>
+              <div class="text-center md:text-right">
                 <p class="text-sm text-slate-400">{{ $t('Phone Number') }}</p>
-                <p class="text-slate-200 font-bold">+20 123 456 7890</p>
+                <p class="text-slate-200 font-bold" dir="ltr">+20 123 456 7890</p>
               </div>
             </div>
           </div>
@@ -93,8 +78,8 @@
           &copy; {{ new Date().getFullYear() }} <span class="text-white font-bold">TALABY</span>. {{ $t('All rights reserved.') }}
         </p>
         <div class="flex gap-6 text-sm text-slate-400">
-          <a href="#" class="hover:text-white transition-colors">{{ $t('Privacy Policy') }}</a>
-          <a href="#" class="hover:text-white transition-colors">{{ $t('Terms of Service') }}</a>
+          <NuxtLink to="/privacy" class="hover:text-white transition-colors">{{ $t('Privacy Policy') }}</NuxtLink>
+          <NuxtLink to="/terms" class="hover:text-white transition-colors">{{ $t('Terms of Service') }}</NuxtLink>
         </div>
       </div>
     </div>
@@ -102,19 +87,20 @@
 </template>
 
 <script setup>
-const quickLinks = [
-  { to: '/', label: 'Home' },
-  { to: '/departments', label: 'Departments' },
-  { to: '/payment', label: 'Payment' },
-  { to: '/my-profile', label: 'My profile' },
-];
+const { t } = useI18n();
+const token = useLocalStorage('token', null);
+const isLoggedIn = computed(() => !!token.value);
 
-const services = [
-  { label: 'Maintenance' },
-  { label: 'Shopping' },
-  { label: 'Delivery' },
-  { label: 'Professional Support' },
-];
+const navLinks = computed(() => {
+  const links = [
+    { to: '/', label: 'Home' },
+    { to: '/departments', label: 'Departments' },
+  ];
+  if (isLoggedIn.value) {
+    links.push({ to: '/dashboard', label: 'Dashboard' });
+  }
+  return links;
+});
 </script>
 
 <style scoped>
