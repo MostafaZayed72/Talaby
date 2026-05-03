@@ -18,6 +18,7 @@ const storeCategoryId = route.params.department
 const showDialog = ref(false)
 const loading = ref(false)
 const success = ref(false)
+const isUploadingImage = ref(false)
 const error = ref('')
 
 const requestData = ref({
@@ -32,6 +33,9 @@ const handleFileChange = async (event: Event) => {
   const file = (event.target as HTMLInputElement)?.files?.[0]
   if (!file) return
 
+  isUploadingImage.value = true
+  error.value = ''
+
   const formData = new FormData()
   formData.append('file', file)
   formData.append('upload_preset', config.public.CLOUDINARY_UPLOAD_PRESET)
@@ -44,6 +48,8 @@ const handleFileChange = async (event: Event) => {
     requestData.value.imageUrl = response.data.secure_url
   } catch (err) {
     error.value = t('Image upload failed.')
+  } finally {
+    isUploadingImage.value = false
   }
 }
 
@@ -162,13 +168,19 @@ const submitRequest = async () => {
                         @change="handleFileChange" 
                         accept="image/*" 
                       />
-                      <div class="w-full border-2 border-dashed border-slate-200 dark:border-white/10 rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 flex flex-col items-center justify-center gap-2 md:gap-4 group-hover:border-indigo-500 transition-all bg-slate-50/50 dark:bg-white/5">
-                        <div v-if="!requestData.imageUrl" class="text-center">
+                      <div class="w-full border-2 border-dashed border-slate-200 dark:border-white/10 rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 flex flex-col items-center justify-center gap-2 md:gap-4 group-hover:border-indigo-500 transition-all bg-slate-50/50 dark:bg-white/5 relative overflow-hidden">
+                        <!-- Loading Overlay -->
+                        <div v-if="isUploadingImage" class="absolute inset-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm z-30 flex flex-col items-center justify-center">
+                          <Icon name="ph:circle-notch-bold" class="text-4xl text-indigo-600 animate-spin mb-2" />
+                          <p class="text-xs font-black text-indigo-600 animate-pulse">{{ t('Uploading...') }}</p>
+                        </div>
+
+                        <div v-if="!requestData.imageUrl && !isUploadingImage" class="text-center">
                           <Icon name="ph:image-square-bold" class="text-3xl md:text-4xl text-slate-400 mb-1 md:mb-2" />
                           <p class="text-xs md:text-sm font-bold text-slate-500">{{ t('Click to upload image') }}</p>
                         </div>
-                        <div v-else class="relative w-full aspect-video rounded-xl md:rounded-2xl overflow-hidden">
-                          <img :src="requestData.imageUrl" class="w-full h-full object-cover" />
+                        <div v-if="requestData.imageUrl" class="relative w-full max-h-[300px] aspect-video rounded-xl md:rounded-2xl overflow-hidden bg-slate-100 dark:bg-white/5">
+                          <img :src="requestData.imageUrl" class="w-full h-full object-contain" />
                           <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                             <Icon name="ph:arrows-clockwise-bold" class="text-2xl md:text-3xl text-white animate-spin-slow" />
                           </div>

@@ -4,7 +4,16 @@ import { useRoute } from 'vue-router'
 import { useLocalStorage } from '@vueuse/core'
 import { useRuntimeConfig } from '#imports'
 import { useI18n } from 'vue-i18n'
+import { useCurrentUser } from '~/composables/useCurrentUser'
 
+const props = defineProps({
+  project: {
+    type: Object,
+    default: null
+  }
+})
+
+const { user } = await useCurrentUser()
 const { locale } = useI18n()
 const config = useRuntimeConfig()
 const route = useRoute()
@@ -20,66 +29,27 @@ const proposedAmount = ref<number | null>(null)
 
 const projectRequestId = route.params.id as string
 
-const postCategoryId = ref<number | null>(null)
-const userCategoryId = ref<number | null>(null)
-const projectStatusValue = ref<number | null>(null)
-const projectStatusName = ref<string>('')
+
 
 const canSubmit = computed(() => {
+  if (!props.project || !user.value) return false
+
   const isStore = roles.value.some((r: any) => String(r).toLowerCase() === 'store')
-  const hasCategories = postCategoryId.value != null && userCategoryId.value != null
-  const isSameCategory = String(postCategoryId.value) === String(userCategoryId.value)
   
-  // More robust status check: If status is undefined, we assume it's open for now to debug
-  const statusVal = projectStatusValue.value
-  const statusNm = projectStatusName.value?.toLowerCase()
+  const postCategoryId = props.project.storeCategoryId || props.project.categoryId
+  const userCategoryId = user.value.storeCategoryId
+  
+  const hasCategories = postCategoryId != null && userCategoryId != null
+  const isSameCategory = String(postCategoryId) === String(userCategoryId)
+  
+  const statusVal = props.project.statusValue !== undefined ? props.project.statusValue : props.project.status
+  const statusNm = (props.project.statusName || props.project.status)?.toLowerCase()
   const isOpen = statusVal === 1 || statusVal === 0 || statusNm === 'open' || statusNm === undefined || statusNm === '' || statusNm === 'string'
   
-  console.log('DEBUG addProposal - canSubmit Details:', {
-    roles: roles.value,
-    isStore,
-    postCategoryId: postCategoryId.value,
-    userCategoryId: userCategoryId.value,
-    isSameCategory,
-    projectStatusValue: statusVal,
-    projectStatusName: projectStatusName.value,
-    isOpen
-  })
-
   return isStore && hasCategories && isSameCategory && isOpen
 })
 
-// احضار كاتجوري البوست
-const fetchPostCategory = async () => {
-  const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${projectRequestId}`, {
-    headers: {
-      Authorization: `Bearer ${token.value}`,
-    },
-  })
 
-  if (res.ok) {
-    const response = await res.json()
-    console.log('DEBUG addProposal - Project Data Keys:', Object.keys(response.data))
-    console.log('DEBUG addProposal - Project Data Full:', response.data)
-    postCategoryId.value = response.data.storeCategoryId || response.data.categoryId
-    projectStatusValue.value = response.data.statusValue !== undefined ? response.data.statusValue : response.data.status
-    projectStatusName.value = response.data.statusName || response.data.status
-  }
-}
-
-// احضار كاتجوري المستخدم
-const fetchUserCategory = async () => {
-  const res = await fetch(`${config.public.API_BASE_URL}/identity/users/me`, {
-    headers: {
-      Authorization: `Bearer ${token.value}`,
-    },
-  })
-
-  if (res.ok) {
-    const response = await res.json()
-    userCategoryId.value = response.data.storeCategoryId
-  }
-}
 
 const submitProposal = async () => {
   if (!content.value || proposedAmount.value === null) return
@@ -112,8 +82,7 @@ const submitProposal = async () => {
 }
 
 onMounted(() => {
-  fetchPostCategory()
-  fetchUserCategory()
+  // We no longer need to fetch here as data comes from props and shared user state
 })
 </script>
 

@@ -1,9 +1,20 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useRuntimeConfig } from '#imports'
 import { useLocalStorage } from '@vueuse/core'
 import { useCurrentUser } from '~/composables/useCurrentUser'
+
+const props = defineProps({
+  project: {
+    type: Object,
+    default: null
+  },
+  loading: {
+    type: Boolean,
+    default: true
+  }
+})
 
 const { user } = await useCurrentUser()
 
@@ -13,43 +24,7 @@ const token = useLocalStorage('token', '')
 
 const postId = route.params.id as string
 
-const post = ref<null | {
-  title: string
-  description: string
-  minBudget: number
-  maxBudget: number
-  imageUrl: string
-  statusName: string
-  createdAt: string
-  creatorId: string
-}>(null)
-
-const loading = ref(true)
 const error = ref('')
-
-const fetchPostDetails = async () => {
-  loading.value = true
-  error.value = ''
-
-  try {
-    const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${postId}`, {
-      headers: {
-        Authorization: `Bearer ${token.value}`,
-        'Content-Type': 'application/json',
-      },
-    })
-
-    if (!res.ok) throw new Error('فشل في تحميل تفاصيل الطلب')
-
-    const response = await res.json()
-    console.log('DEBUG: Project Details Data:', response.data)
-    post.value = response.data
-  } catch (err: any) {
-    error.value = err.message || 'حدث خطأ أثناء تحميل البيانات'
-  } finally {
-    loading.value = false
-  }
-}
 
 const isProcessingPayment = ref(false)
 const payCommission = async () => {
@@ -74,8 +49,6 @@ const payCommission = async () => {
     isProcessingPayment.value = false
   }
 }
-
-onMounted(fetchPostDetails)
 </script>
 
 <template>
@@ -90,17 +63,17 @@ onMounted(fetchPostDetails)
       <p>{{ error }}</p>
     </div>
 
-    <div v-if="post" class="space-y-12">
+    <div v-if="project" class="space-y-12">
       <!-- Header Card -->
       <div class="relative bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[3rem] p-10 md:p-16 shadow-2xl overflow-hidden">
         <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-600/10 rounded-full blur-[100px]"></div>
         
         <div class="relative z-10 flex flex-col md:flex-row gap-12 items-center md:items-start text-right">
           <!-- Image Section -->
-          <div v-if="post.imageUrl" class="w-full md:w-1/3 group">
+          <div v-if="project.imageUrl" class="w-full md:w-1/3 group">
             <div class="aspect-square rounded-[2.5rem] overflow-hidden border-4 border-white/10 shadow-2xl group-hover:scale-105 transition-transform duration-500">
               <img
-                :src="post.imageUrl"
+                :src="project.imageUrl"
                 class="w-full h-full object-cover"
                 alt="Request Image"
               />
@@ -111,16 +84,17 @@ onMounted(fetchPostDetails)
           <div class="flex-1 space-y-8">
             <div class="space-y-4">
               <h1 class="text-4xl md:text-6xl font-black text-slate-900 dark:text-white leading-tight italic tracking-tighter">
-                {{ post.title }}
+                {{ project.title }}
               </h1>
-              <div v-if="post && post.statusName" class="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 border border-indigo-600/30 font-black text-sm uppercase tracking-widest shadow-lg backdrop-blur-md">
-                <Icon name="ph:info-bold" />
-                <span>{{ $t(String(post.statusName)) }}</span>
+              <div v-if="project" class="inline-flex items-center gap-2 px-8 py-3 rounded-2xl bg-indigo-600 text-white border border-white/20 font-black text-sm uppercase tracking-widest shadow-2xl backdrop-blur-md">
+                <Icon name="ph:seal-check-bold" v-if="project.statusValue === 2 || (project.statusName || project.status)?.toLowerCase() === 'accepted'" />
+                <Icon name="ph:clock-countdown-bold" v-else />
+                <span>{{ $t(String(project.statusName || project.status || 'Open')) }}</span>
               </div>
 
               <!-- زر الدفع لصاحب الطلب -->
               <button 
-                v-if="user && user.id === post.creatorId && (post.statusName === 'AwaitingCommissionPayment' || post.statusName === 'AWAITINGCOMMISSIONPAYMENT')"
+                v-if="user && user.id === project.creatorId && (project.statusName === 'AwaitingCommissionPayment' || project.statusName === 'AWAITINGCOMMISSIONPAYMENT')"
                 @click="payCommission"
                 :disabled="isProcessingPayment"
                 class="inline-flex items-center gap-3 px-8 py-3 rounded-2xl bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black shadow-xl transition-all active:scale-95 disabled:opacity-50"
@@ -135,7 +109,7 @@ onMounted(fetchPostDetails)
                <div class="bg-white/5 p-6 rounded-3xl border border-white/5 space-y-1">
                   <span class="text-xs font-black text-slate-500 uppercase tracking-widest">{{ $t('Created On') }}</span>
                   <p class="text-xl font-bold text-slate-900 dark:text-white">
-                    {{ new Date(post.createdAt).toLocaleDateString() }}
+                    {{ new Date(project.createdAt).toLocaleDateString() }}
                   </p>
                </div>
             </div>
@@ -143,7 +117,7 @@ onMounted(fetchPostDetails)
             <div class="bg-white/5 p-8 rounded-[2rem] border border-white/5">
               <h3 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">{{ $t('Full Description') }}</h3>
               <p class="text-lg font-medium text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-line">
-                {{ post.description }}
+                {{ project.description }}
               </p>
             </div>
           </div>

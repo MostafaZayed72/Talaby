@@ -12,37 +12,24 @@ const router = useRouter()
 
 const postId = route.params.id as string
 
+const props = defineProps({
+  project: {
+    type: Object,
+    default: null
+  }
+})
+
 const proposals = ref<any[]>([])
-const projectRequest = ref<any>(null)
 const pageNumber = ref(1)
 const pageSize = ref(5)
 const totalPages = ref(1)
 const loading = ref(false)
 const error = ref('')
-const currentUser = ref<any>(null)
+
+const { user: currentUser } = await useCurrentUser()
 
 const showDialog = ref(false)
 const selectedProposalId = ref<string | null>(null)
-
-const fetchCurrentUser = async () => {
-  const { user } = await useCurrentUser()
-  currentUser.value = user.value
-}
-
-const fetchRequest = async () => {
-  try {
-    const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${postId}`, {
-      headers: {
-        Authorization: `Bearer ${token.value}`,
-      },
-    })
-    if (!res.ok) throw new Error('فشل تحميل الطلب')
-    const response = await res.json()
-    projectRequest.value = response.data
-  } catch (err: any) {
-    console.error(err)
-  }
-}
 
 const fetchProposals = async () => {
   loading.value = true
@@ -71,7 +58,7 @@ const fetchProposals = async () => {
   }
 }
 
-const isRequestOwner = () => currentUser.value?.id === projectRequest.value?.creatorId
+const isRequestOwner = () => currentUser.value?.id === props.project?.creatorId
 
 const openSelectDialog = (proposalId: string) => {
   selectedProposalId.value = proposalId
@@ -101,7 +88,8 @@ const confirmSelection = async () => {
 
     showDialog.value = false
     await fetchProposals()
-    await fetchRequest()
+    // Redirect to chat/replies page immediately
+    router.push(`/replies/${selectedProposalId.value}`)
   } catch (err) {
     console.error('فشل التحديث', err)
   }
@@ -109,7 +97,7 @@ const confirmSelection = async () => {
 
 const navigateTo = (proposal: any) => {
   const isProposalOwner = proposal.creatorEmail === currentUser.value?.email
-  const isReqOwner = projectRequest.value?.creatorId === currentUser.value?.id
+  const isReqOwner = props.project?.creatorId === currentUser.value?.id
   const isAcceptedProposal = proposal.statusValue === 2 || proposal.statusName?.toLowerCase() === 'accepted'
 
   if ((isProposalOwner || isReqOwner) && isAcceptedProposal) {
@@ -120,15 +108,10 @@ const navigateTo = (proposal: any) => {
 watch(pageNumber, fetchProposals)
 
 onMounted(async () => {
-  await fetchCurrentUser()
-  await fetchRequest()
   await fetchProposals()
   
   console.log('DEBUG: Current User ID:', currentUser.value?.id)
-  console.log('DEBUG: Request Creator ID:', projectRequest.value?.creatorId)
-  console.log('DEBUG: Project Status Name:', projectRequest.value?.statusName)
-  console.log('DEBUG: Project Status Value:', projectRequest.value?.statusValue)
-  console.log('DEBUG: Proposals:', proposals.value.map(p => ({ id: p.id, statusName: p.statusName, statusValue: p.statusValue })))
+  console.log('DEBUG: Request Creator ID:', props.project?.creatorId)
 })
 
 defineExpose({ fetchProposals })

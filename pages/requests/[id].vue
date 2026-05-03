@@ -1,5 +1,35 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useCurrentUser } from '~/composables/useCurrentUser'
+import { useLocalStorage } from '@vueuse/core'
+
+const config = useRuntimeConfig()
+const route = useRoute()
+const token = useLocalStorage('token', '')
+const { user } = await useCurrentUser()
+
+const postId = route.params.id as string
+const project = ref<any>(null)
+const projectLoading = ref(true)
+
+const fetchProject = async () => {
+  projectLoading.value = true
+  try {
+    const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${postId}`, {
+      headers: { Authorization: `Bearer ${token.value}` }
+    })
+    if (res.ok) {
+      const response = await res.json()
+      project.value = response.data
+    }
+  } catch (err) {
+    console.error(err)
+  } finally {
+    projectLoading.value = false
+  }
+}
+
+onMounted(fetchProject)
 
 const proposalsRef = ref<any>(null)
 const questionsRef = ref<any>(null)
@@ -22,7 +52,7 @@ const handleQuestionAdded = () => {
     <div class="max-w-7xl mx-auto relative z-10">
       <!-- Request Header/Details -->
       <div class="mb-12">
-        <RequestsGet />
+        <RequestsGet :project="project" :loading="projectLoading" />
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
@@ -36,9 +66,9 @@ const handleQuestionAdded = () => {
           </div>
           
           <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 shadow-2xl">
-            <RequestsAddProposal @proposal-added="handleProposalAdded" />
+            <RequestsAddProposal :project="project" @proposal-added="handleProposalAdded" />
             <div class="mt-10 border-t border-white/10 pt-10">
-              <RequestsGetProposals ref="proposalsRef" />
+              <RequestsGetProposals :project="project" ref="proposalsRef" />
             </div>
           </div>
         </div>
@@ -53,7 +83,7 @@ const handleQuestionAdded = () => {
           </div>
 
           <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 shadow-2xl">
-            <QuestionsAddQuestion @question-added="handleQuestionAdded" />
+            <QuestionsAddQuestion :project="project" @question-added="handleQuestionAdded" />
             <div class="mt-10 border-t border-white/10 pt-10">
               <QuestionsGetQuestions ref="questionsRef" />
             </div>
