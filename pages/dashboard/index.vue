@@ -60,20 +60,22 @@ const role = ref(null)
 
 // Determine role early for template
 if (process.client) {
-  if (roles.value.includes('Admin')) {
+  const rolesArr = Array.isArray(roles.value) ? roles.value : []
+  if (rolesArr.includes('Admin')) {
     role.value = 'Admin'
-  } else if (roles.value.includes('Store')) {
+  } else if (rolesArr.includes('Store')) {
     role.value = 'Store'
-  } else if (roles.value.includes('Client')) {
+  } else if (rolesArr.includes('Client')) {
     role.value = 'Client'
   }
 }
 
 const fetchData = async () => {
+  const rolesArr = Array.isArray(roles.value) ? roles.value : []
   if (!role.value) {
-    if (roles.value.includes('Admin')) role.value = 'Admin'
-    else if (roles.value.includes('Store')) role.value = 'Store'
-    else if (roles.value.includes('Client')) role.value = 'Client'
+    if (rolesArr.includes('Admin')) role.value = 'Admin'
+    else if (rolesArr.includes('Store')) role.value = 'Store'
+    else if (rolesArr.includes('Client')) role.value = 'Client'
     else {
       loading.value = false
       return

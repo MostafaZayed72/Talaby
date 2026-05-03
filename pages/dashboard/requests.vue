@@ -17,10 +17,11 @@ const userRole = ref('')
 const roles = useCookie('roles')
 
 // Set role early for template
-if (roles.value) {
-  if (roles.value.includes('Store')) {
+const rolesArr = Array.isArray(roles.value) ? roles.value : []
+if (rolesArr.length) {
+  if (rolesArr.includes('Store')) {
     userRole.value = 'Store'
-  } else if (roles.value.includes('Client')) {
+  } else if (rolesArr.includes('Client')) {
     userRole.value = 'Client'
   }
 }
