@@ -134,9 +134,12 @@
       </div>
     </transition>
 
-    <main class="p-0">
+    <main class="pt-16 md:pt-20">
       <slot />
     </main>
+
+    <!-- Global Footer -->
+    <Footer />
   </div>
 </template>
 
@@ -161,6 +164,7 @@ const navLinks = computed(() => {
   const links = [
     { to: '/', label: 'Home', icon: 'ph:house-fill' },
     { to: '/departments', label: 'Departments', icon: 'ph:grid-four-fill' },
+    { to: '/about', label: 'About Us', icon: 'ph:info-fill' },
   ];
   if (isLoggedIn.value) {
     links.push({ to: '/dashboard', label: 'Dashboard', icon: 'ph:layout-fill' });

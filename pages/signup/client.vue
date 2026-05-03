@@ -125,6 +125,51 @@
         </button>
       </div>
     </Dialog>
+
+    <!-- Privacy Policy Dialog -->
+    <Dialog
+      v-model:visible="showPolicyDialog"
+      modal
+      class="rounded-3xl overflow-hidden border-none shadow-2xl bg-white dark:bg-slate-900"
+      :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr', width: '90vw', maxWidth: '600px' }"
+      :header="$t('Privacy Policy & Terms')"
+    >
+      <div class="p-6 md:p-8">
+        <div class="max-h-[40vh] overflow-y-auto mb-8 pr-4 space-y-4 text-slate-600 dark:text-slate-400 text-sm leading-relaxed scrollbar-thin scrollbar-thumb-indigo-500">
+          <p class="font-bold text-slate-900 dark:text-white">{{ $t('By registering, you agree to our policies:') }}</p>
+          <ul class="list-disc list-inside space-y-2">
+            <li>{{ $t('We collect and use your data to facilitate orders.') }}</li>
+            <li>{{ $t('We ensure the security of your personal information.') }}</li>
+            <li>{{ $t('Talaby acts as a mediator between you and the stores.') }}</li>
+            <li>{{ $t('You have the right to manage your data at any time.') }}</li>
+          </ul>
+          <p>{{ $t('Please review our full Privacy Policy page for more details.') }}</p>
+        </div>
+
+        <div class="flex items-center gap-3 mb-8 p-4 bg-indigo-600/5 rounded-2xl border border-indigo-600/10">
+          <input type="checkbox" v-model="agreeToTerms" id="terms" class="w-5 h-5 rounded border-indigo-300 text-indigo-600 focus:ring-indigo-500" />
+          <label for="terms" class="text-sm font-bold text-slate-700 dark:text-slate-200 cursor-pointer select-none">
+            {{ $t('I agree to the Privacy Policy and Terms of Use') }}
+          </label>
+        </div>
+
+        <div class="flex gap-4">
+          <button 
+            class="flex-1 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 font-bold py-4 rounded-2xl hover:bg-slate-200 transition-all"
+            @click="showPolicyDialog = false"
+          >
+            {{ $t('Cancel') }}
+          </button>
+          <button 
+            class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl transition-all shadow-xl disabled:opacity-50"
+            :disabled="!agreeToTerms"
+            @click="confirmRegistration"
+          >
+            {{ $t('Confirm & Register') }}
+          </button>
+        </div>
+      </div>
+    </Dialog>
   </div>
 </template>
 
@@ -138,6 +183,8 @@ const router = useRouter()
 const loading = ref(false)
 const isUploadingImage = ref(false)
 const isDialogVisible = ref(false)
+const showPolicyDialog = ref(false)
+const agreeToTerms = ref(false)
 
 const firstName = ref('')
 const lastName = ref('')
@@ -171,7 +218,17 @@ const loginUser = async (userEmail: string, userPassword: string) => {
   }
 }
 
-const registerClient = async () => {
+const registerClient = () => {
+  showPolicyDialog.value = true
+}
+
+const confirmRegistration = async () => {
+  if (!agreeToTerms.value) {
+    toast.add({ severity: 'warn', summary: locale.value === 'ar' ? 'تنبيه' : 'Warning', detail: locale.value === 'ar' ? 'يجب الموافقة على الشروط والأحكام' : 'You must agree to the terms and conditions' })
+    return
+  }
+  
+  showPolicyDialog.value = false
   loading.value = true
 
   const payload = {

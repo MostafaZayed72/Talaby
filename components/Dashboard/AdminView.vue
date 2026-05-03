@@ -44,9 +44,11 @@
           <div v-for="cat in data.topCategories" :key="cat.categoryName" class="flex items-center justify-between group">
             <div class="flex items-center gap-4">
               <div class="w-10 h-10 rounded-xl bg-indigo-600/10 flex items-center justify-center text-indigo-600 font-black">
-                {{ cat.categoryName.charAt(0) }}
+                {{ (locale === 'ar' ? (cat.categoryNameAr || cat.categoryName) : cat.categoryName).charAt(0) }}
               </div>
-              <span class="font-bold text-slate-700 dark:text-slate-200">{{ cat.categoryName }}</span>
+              <span class="font-bold text-slate-700 dark:text-slate-200">
+                {{ locale === 'ar' ? (cat.categoryNameAr || cat.categoryName) : cat.categoryName }}
+              </span>
             </div>
             <span class="px-4 py-1 bg-indigo-600 text-white rounded-full text-xs font-black">
               {{ cat.projectCount }} {{ $t('Projects') }}
@@ -109,6 +111,7 @@
 </template>
 
 <script setup>
+const { locale } = useI18n()
 const props = defineProps({
   data: {
     type: Object,

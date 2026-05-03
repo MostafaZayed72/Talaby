@@ -8,10 +8,10 @@
 
         <div class="flex-1 text-center lg:text-right text-white z-10">
           <h2 class="text-3xl md:text-5xl font-black mb-8 leading-tight italic">
-            {{ $t('Join Our Network of Professionals') }}
+            {{ $t('Mediator Section Title') }}
           </h2>
           <p class="text-indigo-100 text-lg md:text-xl mb-12 max-w-2xl leading-relaxed">
-            {{ $t('Are you a professional service provider? Join Talaby today and expand your reach to thousands of customers in your area.') }}
+            {{ $t('Mediator Section Description') }}
           </p>
           <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 md:gap-6">
             <NuxtLink to="/signup/service_provider" class="bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black px-10 py-5 rounded-2xl transition-all transform hover:scale-105 shadow-2xl flex items-center justify-center gap-3">

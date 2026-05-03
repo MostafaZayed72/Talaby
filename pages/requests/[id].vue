@@ -14,7 +14,7 @@ const handleQuestionAdded = () => {
 </script>
 
 <template>
-  <div class="min-h-screen pt-10 md:pt-16 pb-20 px-4 md:px-6 relative overflow-hidden">
+  <div class="min-h-screen pb-20 px-4 md:px-6 relative overflow-hidden">
     <!-- Background Decorations -->
     <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-[120px]"></div>
     <div class="absolute bottom-0 left-0 w-96 h-96 bg-violet-600/10 rounded-full blur-[120px]"></div>

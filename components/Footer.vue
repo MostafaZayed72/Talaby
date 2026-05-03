@@ -14,7 +14,7 @@
             <span class="text-3xl font-black tracking-tighter italic">TALABY<span class="text-yellow-400">.</span></span>
           </div>
           <p class="text-slate-300 leading-relaxed text-lg">
-            {{ $t('Providing high-quality services with speed and reliability. Your comfort is our priority.') }}
+            {{ $t('Your trusted mediator connecting you with the best stores and professional services. Quality and reliability in every transaction.') }}
           </p>
           <div class="flex justify-center md:justify-start gap-4">
             <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-yellow-400 hover:text-violet-950 transition-all duration-300">
@@ -78,7 +78,7 @@
           &copy; {{ new Date().getFullYear() }} <span class="text-white font-bold">TALABY</span>. {{ $t('All rights reserved.') }}
         </p>
         <div class="flex gap-6 text-sm text-slate-400">
-          <NuxtLink to="/privacy" class="hover:text-white transition-colors">{{ $t('Privacy Policy') }}</NuxtLink>
+          <NuxtLink to="/privacy-policy" class="hover:text-white transition-colors">{{ $t('Privacy Policy') }}</NuxtLink>
           <NuxtLink to="/terms" class="hover:text-white transition-colors">{{ $t('Terms of Service') }}</NuxtLink>
         </div>
       </div>
@@ -95,6 +95,7 @@ const navLinks = computed(() => {
   const links = [
     { to: '/', label: 'Home' },
     { to: '/departments', label: 'Departments' },
+    { to: '/about', label: 'About Us' },
   ];
   if (isLoggedIn.value) {
     links.push({ to: '/dashboard', label: 'Dashboard' });

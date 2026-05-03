@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-x-hidden">
     <!-- Hero Carousel Section -->
-    <HomeCarousel class="pt-6" />
+    <HomeCarousel />
 
     <!-- Services Grid Section -->
     <PopularServices />
@@ -17,9 +17,6 @@
 
     <!-- Join As Provider Section -->
     <JoinAsProvider />
-
-    <!-- Main Footer -->
-    <Footer />
   </div>
 </template>
 

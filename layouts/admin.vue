@@ -15,7 +15,7 @@
           <div class="bg-white p-1 rounded-2xl shadow-lg">
             <img src="/imgs/logo.png" class="w-10 h-10" alt="Logo">
           </div>
-          <span class="text-2xl font-black text-white italic tracking-tighter uppercase">Admin<span class="text-yellow-400">Panel</span></span>
+          <span class="text-2xl font-black text-white italic tracking-tighter uppercase">{{ $t('Admin Panel') }}</span>
         </div>
 
         <!-- Nav Links -->
@@ -69,7 +69,7 @@
 
         <div class="flex items-center gap-4">
           <div class="text-right hidden sm:block">
-            <p class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">Administrator</p>
+            <p class="text-sm font-black text-slate-900 dark:text-white uppercase tracking-wider">{{ $t('Administrator') }}</p>
             <p class="text-xs text-slate-500 dark:text-slate-400">admin@talaby.net</p>
           </div>
           <div class="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-white shadow-lg">
