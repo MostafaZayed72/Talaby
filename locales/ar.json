@@ -374,5 +374,9 @@
     "Review Note": "ملاحظة المراجعة",
     "Add a note explaining your decision...": "أضف ملاحظة توضح قرارك...",
     "Submit Decision": "إرسال القرار",
-    "PendingReview": "قيد المراجعة"
+    "PendingReview": "قيد المراجعة",
+    "Department": "القسم",
+    "Select Department": "اختر القسم",
+    "Question details": "تفاصيل الاستفسار",
+    "Enter your question clearly": "أدخل استفسارك بوضوح..."
 }

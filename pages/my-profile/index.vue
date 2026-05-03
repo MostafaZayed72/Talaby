@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import { useRuntimeConfig } from '#imports'
 import { useLocalStorage } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
 const config = useRuntimeConfig()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const token = useLocalStorage('token', '')
 const loading = ref(false)
@@ -25,6 +25,24 @@ const user = ref({
   commercialRegisterNumber: '',
   storeCategoryId: null as number | null
 })
+
+const roles = useLocalStorage('roles', [])
+const categories = ref<any[]>([])
+
+const currentCategoryName = computed(() => {
+  const cat = categories.value.find(c => c.id == user.value.storeCategoryId)
+  return cat ? (locale.value === 'ar' ? cat.nameAr : cat.nameEn) : '---'
+})
+
+const fetchCategories = async () => {
+  try {
+    const res = await fetch(`${config.public.API_BASE_URL}/storeCategories?PageSize=100`)
+    const response = await res.json()
+    categories.value = response.data?.items || []
+  } catch (err) {
+    console.error('Failed to fetch categories:', err)
+  }
+}
 
 const fetchUser = async () => {
   loading.value = true
@@ -73,7 +91,10 @@ const updateUser = async () => {
   }
 }
 
-onMounted(fetchUser)
+onMounted(() => {
+  fetchUser()
+  fetchCategories()
+})
 </script>
 
 <template>
@@ -190,6 +211,17 @@ onMounted(fetchUser)
               </div>
               <div v-else class="bg-slate-50 dark:bg-white/5 rounded-2xl px-6 py-4 font-bold text-slate-900 dark:text-white border border-slate-100 dark:border-transparent">
                 {{ user.commercialRegisterNumber }}
+              </div>
+            </div>
+
+            <!-- Category (Only for Store) -->
+            <div v-if="roles.includes('Store') || user.storeCategoryId" class="space-y-2 md:col-span-2">
+              <label class="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-bold text-sm uppercase tracking-widest px-2">
+                <Icon name="ph:squares-four-bold" />
+                {{ t('Department') }}
+              </label>
+              <div class="bg-slate-50 dark:bg-white/5 rounded-2xl px-6 py-4 font-bold text-slate-900 dark:text-white border border-slate-100 dark:border-transparent">
+                {{ currentCategoryName }}
               </div>
             </div>
           </div>

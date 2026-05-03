@@ -20,15 +20,29 @@ const projectRequestId = route.params.id as string
 const postCategoryId = ref<number | null>(null)
 const userCategoryId = ref<number | null>(null)
 const projectStatusValue = ref<number | null>(null)
-
+const projectStatusName = ref<string>('')
 const canSubmit = computed(() => {
-  return (
-    roles.value.includes('Store') &&
-    postCategoryId.value !== null &&
-    userCategoryId.value !== null &&
-    postCategoryId.value === userCategoryId.value &&
-    projectStatusValue.value === 1
-  )
+  const isStore = roles.value.some((r: any) => String(r).toLowerCase() === 'store')
+  const hasCategories = postCategoryId.value != null && userCategoryId.value != null
+  const isSameCategory = String(postCategoryId.value) === String(userCategoryId.value)
+  
+  // More robust status check
+  const statusVal = projectStatusValue.value
+  const statusNm = projectStatusName.value?.toLowerCase()
+  const isOpen = statusVal === 1 || statusVal === 0 || statusNm === 'open' || statusNm === undefined || statusNm === '' || statusNm === 'string'
+  
+  console.log('DEBUG addQuestion - canSubmit Details:', {
+    roles: roles.value,
+    isStore,
+    postCategoryId: postCategoryId.value,
+    userCategoryId: userCategoryId.value,
+    isSameCategory,
+    projectStatusValue: statusVal,
+    projectStatusName: projectStatusName.value,
+    isOpen
+  })
+
+  return isStore && hasCategories && isSameCategory && isOpen
 })
 
 // احضار كاتجوري البوست
@@ -41,8 +55,10 @@ const fetchPostCategory = async () => {
 
   if (res.ok) {
     const response = await res.json()
-    postCategoryId.value = response.data.storeCategoryId
-    projectStatusValue.value = response.data.statusValue
+    console.log('DEBUG addQuestion - Project Data Keys:', Object.keys(response.data))
+    postCategoryId.value = response.data.storeCategoryId || response.data.categoryId
+    projectStatusValue.value = response.data.statusValue !== undefined ? response.data.statusValue : response.data.status
+    projectStatusName.value = response.data.statusName || response.data.status
   }
 }
 
