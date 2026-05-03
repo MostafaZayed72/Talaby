@@ -88,7 +88,7 @@
 
 <script setup>
 const { t } = useI18n();
-const token = useLocalStorage('token', null);
+const token = useCookie('token');
 const isLoggedIn = computed(() => !!token.value);
 
 const navLinks = computed(() => {

@@ -5,7 +5,7 @@ import { useLocalStorage } from '@vueuse/core'
 
 const config = useRuntimeConfig()
 const route = useRoute()
-const token = useLocalStorage('token', '')
+const token = useCookie('token')
 const { user } = await useCurrentUser()
 
 const postId = route.params.id as string

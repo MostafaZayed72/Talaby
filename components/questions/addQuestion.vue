@@ -15,8 +15,8 @@ const props = defineProps({
 const { user } = await useCurrentUser()
 const config = useRuntimeConfig()
 const route = useRoute()
-const token = useLocalStorage('token', '')
-const roles = useLocalStorage('roles', []) // من نوع Array<string>
+const token = useCookie('token')
+const roles = useCookie('roles')
 
 const emit = defineEmits(['question-added'])
 

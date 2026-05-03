@@ -6,7 +6,7 @@ import { useRuntimeConfig } from '#imports'
 import { useLocalStorage } from '@vueuse/core'
 
 const config = useRuntimeConfig()
-const token = useLocalStorage('token', '')
+const token = useCookie('token')
 const route = useRoute()
 const router = useRouter()
 

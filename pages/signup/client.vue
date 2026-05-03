@@ -204,9 +204,9 @@ const mobile = ref('')
 const location = ref('')
 const countdown = ref(0)
 
-const token = useLocalStorage('token', '')
+const token = useCookie('token')
 const userID = useLocalStorage('userID', '')
-const roles = useLocalStorage('roles', [])
+const roles = useCookie('roles')
 
 const loginUser = async (userEmail: string, userPassword: string) => {
   try {

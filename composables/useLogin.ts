@@ -10,9 +10,9 @@ export function useLogin() {
   const router = useRouter()
   const loading = ref(false)
 
-  const token = useLocalStorage('token', '')
-  const userID = useLocalStorage('userID', '')
-  const roles = useLocalStorage('roles', [])
+  const token = useCookie('token')
+  const userID = useCookie('userID')
+  const roles = useCookie('roles')
 
   const loginUser = async (email: string, password: string, redirect = true) => {
     loading.value = true

@@ -5,7 +5,7 @@ import { useCurrentUser } from '~/composables/useCurrentUser'
 
 export default defineNuxtRouteMiddleware(async (to) => {
   const config = useRuntimeConfig()
-  const token = useLocalStorage('token', '')
+  const token = useCookie('token')
   const proposalId = to.params.id as string
 
   if (!token.value) {

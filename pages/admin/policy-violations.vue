@@ -197,7 +197,7 @@ definePageMeta({
 
 const config = useRuntimeConfig()
 const { locale, t } = useI18n()
-const token = useLocalStorage('token', '')
+const token = useCookie('token')
 
 const loading = ref(true)
 const submitting = ref(false)

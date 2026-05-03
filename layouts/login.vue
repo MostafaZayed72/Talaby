@@ -52,7 +52,7 @@ const loading = ref(true);
 const router = useRouter();
 
 // استخدام useLocalStorage بدلاً من localStorage مباشرة
-const token = useLocalStorage('token', null); // "token" هو اسم المفتاح و "null" هو القيمة الافتراضية
+const token = useCookie('token');
 const userID = ref()
 const roles = ref()
 // دالة التحقق من التوكن

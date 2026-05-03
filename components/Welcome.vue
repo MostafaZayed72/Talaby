@@ -14,7 +14,7 @@ const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
 
 // متغير لتخزين اسم المستخدم
 const firstName = ref('');
-const token = useLocalStorage('token', ''); // استرجاع التوكن من localStorage
+const token = useCookie('token');
 
 const fetchUserData = async () => {
   if (!token.value) {

@@ -7,7 +7,7 @@ import { ref } from 'vue'
 const route = useRoute()
 const router = useRouter()
 const config = useRuntimeConfig()
-const token = useLocalStorage('token', '')
+const token = useCookie('token')
 
 const loading = ref(false)
 const errorMessage = ref('')

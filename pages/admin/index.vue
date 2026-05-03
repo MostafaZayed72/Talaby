@@ -21,7 +21,7 @@ definePageMeta({
 })
 
 const config = useRuntimeConfig()
-const token = useLocalStorage('token', '')
+const token = useCookie('token')
 const loading = ref(true)
 const error = ref(null)
 const dashboardData = ref(null)

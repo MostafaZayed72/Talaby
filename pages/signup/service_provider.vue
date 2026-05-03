@@ -251,9 +251,9 @@ const commercialRegisterImageUrl = ref('')
 const categories = ref<any[]>([])
 const countdown = ref(0)
 
-const token = useLocalStorage('token', '')
+const token = useCookie('token')
 const userID = useLocalStorage('userID', '')
-const roles = useLocalStorage('roles', [])
+const roles = useCookie('roles')
 
 const isUploadingImage = ref(false)
 

@@ -126,7 +126,7 @@ import Dialog from 'primevue/dialog';
 
 const userData = ref(null);
 const loading = ref(true);
-const token = useLocalStorage('token', '');
+const token = useCookie('token');
 const showEditDialog = ref(false);
 const editData = ref({});
 

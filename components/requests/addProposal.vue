@@ -18,7 +18,7 @@ const { locale } = useI18n()
 const config = useRuntimeConfig()
 const route = useRoute()
 const token = useCookie('token')
-const roles = useLocalStorage('roles', []) // من نوع Array<string>
+const roles = useCookie('roles')
 
 const emit = defineEmits(['proposal-added'])
 
