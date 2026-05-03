@@ -90,11 +90,11 @@
                 </td>
                 <td class="px-4 md:px-8 py-4 md:py-6 text-center">
                    <div 
-                    @click.stop="(item.status.toLowerCase() === 'accepted' || item.status.toLowerCase() === 'completed') ? router.push(item.acceptedProposalId ? `/replies/${item.acceptedProposalId}` : `/requests/${item.id}`) : null"
+                    @click.stop="goToChat(item)"
                     class="flex items-center justify-center gap-2 text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer"
-                    :title="(item.status.toLowerCase() === 'accepted' || item.status.toLowerCase() === 'completed') ? $t('Open Chat') : ''"
+                    :title="isChatOpen(item) ? $t('Open Chat') : ''"
                    >
-                      <Icon name="ph:chat-circle-dots-fill" :class="{'text-indigo-600': item.status.toLowerCase() === 'accepted' || item.status.toLowerCase() === 'completed'}" />
+                      <Icon name="ph:chat-circle-dots-fill" :class="{'text-indigo-600': isChatOpen(item)}" />
                       <span class="text-xs font-black">{{ item.repliesCount || 0 }}</span>
                    </div>
                 </td>
