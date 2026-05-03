@@ -106,56 +106,55 @@ const submitRequest = async () => {
           <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md" @click="showDialog = false"></div>
           
           <!-- Dialog Content -->
-          <div class="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-white/20 p-8 md:p-12 animate-modal-in overflow-hidden max-h-[90vh] flex flex-col">
+          <div class="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[1.5rem] md:rounded-[2.5rem] shadow-2xl border border-white/20 p-5 md:p-12 animate-modal-in overflow-hidden max-h-[90vh] flex flex-col mx-4">
             <!-- Decorative Light -->
             <div class="absolute top-0 right-0 w-48 h-48 bg-indigo-600/10 rounded-full blur-[80px]"></div>
             
             <div class="relative z-10 flex flex-col h-full">
               <!-- Header -->
-              <div class="flex justify-between items-center mb-8">
+              <div class="flex justify-between items-center mb-6 md:mb-8">
                 <div>
-                  <h2 class="text-3xl font-black text-slate-900 dark:text-white italic tracking-tight mb-2">{{ t('Add New Request') }}</h2>
+                  <h2 class="text-xl md:text-3xl font-black text-slate-900 dark:text-white italic tracking-tight mb-1 md:mb-2">{{ t('Add New Request') }}</h2>
                   <div class="flex items-center gap-2">
-                    <span class="h-1.5 w-12 bg-yellow-400 rounded-full"></span>
-                    <p class="text-xs font-black uppercase tracking-widest text-green-600 dark:text-green-400">{{ $t('Dear customer') }}: {{ $t('Remember: Clear demand = clear supply') }}</p>
+                    <span class="h-1 w-8 md:h-1.5 md:w-12 bg-yellow-400 rounded-full"></span>
+                    <p class="text-[9px] md:text-xs font-black uppercase tracking-widest text-green-600 dark:text-green-400 leading-tight">{{ $t('Dear customer') }}: {{ $t('Remember: Clear demand = clear supply') }}</p>
                   </div>
                 </div>
-                <button @click="showDialog = false" class="p-3 rounded-2xl hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
-                  <Icon name="ph:x-bold" class="text-xl dark:text-white" />
+                <button @click="showDialog = false" class="p-2 md:p-3 rounded-xl md:rounded-2xl hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
+                  <Icon name="ph:x-bold" class="text-lg md:text-xl dark:text-white" />
                 </button>
               </div>
 
               <!-- Body (Scrollable) -->
-              <div class="flex-1 overflow-y-auto pr-2 space-y-8 custom-scrollbar">
-                <div v-if="error" class="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 font-bold flex items-center gap-3">
+              <div class="flex-1 overflow-y-auto pr-1 md:pr-2 space-y-6 md:space-y-8 custom-scrollbar">
+                <div v-if="error" class="p-3 md:p-4 rounded-xl md:rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 font-bold flex items-center gap-3 text-xs md:text-sm">
                   <Icon name="ph:warning-circle-bold" />
                   {{ error }}
                 </div>
-
-                <div class="space-y-6">
+                <div class="space-y-4 md:space-y-6">
                   <!-- Title -->
-                  <div class="space-y-2">
-                    <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ t('Request Title') }}</label>
+                  <div class="space-y-1 md:space-y-2 text-right">
+                    <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ t('Request Title') }}</label>
                     <input 
                       v-model="requestData.title" 
                       :placeholder="t('What do you need?')"
-                      class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white transition-all font-bold" 
+                      class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white transition-all font-bold text-sm md:text-base" 
                     />
                   </div>
 
                   <!-- Description -->
-                  <div class="space-y-2">
-                    <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ t('Description') }}</label>
+                  <div class="space-y-1 md:space-y-2 text-right">
+                    <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ t('Description') }}</label>
                     <textarea 
                       v-model="requestData.description" 
                       :placeholder="t('Provide details about your request...')"
-                      class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white min-h-[150px] resize-none transition-all font-medium" 
+                      class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white min-h-[100px] md:min-h-[150px] resize-none transition-all font-medium text-sm md:text-base" 
                     ></textarea>
                   </div>
 
                   <!-- Image Upload -->
-                  <div class="space-y-2">
-                    <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ t('You can add a photo to illustrate the request') }}</label>
+                  <div class="space-y-1 md:space-y-2 text-right">
+                    <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ t('You can add a photo to illustrate the request') }}</label>
                     <div class="relative group">
                       <input 
                         type="file" 
@@ -163,15 +162,15 @@ const submitRequest = async () => {
                         @change="handleFileChange" 
                         accept="image/*" 
                       />
-                      <div class="w-full border-2 border-dashed border-slate-200 dark:border-white/10 rounded-[2rem] p-8 flex flex-col items-center justify-center gap-4 group-hover:border-indigo-500 transition-all bg-slate-50/50 dark:bg-white/5">
+                      <div class="w-full border-2 border-dashed border-slate-200 dark:border-white/10 rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 flex flex-col items-center justify-center gap-2 md:gap-4 group-hover:border-indigo-500 transition-all bg-slate-50/50 dark:bg-white/5">
                         <div v-if="!requestData.imageUrl" class="text-center">
-                          <Icon name="ph:image-square-bold" class="text-4xl text-slate-400 mb-2" />
-                          <p class="text-sm font-bold text-slate-500">{{ t('Click to upload image') }}</p>
+                          <Icon name="ph:image-square-bold" class="text-3xl md:text-4xl text-slate-400 mb-1 md:mb-2" />
+                          <p class="text-xs md:text-sm font-bold text-slate-500">{{ t('Click to upload image') }}</p>
                         </div>
-                        <div v-else class="relative w-full aspect-video rounded-2xl overflow-hidden">
+                        <div v-else class="relative w-full aspect-video rounded-xl md:rounded-2xl overflow-hidden">
                           <img :src="requestData.imageUrl" class="w-full h-full object-cover" />
                           <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Icon name="ph:arrows-clockwise-bold" class="text-3xl text-white animate-spin-slow" />
+                            <Icon name="ph:arrows-clockwise-bold" class="text-2xl md:text-3xl text-white animate-spin-slow" />
                           </div>
                         </div>
                       </div>
@@ -181,9 +180,9 @@ const submitRequest = async () => {
               </div>
 
               <!-- Footer -->
-              <div class="mt-10 flex gap-4 pt-6 border-t border-slate-100 dark:border-white/5">
+              <div class="mt-6 md:mt-10 flex flex-col sm:flex-row gap-3 md:gap-4 pt-5 md:pt-6 border-t border-slate-100 dark:border-white/5">
                 <button 
-                  class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black py-5 rounded-2xl transition-all transform hover:scale-[1.02] shadow-xl active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50"
+                  class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 md:py-5 rounded-xl md:rounded-2xl transition-all transform hover:scale-[1.02] shadow-xl active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50 text-sm md:text-base order-1 sm:order-2"
                   :disabled="loading" 
                   @click="submitRequest"
                 >
@@ -192,7 +191,7 @@ const submitRequest = async () => {
                   {{ t('Submit Request') }}
                 </button>
                 <button 
-                  class="px-10 bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-white font-black rounded-2xl hover:bg-slate-200 dark:hover:bg-white/20 transition-all active:scale-95"
+                  class="px-8 md:px-10 py-4 md:py-5 bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-white font-black rounded-xl md:rounded-2xl hover:bg-slate-200 dark:hover:bg-white/20 transition-all active:scale-95 text-sm md:text-base order-2 sm:order-1"
                   @click="showDialog = false"
                 >
                   {{ t('Cancel') }}

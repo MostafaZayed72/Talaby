@@ -14,7 +14,7 @@ const handleQuestionAdded = () => {
 </script>
 
 <template>
-  <div class="min-h-screen pb-20 px-6 relative overflow-hidden">
+  <div class="min-h-screen pb-20 px-4 md:px-6 relative overflow-hidden">
     <!-- Background Decorations -->
     <div class="absolute top-0 right-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-[120px]"></div>
     <div class="absolute bottom-0 left-0 w-96 h-96 bg-violet-600/10 rounded-full blur-[120px]"></div>
@@ -25,17 +25,17 @@ const handleQuestionAdded = () => {
         <RequestsGet />
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
         <!-- Proposals Column -->
         <div class="space-y-12">
-          <div class="flex items-center gap-4 mb-6">
-            <div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
-              <Icon name="ph:handshake-bold" class="text-2xl text-white" />
+          <div class="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+            <div class="w-10 h-10 md:w-12 md:h-12 bg-indigo-600 rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg">
+              <Icon name="ph:handshake-bold" class="text-xl md:text-2xl text-white" />
             </div>
-            <h2 class="text-3xl font-black text-slate-900 dark:text-white italic">{{ $t('Proposals') }}</h2>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-900 dark:text-white italic">{{ $t('Proposals') }}</h2>
           </div>
           
-          <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-8 shadow-2xl">
+          <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 shadow-2xl">
             <RequestsAddProposal @proposal-added="handleProposalAdded" />
             <div class="mt-10 border-t border-white/10 pt-10">
               <RequestsGetProposals ref="proposalsRef" />
@@ -45,14 +45,14 @@ const handleQuestionAdded = () => {
 
         <!-- Questions Column -->
         <div class="space-y-12">
-          <div class="flex items-center gap-4 mb-6">
-            <div class="w-12 h-12 bg-yellow-400 rounded-2xl flex items-center justify-center shadow-lg">
-              <Icon name="ph:chats-circle-bold" class="text-2xl text-violet-950" />
+          <div class="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
+            <div class="w-10 h-10 md:w-12 md:h-12 bg-yellow-400 rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg">
+              <Icon name="ph:chats-circle-bold" class="text-xl md:text-2xl text-violet-950" />
             </div>
-            <h2 class="text-3xl font-black text-slate-900 dark:text-white italic">{{ $t('Questions') }}</h2>
+            <h2 class="text-2xl md:text-3xl font-black text-slate-900 dark:text-white italic">{{ $t('Questions') }}</h2>
           </div>
 
-          <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-8 shadow-2xl">
+          <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 shadow-2xl">
             <QuestionsAddQuestion @question-added="handleQuestionAdded" />
             <div class="mt-10 border-t border-white/10 pt-10">
               <QuestionsGetQuestions ref="questionsRef" />

@@ -68,7 +68,7 @@
                 <Icon name="ph:sign-out-bold" class="text-2xl" />
               </button>
             </template>
-            <NuxtLink v-else to="/login" class="bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black px-6 py-3 rounded-xl transition-all transform hover:scale-105 shadow-[0_10px_20px_rgba(234,179,8,0.3)] active:scale-95 text-sm md:text-base">
+            <NuxtLink v-else to="/login" class="hidden sm:block bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black px-6 py-3 rounded-xl transition-all transform hover:scale-105 shadow-[0_10px_20px_rgba(234,179,8,0.3)] active:scale-95 text-sm md:text-base">
               {{ $t('Login') }}
             </NuxtLink>
           </div>

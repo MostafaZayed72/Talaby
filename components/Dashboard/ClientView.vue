@@ -1,30 +1,30 @@
 <template>
   <div class="space-y-8 animate-fade-in">
     <!-- Header: Welcome & Quick Actions -->
-    <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl p-8 rounded-[3rem] border border-white/20 shadow-2xl flex flex-col md:flex-row justify-between items-center gap-6">
-      <div class="flex items-center gap-6">
-        <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-lg">
-          <Icon name="ph:hand-waving-fill" class="text-4xl" />
+    <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl p-6 md:p-8 rounded-[2rem] md:rounded-[3rem] border border-white/20 shadow-2xl flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="flex flex-col md:flex-row items-center md:items-start text-center md:text-right gap-4 md:gap-6">
+        <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-lg">
+          <Icon name="ph:hand-waving-fill" class="text-3xl md:text-4xl" />
         </div>
         <div>
-          <h2 class="text-3xl font-black text-slate-900 dark:text-white italic">{{ $t('Welcome Back!') }}</h2>
-          <p class="text-slate-500 font-bold">{{ $t('Manage your requests and track your orders.') }}</p>
+          <h2 class="text-2xl md:text-3xl font-black text-slate-900 dark:text-white italic">{{ $t('Welcome Back!') }}</h2>
+          <p class="text-slate-500 font-bold text-sm md:text-base">{{ $t('Manage your requests and track your orders.') }}</p>
         </div>
       </div>
-      <NuxtLink to="/departments" class="bg-indigo-600 hover:bg-indigo-700 text-white font-black px-10 py-5 rounded-2xl shadow-xl transition-all transform hover:scale-105 active:scale-95 flex items-center gap-3">
-        <Icon name="ph:plus-circle-fill" class="text-2xl" />
+      <NuxtLink to="/departments" class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-black px-8 md:px-10 py-4 md:py-5 rounded-xl md:rounded-2xl shadow-xl transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-3">
+        <Icon name="ph:plus-circle-fill" class="text-xl md:text-2xl" />
         {{ $t('New Request') }}
       </NuxtLink>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Project Breakdown -->
-      <div class="lg:col-span-2 grid grid-cols-2 md:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
         <div v-for="stat in projectStats" :key="stat.label" 
-          class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl p-8 rounded-[2.5rem] border border-white/20 shadow-xl group hover:bg-indigo-600 transition-all cursor-default">
-          <Icon :name="stat.icon" :class="`text-3xl mb-4 group-hover:text-white ${stat.colorClass}`" />
+          class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border border-white/20 shadow-xl group hover:bg-indigo-600 transition-all cursor-default flex flex-col items-center md:items-start text-center md:text-right">
+          <Icon :name="stat.icon" :class="`text-2xl md:text-3xl mb-3 md:mb-4 group-hover:text-white ${stat.colorClass}`" />
           <p class="text-[10px] font-black text-slate-400 group-hover:text-indigo-100 uppercase tracking-widest mb-1">{{ $t(stat.label) }}</p>
-          <p class="text-4xl font-black text-slate-900 dark:text-white group-hover:text-white italic">{{ stat.value }}</p>
+          <p class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white group-hover:text-white italic">{{ stat.value }}</p>
         </div>
       </div>
 
@@ -64,26 +64,26 @@
           </h3>
           <NuxtLink to="/dashboard/requests" class="text-xs font-black text-indigo-600 uppercase tracking-widest hover:underline">{{ $t('View All') }}</NuxtLink>
         </div>
-        <div class="p-8 space-y-4">
+        <div class="p-6 md:p-8 space-y-4">
           <div v-for="project in data.recentProjects" :key="project.id" 
-            class="flex items-center justify-between p-6 bg-slate-50/50 dark:bg-white/5 rounded-3xl border border-white/5 hover:border-indigo-600/30 transition-all group">
-            <div class="flex items-center gap-6">
-              <div class="w-12 h-12 rounded-2xl bg-indigo-600/10 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-all">
-                <Icon name="ph:folder-fill" class="text-2xl" />
+            class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 md:p-6 bg-slate-50/50 dark:bg-white/5 rounded-2xl md:rounded-3xl border border-white/5 hover:border-indigo-600/30 transition-all group gap-4">
+            <div class="flex items-center gap-4 md:gap-6">
+              <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-indigo-600/10 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                <Icon name="ph:folder-fill" class="text-xl md:text-2xl" />
               </div>
               <div>
-                <h4 class="font-black text-slate-900 dark:text-white">{{ project.title }}</h4>
-                <div class="flex items-center gap-3 mt-1">
-                  <span class="text-[10px] font-black text-indigo-500 uppercase">{{ project.storeCategoryName }}</span>
-                  <span class="text-slate-300">•</span>
-                  <span class="text-[10px] font-bold text-slate-500">{{ new Date(project.createdAt).toLocaleDateString() }}</span>
+                <h4 class="font-black text-sm md:text-base text-slate-900 dark:text-white">{{ project.title }}</h4>
+                <div class="flex flex-wrap items-center gap-2 md:gap-3 mt-1">
+                  <span class="text-[9px] md:text-[10px] font-black text-indigo-500 uppercase">{{ project.storeCategoryName }}</span>
+                  <span class="text-slate-300 hidden sm:inline">•</span>
+                  <span class="text-[9px] md:text-[10px] font-bold text-slate-500">{{ new Date(project.createdAt).toLocaleDateString() }}</span>
                 </div>
               </div>
             </div>
-            <div class="flex items-center gap-6">
-              <div class="text-center hidden sm:block">
-                <p class="text-[10px] font-black text-slate-400 uppercase">{{ $t('Proposals') }}</p>
-                <p class="font-black text-indigo-600">{{ project.proposalsCount }}</p>
+            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 md:gap-6">
+              <div class="text-right sm:text-center">
+                <p class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase leading-none mb-1">{{ $t('Proposals') }}</p>
+                <p class="font-black text-indigo-600 leading-none">{{ project.proposalsCount }}</p>
               </div>
               <span :class="statusClass(project.status)">{{ $t(project.status) }}</span>
             </div>

@@ -8,15 +8,15 @@
 
     <div class="relative z-10 w-full max-w-2xl">
       <!-- Signup Card -->
-      <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-8 md:p-12 shadow-2xl">
-        <div class="text-center mb-10">
-          <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 rounded-2xl shadow-xl mb-6">
-            <Icon name="ph:user-plus-bold" class="text-3xl text-white" />
+      <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-12 shadow-2xl">
+        <div class="text-center mb-8 md:mb-10">
+          <div class="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 bg-indigo-600 rounded-2xl shadow-xl mb-4 md:mb-6">
+            <Icon name="ph:user-plus-bold" class="text-2xl md:text-3xl text-white" />
           </div>
-          <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight italic">
+          <h1 class="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight italic">
             {{ $t('Create Client Account') }}
           </h1>
-          <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium">
+          <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium text-sm md:text-base">
             {{ $t('Join our community and discover professional services.') }}
           </p>
         </div>
@@ -25,53 +25,53 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- First Name -->
             <div class="space-y-2 text-right">
-              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('First Name') }}</label>
+              <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('First Name') }}</label>
               <div class="relative">
-                <input v-model="firstName" :placeholder="$t('First Name')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
+                <input v-model="firstName" :placeholder="$t('First Name')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl px-6 py-3 md:py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
               </div>
             </div>
             <!-- Last Name -->
             <div class="space-y-2 text-right">
-              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Last Name') }}</label>
+              <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Last Name') }}</label>
               <div class="relative">
-                <input v-model="lastName" :placeholder="$t('Last Name')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
+                <input v-model="lastName" :placeholder="$t('Last Name')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl px-6 py-3 md:py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
               </div>
             </div>
           </div>
 
           <!-- Email -->
           <div class="space-y-2 text-right">
-            <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Email') }}</label>
+            <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Email') }}</label>
             <div class="relative group">
               <Icon name="ph:envelope-simple-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input v-model="email" :placeholder="$t('Email')" type="email" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
+              <input v-model="email" :placeholder="$t('Email')" type="email" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl pl-12 pr-6 py-3 md:py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
             </div>
           </div>
 
           <!-- Password -->
           <div class="space-y-2 text-right">
-            <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Password') }}</label>
+            <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Password') }}</label>
             <div class="relative group">
               <Icon name="ph:lock-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input v-model="password" :placeholder="$t('Password')" type="password" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
+              <input v-model="password" :placeholder="$t('Password')" type="password" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl pl-12 pr-6 py-3 md:py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
             </div>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Mobile -->
             <div class="space-y-2 text-right">
-              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Mobile Number') }}</label>
+              <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Mobile Number') }}</label>
               <div class="relative group">
                 <Icon name="ph:phone-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input v-model="mobile" :placeholder="$t('Mobile Number')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
+                <input v-model="mobile" :placeholder="$t('Mobile Number')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl pl-12 pr-6 py-3 md:py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
               </div>
             </div>
             <!-- City -->
             <div class="space-y-2 text-right">
-              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('City') }}</label>
+              <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('City') }}</label>
               <div class="relative group">
                 <Icon name="ph:map-pin-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input v-model="location" :placeholder="$t('City')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
+                <input v-model="location" :placeholder="$t('City')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl pl-12 pr-6 py-3 md:py-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white" />
               </div>
             </div>
           </div>

@@ -8,15 +8,15 @@
 
     <div class="relative z-10 w-full max-w-3xl">
       <!-- Signup Card -->
-      <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] p-8 md:p-12 shadow-2xl overflow-hidden">
-        <div class="text-center mb-10">
-          <div class="inline-flex items-center justify-center w-16 h-16 bg-yellow-400 rounded-2xl shadow-xl mb-6">
-            <Icon name="ph:briefcase-bold" class="text-3xl text-violet-950" />
+      <div class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/20 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-12 shadow-2xl overflow-hidden">
+        <div class="text-center mb-8 md:mb-10">
+          <div class="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 bg-yellow-400 rounded-2xl shadow-xl mb-4 md:mb-6">
+            <Icon name="ph:briefcase-bold" class="text-2xl md:text-3xl text-violet-950" />
           </div>
-          <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight italic">
+          <h1 class="text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight italic">
             {{ $t('Sign up as Store') }}
           </h1>
-          <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium">
+          <p class="text-slate-500 dark:text-slate-400 mt-2 font-medium text-sm md:text-base">
             {{ $t('Join our marketplace and reach thousands of customers.') }}
           </p>
         </div>
@@ -25,65 +25,65 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Commercial Register Number -->
             <div class="space-y-2 text-right">
-              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Commercial Register Number') }}</label>
+              <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Commercial Register Number') }}</label>
               <div class="relative group">
                 <Icon name="ph:hash-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input v-model="commercialRegisterNumber" type="number" :placeholder="$t('Commercial Register Number')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
+                <input v-model="commercialRegisterNumber" type="number" :placeholder="$t('Commercial Register Number')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl pl-12 pr-6 py-3 md:py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
               </div>
             </div>
 
             <!-- Trade Name -->
             <div class="space-y-2 text-right">
-              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Trade Name') }}</label>
+              <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Trade Name') }}</label>
               <div class="relative group">
                 <Icon name="ph:storefront-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input v-model="firstName" :placeholder="$t('Trade Name')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
+                <input v-model="firstName" :placeholder="$t('Trade Name')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl pl-12 pr-6 py-3 md:py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
               </div>
             </div>
 
             <!-- Email -->
             <div class="space-y-2 text-right">
-              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Email') }}</label>
+              <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Email') }}</label>
               <div class="relative group">
                 <Icon name="ph:envelope-simple-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input v-model="email" type="email" :placeholder="$t('Email')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
+                <input v-model="email" type="email" :placeholder="$t('Email')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl pl-12 pr-6 py-3 md:py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
               </div>
             </div>
 
             <!-- Password -->
             <div class="space-y-2 text-right">
-              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Password') }}</label>
+              <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Password') }}</label>
               <div class="relative group">
                 <Icon name="ph:lock-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input v-model="password" type="password" :placeholder="$t('Password')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
+                <input v-model="password" type="password" :placeholder="$t('Password')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl pl-12 pr-6 py-3 md:py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
               </div>
             </div>
 
             <!-- Mobile -->
             <div class="space-y-2 text-right">
-              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Mobile Number') }}</label>
+              <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Mobile Number') }}</label>
               <div class="relative group">
                 <Icon name="ph:phone-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input v-model="mobile" :placeholder="$t('Mobile Number')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
+                <input v-model="mobile" :placeholder="$t('Mobile Number')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl pl-12 pr-6 py-3 md:py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
               </div>
             </div>
 
             <!-- City -->
             <div class="space-y-2 text-right">
-              <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('City') }}</label>
+              <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('City') }}</label>
               <div class="relative group">
                 <Icon name="ph:map-pin-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input v-model="location" :placeholder="$t('City')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
+                <input v-model="location" :placeholder="$t('City')" required class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl pl-12 pr-6 py-3 md:py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white" />
               </div>
             </div>
           </div>
 
           <!-- Category Selection -->
           <div class="space-y-2 text-right">
-            <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Select Store Category') }}</label>
+            <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Select Store Category') }}</label>
             <div class="relative group">
               <Icon name="ph:grid-four-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-              <select v-model="selectedCategoryId" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl pl-12 pr-6 py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white appearance-none">
+              <select v-model="selectedCategoryId" class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl pl-12 pr-6 py-3 md:py-4 outline-none focus:ring-2 focus:ring-yellow-400 dark:text-white appearance-none">
                 <option disabled value="">-- {{ $t('Select a category') }} --</option>
                 <option v-for="cat in categories" :key="cat.id" :value="cat.id">
                   {{ locale === 'ar' ? cat.nameAr : cat.nameEn }}
@@ -94,23 +94,23 @@
 
           <!-- Commercial Register Image Upload -->
           <div class="space-y-2 text-right">
-            <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Commercial Register Image') }}</label>
+            <label class="text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Commercial Register Image') }}</label>
             <div class="relative">
               <div class="flex items-center justify-center w-full">
-                <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-200 dark:border-white/10 border-dashed rounded-2xl cursor-pointer bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 transition-all overflow-hidden relative">
+                <label class="flex flex-col items-center justify-center w-full h-28 md:h-32 border-2 border-slate-200 dark:border-white/10 border-dashed rounded-xl md:rounded-2xl cursor-pointer bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 transition-all overflow-hidden relative">
                   <!-- Loading State -->
                   <div v-if="isUploadingImage" class="absolute inset-0 bg-slate-900/10 backdrop-blur-[2px] flex flex-col items-center justify-center space-y-2">
                     <div class="animate-spin border-4 border-violet-600 border-t-transparent rounded-full w-8 h-8"></div>
-                    <p class="text-xs font-black text-violet-600 uppercase tracking-widest">{{ $t('Image is being uploaded') }}</p>
+                    <p class="text-[10px] font-black text-violet-600 uppercase tracking-widest">{{ $t('Image is being uploaded') }}</p>
                   </div>
                   
                   <div v-if="!commercialRegisterImageUrl && !isUploadingImage" class="flex flex-col items-center justify-center pt-5 pb-6">
-                    <Icon name="ph:cloud-arrow-up-bold" class="text-3xl text-slate-400 mb-2" />
-                    <p class="text-sm text-slate-500 dark:text-slate-400 font-bold">{{ $t('Click to upload image') }}</p>
+                    <Icon name="ph:cloud-arrow-up-bold" class="text-2xl md:text-3xl text-slate-400 mb-2" />
+                    <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-bold">{{ $t('Click to upload image') }}</p>
                   </div>
                   <div v-else-if="commercialRegisterImageUrl && !isUploadingImage" class="flex items-center gap-4 p-4">
-                    <img :src="commercialRegisterImageUrl" class="w-16 h-16 rounded-xl object-cover" />
-                    <span class="text-green-500 font-bold flex items-center gap-2">
+                    <img :src="commercialRegisterImageUrl" class="w-12 h-12 md:w-16 md:h-16 rounded-xl object-cover" />
+                    <span class="text-green-500 font-bold text-xs md:text-base flex items-center gap-2">
                       <Icon name="ph:check-circle-fill" />
                       {{ $t('Uploaded') }}
                     </span>

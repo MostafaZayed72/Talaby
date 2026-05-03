@@ -1,8 +1,8 @@
 <template>
   <section class="py-24 bg-slate-50 dark:bg-slate-800/50">
     <div class="container mx-auto px-6">
-      <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-        <div class="max-w-2xl text-right">
+      <div class="flex flex-col md:flex-row justify-between items-center md:items-end mb-12 md:mb-16 gap-6 text-center md:text-right">
+        <div class="max-w-2xl">
           <h2 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-4">
             {{ $t('Explore Our Popular Services') }}
           </h2>
@@ -12,7 +12,7 @@
         </div>
         <NuxtLink to="/departments" class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold hover:gap-4 transition-all duration-300">
           {{ $t('View All Departments') }}
-          <Icon name="ph:arrow-right-bold" />
+          <Icon name="ph:arrow-right-bold" class="rtl:rotate-180" />
         </NuxtLink>
       </div>
 

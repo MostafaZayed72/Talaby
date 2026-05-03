@@ -2,31 +2,31 @@
   <div class="space-y-8 animate-fade-in">
     <!-- Header & Search -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-      <div>
-        <h2 class="text-3xl font-black text-slate-900 dark:text-white italic uppercase tracking-tight flex items-center gap-4">
+      <div class="text-center md:text-right">
+        <h2 class="text-2xl md:text-3xl font-black text-slate-900 dark:text-white italic uppercase tracking-tight flex items-center justify-center md:justify-start gap-3 md:gap-4">
           <Icon name="ph:shopping-bag-fill" class="text-indigo-600" />
           {{ $t('My Orders') }}
         </h2>
-        <p class="text-slate-500 font-bold mt-1">{{ $t('Manage and track your project requests') }}</p>
+        <p class="text-slate-500 font-bold mt-1 text-sm md:text-base">{{ $t('Manage and track your project requests') }}</p>
       </div>
 
       <div class="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
         <NuxtLink 
           to="/departments" 
-          class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-black px-8 py-4 rounded-2xl shadow-xl transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
+          class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-black px-6 md:px-8 py-3 md:py-4 rounded-xl md:rounded-2xl shadow-xl transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
         >
-          <Icon name="ph:plus-circle-fill" class="text-2xl" />
+          <Icon name="ph:plus-circle-fill" class="text-xl md:text-2xl" />
           {{ $t('New Request') }}
         </NuxtLink>
 
-        <div class="w-full md:w-96 relative group">
+        <div class="w-full md:w-80 lg:w-96 relative group">
           <Icon name="ph:magnifying-glass-bold" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
           <input 
             v-model="filters.SearchPhrase"
             @input="debounceSearch"
             type="text" 
             :placeholder="$t('Search orders...')"
-            class="w-full pl-12 pr-6 py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl font-bold shadow-sm focus:ring-4 focus:ring-indigo-600/10 focus:border-indigo-600 transition-all outline-none"
+            class="w-full pl-12 pr-6 py-3 md:py-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-xl md:rounded-2xl font-bold shadow-sm focus:ring-4 focus:ring-indigo-600/10 focus:border-indigo-600 transition-all outline-none text-sm md:text-base"
           >
         </div>
       </div>
@@ -38,15 +38,15 @@
         <table class="w-full text-right" :dir="locale === 'ar' ? 'rtl' : 'ltr'">
           <thead>
             <tr class="bg-slate-50/50 dark:bg-white/5 text-slate-400 font-black uppercase text-[10px] tracking-widest">
-              <th @click="toggleSort('Title')" class="px-8 py-6 cursor-pointer hover:text-indigo-600 transition-colors">
+              <th @click="toggleSort('Title')" class="px-4 md:px-8 py-4 md:py-6 cursor-pointer hover:text-indigo-600 transition-colors">
                 <div class="flex items-center gap-2">
                   {{ $t('Project') }}
                   <Icon v-if="filters.SortBy === 'Title'" :name="filters.SortDirection === 'Ascending' ? 'ph:caret-up-bold' : 'ph:caret-down-bold'" />
                 </div>
               </th>
-              <th class="px-8 py-6 text-center">{{ $t('Proposals') }}</th>
-              <th class="px-8 py-6 text-center">{{ $t('Status') }}</th>
-              <th @click="toggleSort('CreatedAt')" class="px-8 py-6 text-center cursor-pointer hover:text-indigo-600 transition-colors">
+              <th class="px-4 md:px-8 py-4 md:py-6 text-center">{{ $t('Proposals') }}</th>
+              <th class="px-4 md:px-8 py-4 md:py-6 text-center">{{ $t('Status') }}</th>
+              <th @click="toggleSort('CreatedAt')" class="px-4 md:px-8 py-4 md:py-6 text-center cursor-pointer hover:text-indigo-600 transition-colors hidden sm:table-cell">
                 <div class="flex items-center justify-center gap-2">
                   {{ $t('Date') }}
                   <Icon v-if="filters.SortBy === 'CreatedAt'" :name="filters.SortDirection === 'Ascending' ? 'ph:caret-up-bold' : 'ph:caret-down-bold'" />
@@ -68,26 +68,26 @@
                 class="hover:bg-indigo-600/10 transition-all group cursor-pointer border-b border-white/5 last:border-0"
                 :class="index % 2 === 0 ? 'bg-indigo-600/[0.03]' : 'bg-transparent'"
               >
-                <td class="px-8 py-6">
+                <td class="px-4 md:px-8 py-4 md:py-6">
                   <div class="flex flex-col">
-                    <span class="text-sm font-black text-slate-900 dark:text-white group-hover:text-indigo-600 transition-colors">{{ item.title }}</span>
-                    <span class="text-[10px] text-slate-500 font-bold line-clamp-1 max-w-[300px]">{{ item.description }}</span>
+                    <span class="text-xs md:text-sm font-black text-slate-900 dark:text-white group-hover:text-indigo-600 transition-colors truncate max-w-[150px] md:max-w-[300px]">{{ item.title }}</span>
+                    <span class="text-[9px] md:text-[10px] text-slate-500 font-bold line-clamp-1 max-w-[150px] md:max-w-[300px]">{{ item.description }}</span>
                   </div>
                 </td>
-                <td class="px-8 py-6 text-center">
+                <td class="px-4 md:px-8 py-4 md:py-6 text-center">
                   <div class="flex items-center justify-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-white/5 flex items-center justify-center text-indigo-600 font-black text-xs">
+                    <div class="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-indigo-50 dark:bg-white/5 flex items-center justify-center text-indigo-600 font-black text-[10px] md:text-xs">
                       {{ item.proposalsCount }}
                     </div>
-                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{{ $t('Offers') }}</span>
+                    <span class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest hidden md:inline">{{ $t('Offers') }}</span>
                   </div>
                 </td>
-                <td class="px-8 py-6 text-center">
+                <td class="px-4 md:px-8 py-4 md:py-6 text-center">
                   <span :class="statusClass(item.status)">
                     {{ $t(item.status) }}
                   </span>
                 </td>
-                <td class="px-8 py-6 text-center">
+                <td class="px-4 md:px-8 py-4 md:py-6 text-center hidden sm:table-cell">
                   <div class="flex flex-col items-center">
                     <span class="text-xs text-slate-900 dark:text-white font-bold">{{ new Date(item.createdAt).toLocaleDateString() }}</span>
                     <span class="text-[10px] text-slate-500 font-bold">{{ new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}</span>
@@ -112,15 +112,15 @@
       </div>
 
       <!-- Pagination -->
-      <div v-if="totalPages > 1" class="p-8 border-t border-white/10 flex items-center justify-between">
-        <p class="text-xs font-black text-slate-500 uppercase tracking-widest">
+      <div v-if="totalPages > 1" class="p-6 md:p-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6">
+        <p class="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest">
            {{ $t('Showing') }} {{ (filters.PageNumber - 1) * filters.PageSize + 1 }} - {{ Math.min(filters.PageNumber * filters.PageSize, totalItemsCount) }} {{ $t('of') }} {{ totalItemsCount }}
         </p>
         <div class="flex gap-2">
           <button 
             @click="prevPage" 
             :disabled="filters.PageNumber === 1"
-            class="p-3 bg-slate-100 dark:bg-white/5 rounded-xl disabled:opacity-50 hover:bg-indigo-600 hover:text-white transition-all"
+            class="p-2 md:p-3 bg-slate-100 dark:bg-white/5 rounded-lg md:rounded-xl disabled:opacity-50 hover:bg-indigo-600 hover:text-white transition-all"
           >
             <Icon :name="locale === 'ar' ? 'ph:caret-right-bold' : 'ph:caret-left-bold'" />
           </button>
@@ -129,17 +129,16 @@
              <button 
                v-for="p in displayedPages" :key="p"
                @click="filters.PageNumber = p; fetchData()"
-               class="w-10 h-10 rounded-xl font-black text-xs transition-all"
+               class="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl font-black text-[10px] md:text-xs transition-all"
                :class="p === filters.PageNumber ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'bg-slate-100 dark:bg-white/5 text-slate-500 hover:bg-slate-200'"
              >
                {{ p }}
              </button>
           </div>
-
           <button 
             @click="nextPage" 
             :disabled="filters.PageNumber === totalPages"
-            class="p-3 bg-slate-100 dark:bg-white/5 rounded-xl disabled:opacity-50 hover:bg-indigo-600 hover:text-white transition-all"
+            class="p-2 md:p-3 bg-slate-100 dark:bg-white/5 rounded-lg md:rounded-xl disabled:opacity-50 hover:bg-indigo-600 hover:text-white transition-all"
           >
             <Icon :name="locale === 'ar' ? 'ph:caret-left-bold' : 'ph:caret-right-bold'" />
           </button>

@@ -16,14 +16,14 @@
           </div>
           <div class="relative z-1 container mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center gap-8">
             <div class="text-center md:text-right flex-1 animate-fade-in-up">
-              <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-[1.1] tracking-tight italic">
+              <h1 class="text-2xl sm:text-3xl md:text-6xl font-black text-white mb-4 md:mb-6 leading-[1.1] tracking-tight italic">
                 {{ $t('Welcome to Talaby') }}
               </h1>
-              <p class="text-xl md:text-2xl text-slate-200 mb-10 max-w-2xl mx-auto md:mx-0 font-medium leading-relaxed">
+              <p class="text-sm sm:text-lg md:text-2xl text-slate-200 mb-6 md:mb-10 max-w-2xl mx-auto md:mx-0 font-medium leading-relaxed">
                 {{ $t('All your services in one place. Fast, reliable, and easy to use.') }}
               </p>
-              <div class="flex flex-wrap justify-center md:justify-start gap-6">
-                <NuxtLink to="/departments" class="bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black py-4 px-10 rounded-2xl transition-all transform hover:scale-105 shadow-[0_20px_50px_rgba(234,179,8,0.3)] active:scale-95">
+              <div class="flex flex-wrap justify-center md:justify-start gap-4 md:gap-6 mb-8 md:mb-0">
+                <NuxtLink to="/departments" class="bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black py-3 md:py-4 px-8 md:px-10 rounded-xl md:rounded-2xl transition-all transform hover:scale-105 shadow-[0_20px_50px_rgba(234,179,8,0.3)] active:scale-95 text-sm md:text-base">
                   {{ $t('Order Now') }}
                 </NuxtLink>
               </div>
@@ -43,13 +43,13 @@
           </div>
           <div class="relative z-1 container mx-auto px-6 md:px-12 flex flex-col md:flex-row-reverse items-center gap-8">
             <div class="text-center md:text-right flex-1 animate-fade-in-left">
-              <h2 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight tracking-tight italic">
+              <h2 class="text-2xl sm:text-3xl md:text-6xl font-black text-white mb-4 md:mb-6 leading-tight tracking-tight italic">
                 {{ $t('Connect with Professionals') }}
               </h2>
-              <p class="text-xl md:text-2xl text-slate-200 mb-10 font-medium leading-relaxed">
+              <p class="text-sm sm:text-lg md:text-2xl text-slate-200 mb-6 md:mb-10 font-medium leading-relaxed">
                 {{ $t('Find the best service providers in your area for any task.') }}
               </p>
-              <NuxtLink to="/departments" class="inline-block bg-white text-violet-950 font-black py-4 px-12 rounded-2xl hover:bg-yellow-400 transition-all shadow-[0_20px_50px_rgba(255,255,255,0.1)] active:scale-95">
+              <NuxtLink to="/departments" class="inline-block bg-white text-violet-950 font-black py-3 md:py-4 px-8 md:px-12 rounded-xl md:rounded-2xl hover:bg-yellow-400 transition-all shadow-[0_20px_50px_rgba(255,255,255,0.1)] active:scale-95 mb-8 md:mb-0 text-sm md:text-base">
                 {{ $t('Browse Services') }}
               </NuxtLink>
             </div>
@@ -67,24 +67,24 @@
             <img class="w-full h-full object-cover" src="/imgs/hero3.png" alt="Hero 3" />
           </div>
           <div class="relative z-1 text-center px-6 animate-zoom-in">
-            <h2 class="text-4xl md:text-7xl font-black text-white mb-8 tracking-tighter italic">
+            <h2 class="text-2xl sm:text-3xl md:text-7xl font-black text-white mb-4 md:mb-8 tracking-tighter italic leading-tight">
               {{ $t('Everything You Need, Delivered') }}
             </h2>
-            <p class="text-xl md:text-3xl text-slate-100 mb-12 max-w-4xl mx-auto font-medium leading-relaxed opacity-90">
+            <p class="text-sm sm:text-lg md:text-3xl text-slate-100 mb-8 md:mb-12 max-w-4xl mx-auto font-medium leading-relaxed opacity-90">
               {{ $t('From daily essentials to professional maintenance, we handle it all.') }}
             </p>
-            <div class="flex justify-center gap-8">
-               <div class="bg-white/10 backdrop-blur-xl p-6 rounded-3xl border border-white/20 shadow-2xl hover:scale-110 transition-transform">
-                  <span class="text-yellow-400 block font-black text-4xl mb-1">100+</span>
-                  <span class="text-slate-300 text-sm font-bold uppercase tracking-widest">{{ $t('Services') }}</span>
+            <div class="flex flex-wrap justify-center gap-4 md:gap-8">
+               <div class="bg-white/10 backdrop-blur-xl p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/20 shadow-2xl hover:scale-110 transition-transform">
+                  <span class="text-yellow-400 block font-black text-2xl md:text-4xl mb-1">100+</span>
+                  <span class="text-slate-300 text-xs md:text-sm font-bold uppercase tracking-widest">{{ $t('Services') }}</span>
                </div>
-               <div class="bg-white/10 backdrop-blur-xl p-6 rounded-3xl border border-white/20 shadow-2xl hover:scale-110 transition-transform">
-                  <span class="text-yellow-400 block font-black text-4xl mb-1">24/7</span>
-                  <span class="text-slate-300 text-sm font-bold uppercase tracking-widest">{{ $t('Support') }}</span>
+               <div class="bg-white/10 backdrop-blur-xl p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/20 shadow-2xl hover:scale-110 transition-transform">
+                  <span class="text-yellow-400 block font-black text-2xl md:text-4xl mb-1">24/7</span>
+                  <span class="text-slate-300 text-xs md:text-sm font-bold uppercase tracking-widest">{{ $t('Support') }}</span>
                </div>
-               <div class="bg-white/10 backdrop-blur-xl p-6 rounded-3xl border border-white/20 shadow-2xl hover:scale-110 transition-transform">
-                  <span class="text-yellow-400 block font-black text-4xl mb-1">50k+</span>
-                  <span class="text-slate-300 text-sm font-bold uppercase tracking-widest">{{ $t('Users') }}</span>
+               <div class="bg-white/10 backdrop-blur-xl p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/20 shadow-2xl hover:scale-110 transition-transform">
+                  <span class="text-yellow-400 block font-black text-2xl md:text-4xl mb-1">50k+</span>
+                  <span class="text-slate-300 text-xs md:text-sm font-bold uppercase tracking-widest">{{ $t('Users') }}</span>
                </div>
             </div>
           </div>
@@ -103,14 +103,14 @@ const products = ref([]); // لتخزين المنتجات
 
 // دالة لتحديث الارتفاع بناءً على حجم الشاشة
 const updateHeight = () => {
-  if (window.innerWidth >= 580) {
-    carouselHeight.value = 450; // الطول للشاشات الكبيرة جدًا
-  } else if (window.innerWidth >= 490) {
-    carouselHeight.value = 350; // الطول للشاشات الكبيرة
-  } else if (window.innerWidth >= 410) {
-    carouselHeight.value = 300; // الطول للشاشات المتوسطة
+  if (window.innerWidth >= 1024) {
+    carouselHeight.value = 500; // للشاشات الكبيرة جدًا
+  } else if (window.innerWidth >= 768) {
+    carouselHeight.value = 450; // للشاشات المتوسطة (تابلت)
+  } else if (window.innerWidth >= 480) {
+    carouselHeight.value = 350; // للشاشات الصغيرة الكبيرة
   } else {
-    carouselHeight.value = 240; // الطول للشاشات الصغيرة
+    carouselHeight.value = 320; // زيادة الطول للموبايل لإعطاء مساحة للمحتوى
   }
 };
 

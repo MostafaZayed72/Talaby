@@ -3,45 +3,45 @@
     <!-- Earnings & Performance Header -->
       <div class="lg:col-span-3 bg-gradient-to-br from-indigo-600 to-violet-700 p-10 md:p-16 rounded-[3.5rem] shadow-2xl relative overflow-hidden group">
         <Icon name="ph:sketch-logo-fill" class="absolute -right-10 -top-10 text-[25rem] text-white/10 rotate-12 group-hover:rotate-45 transition-transform duration-1000" />
-        <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-12">
-          <div class="space-y-4 text-center md:text-right">
-            <p class="text-indigo-100 font-black uppercase tracking-[0.3em] text-xs opacity-80">{{ $t('Total Earnings') }}</p>
-            <h2 class="text-6xl md:text-8xl font-black text-white italic tracking-tighter leading-none">
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8 md:gap-12">
+          <div class="space-y-4 text-center md:text-right w-full md:w-auto">
+            <p class="text-indigo-100 font-black uppercase tracking-[0.3em] text-[10px] md:text-xs opacity-80">{{ $t('Total Earnings') }}</p>
+            <h2 class="text-4xl sm:text-6xl md:text-8xl font-black text-white italic tracking-tighter leading-none">
               ${{ data.earningsStats.totalCompletedProposalAmount }}
             </h2>
-            <div class="pt-8 flex items-center justify-center md:justify-start gap-10">
+            <div class="pt-6 md:pt-8 flex items-center justify-center md:justify-start gap-6 md:gap-10">
               <div class="flex flex-col">
-                <span class="text-indigo-200 text-xs font-black uppercase tracking-wider mb-1">{{ $t('Average') }}</span>
-                <span class="text-3xl font-black text-white italic">${{ data.earningsStats.averageAcceptedProposalAmount }}</span>
+                <span class="text-indigo-200 text-[10px] md:text-xs font-black uppercase tracking-wider mb-1">{{ $t('Average') }}</span>
+                <span class="text-2xl md:text-3xl font-black text-white italic">${{ data.earningsStats.averageAcceptedProposalAmount }}</span>
               </div>
-              <div class="w-px h-12 bg-white/20"></div>
+              <div class="w-px h-10 md:h-12 bg-white/20"></div>
               <div class="flex flex-col">
-                <span class="text-indigo-200 text-xs font-black uppercase tracking-wider mb-1">{{ $t('Accepted') }}</span>
-                <span class="text-3xl font-black text-white italic">${{ data.earningsStats.totalAcceptedProposalAmount }}</span>
+                <span class="text-indigo-200 text-[10px] md:text-xs font-black uppercase tracking-wider mb-1">{{ $t('Accepted') }}</span>
+                <span class="text-2xl md:text-3xl font-black text-white italic">${{ data.earningsStats.totalAcceptedProposalAmount }}</span>
               </div>
             </div>
           </div>
           
-          <div class="flex flex-col items-center md:items-end gap-6">
-            <div class="bg-white/15 backdrop-blur-xl px-10 py-5 rounded-[2rem] border border-white/20 text-white font-black text-lg italic shadow-2xl">
+          <div class="flex flex-col items-center md:items-end gap-4 md:gap-6">
+            <div class="bg-white/15 backdrop-blur-xl px-6 md:px-10 py-3 md:py-5 rounded-2xl md:rounded-[2rem] border border-white/20 text-white font-black text-base md:text-lg italic shadow-2xl">
               {{ $t('Top Rated Provider') }}
             </div>
-            <div class="flex gap-3">
-              <div v-for="i in 5" :key="i" class="w-3 h-3 rounded-full bg-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)]"></div>
+            <div class="flex gap-2 md:gap-3">
+              <div v-for="i in 5" :key="i" class="w-2 h-2 md:w-3 md:h-3 rounded-full bg-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.5)]"></div>
             </div>
           </div>
         </div>
       </div>
 
     <!-- Stats Breakdown Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
       <div v-for="stat in workStats" :key="stat.label" 
-        class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl p-8 rounded-[2.5rem] border border-white/20 shadow-xl group hover:-translate-y-2 transition-all">
-        <div :class="`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-lg ${stat.bgClass}`">
-          <Icon :name="stat.icon" class="text-2xl text-white" />
+        class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-2xl p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border border-white/20 shadow-xl group hover:-translate-y-1 md:hover:-translate-y-2 transition-all">
+        <div :class="`w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl flex items-center justify-center mb-4 md:mb-6 shadow-lg ${stat.bgClass}`">
+          <Icon :name="stat.icon" class="text-xl md:text-2xl text-white" />
         </div>
-        <p class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-[0.2em] mb-2">{{ $t(stat.label) }}</p>
-        <p class="text-4xl font-black text-slate-900 dark:text-white italic">{{ stat.value }}</p>
+        <p class="text-[8px] md:text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 md:mb-2">{{ $t(stat.label) }}</p>
+        <p class="text-2xl md:text-4xl font-black text-slate-900 dark:text-white italic">{{ stat.value }}</p>
       </div>
     </div>
 
