@@ -89,13 +89,26 @@
                   </span>
                 </td>
                 <td class="px-4 md:px-8 py-4 md:py-6 text-center">
-                   <div 
-                    @click.stop="goToChat(item)"
-                    class="flex items-center justify-center gap-2 text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer"
-                    :title="isChatOpen(item) ? $t('Open Chat') : ''"
-                   >
-                      <Icon name="ph:chat-circle-dots-fill" :class="{'text-indigo-600': isChatOpen(item)}" />
-                      <span class="text-xs font-black">{{ item.repliesCount || 0 }}</span>
+                   <div class="flex items-center justify-center gap-2">
+                    <div 
+                      @click.stop="goToChat(item)"
+                      class="flex items-center justify-center gap-2 text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer"
+                      :title="isChatOpen(item) ? $t('Open Chat') : ''"
+                    >
+                        <Icon name="ph:chat-circle-dots-fill" :class="{'text-indigo-600': isChatOpen(item)}" />
+                        <span class="text-xs font-black">{{ item.repliesCount || 0 }}</span>
+                    </div>
+
+                    <button
+                      v-if="item.status?.toLowerCase() === 'awaitingcommissionpayment'"
+                      @click.stop="payCommission(item.id)"
+                      :disabled="isProcessingPayment"
+                      class="w-8 h-8 flex items-center justify-center bg-yellow-400/10 text-yellow-600 hover:bg-yellow-400 hover:text-violet-950 rounded-lg transition-colors disabled:opacity-50"
+                      :title="$t('Pay Commission')"
+                    >
+                      <Icon v-if="isProcessingPayment" name="ph:circle-notch-bold" class="animate-spin" />
+                      <Icon v-else name="ph:credit-card-bold" />
+                    </button>
                    </div>
                 </td>
                 <td class="px-4 md:px-8 py-4 md:py-6 text-center hidden sm:table-cell">
@@ -156,6 +169,38 @@
         </div>
       </div>
     </div>
+
+    <!-- Dialog تأكيد الدفع الاحترافي -->
+    <div v-if="showPaymentConfirmDialog" class="fixed inset-0 z-[100] flex items-center justify-center p-6">
+      <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md" @click="showPaymentConfirmDialog = false"></div>
+      <div class="relative bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-2xl border border-white/10 max-w-md w-full text-center space-y-8 animate-in fade-in zoom-in duration-300">
+        <div class="w-20 h-20 bg-yellow-400/10 text-yellow-500 rounded-3xl flex items-center justify-center mx-auto shadow-lg">
+           <Icon name="ph:credit-card-bold" class="text-4xl" />
+        </div>
+        <div class="space-y-2">
+          <h3 class="text-2xl font-black text-slate-900 dark:text-white italic">{{ $t('Commission Payment') }}</h3>
+          <p class="text-slate-500 dark:text-slate-400 font-medium">{{ $t('The commission amount to be paid is:') }}</p>
+          <div class="text-4xl font-black text-indigo-600 py-4">
+            {{ selectedPaymentAmount.toFixed(2) }} {{ $t('SAR') }}
+          </div>
+          <p class="text-xs text-slate-400 italic">{{ $t('2.5% of the total proposal amount') }}</p>
+        </div>
+        <div class="flex gap-4">
+          <button
+            class="flex-1 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-6 py-4 rounded-2xl font-black transition-all hover:bg-slate-200"
+            @click="showPaymentConfirmDialog = false"
+          >
+            {{ $t('Cancel') }}
+          </button>
+          <button
+            class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+            @click="confirmAndPay"
+          >
+            {{ $t('Confirm & Pay') }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -168,12 +213,15 @@ import { useI18n } from 'vue-i18n'
 const config = useRuntimeConfig()
 const router = useRouter()
 const { locale, t } = useI18n()
-const token = useLocalStorage('token', '')
+const token = useCookie('token')
 
 const loading = ref(true)
-const items = ref([])
 const totalPages = ref(0)
 const totalItemsCount = ref(0)
+const isProcessingPayment = ref(false)
+const showPaymentConfirmDialog = ref(false)
+const selectedPaymentAmount = ref(0)
+const selectedPaymentRequestId = ref('')
 
 const filters = reactive({
   SearchPhrase: '',
@@ -203,6 +251,61 @@ const fetchData = async () => {
     console.error(err)
   } finally {
     loading.value = false
+  }
+}
+
+const payCommission = async (requestId) => {
+  isProcessingPayment.value = true
+  try {
+    // نحتاج لجلب العروض لهذا الطلب لمعرفة قيمة العرض المقبول
+    const resProposals = await fetch(`${config.public.API_BASE_URL}/project-requests/${requestId}/proposals?pageNumber=1&pageSize=100`, {
+      headers: { Authorization: `Bearer ${token.value}` }
+    })
+    if (!resProposals.ok) throw new Error('Failed to fetch proposals for amount calculation')
+    
+    const responseProposals = await resProposals.json()
+    const accepted = responseProposals.data.items.find(p => 
+      p.statusValue === 2 || 
+      p.statusValue === 3 || 
+      ['accepted', 'completed', 'awaitingcommissionpayment'].includes((p.statusName || p.status || '').toLowerCase())
+    )
+    
+    if (!accepted) {
+      alert('لم يتم العثور على العرض المقبول لحساب العمولة')
+      return
+    }
+
+    selectedPaymentAmount.value = (accepted.proposedAmount || 0) * 0.025
+    selectedPaymentRequestId.value = requestId
+    showPaymentConfirmDialog.value = true
+  } catch (err) {
+    alert(err.message || 'حدث خطأ')
+  } finally {
+    isProcessingPayment.value = false
+  }
+}
+
+const confirmAndPay = async () => {
+  showPaymentConfirmDialog.value = false
+  isProcessingPayment.value = true
+  try {
+    localStorage.setItem('pending_payment_project_id', selectedPaymentRequestId.value)
+    const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${selectedPaymentRequestId.value}/commission-payment/checkout`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    if (!res.ok) throw new Error('فشل إنشاء طلب الدفع')
+    const response = await res.json()
+    if (response.isSuccess && response.data.checkoutUrl) {
+      window.open(response.data.checkoutUrl, '_blank')
+    }
+  } catch (err) {
+    alert(err.message || 'حدث خطأ')
+  } finally {
+    isProcessingPayment.value = false
   }
 }
 

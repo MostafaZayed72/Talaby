@@ -6,7 +6,7 @@ import { useLocalStorage } from '@vueuse/core'
 import { useCurrentUser } from '~/composables/useCurrentUser'
 
 const config = useRuntimeConfig()
-const token = useLocalStorage('token', '')
+const token = useCookie('token')
 const route = useRoute()
 const router = useRouter()
 
@@ -29,6 +29,10 @@ const error = ref('')
 const { user: currentUser } = await useCurrentUser()
 
 const showDialog = ref(false)
+const showMarkDoneDialog = ref(false)
+const showPaymentConfirmDialog = ref(false)
+const selectedPaymentAmount = ref(0)
+const selectedPaymentRequestId = ref('')
 const selectedProposalId = ref<string | null>(null)
 
 const fetchProposals = async () => {
@@ -114,6 +118,72 @@ onMounted(async () => {
   console.log('DEBUG: Request Creator ID:', props.project?.creatorId)
 })
 
+const isMarkingDone = ref(false)
+const confirmMarkAsDone = async () => {
+  showMarkDoneDialog.value = false
+  isMarkingDone.value = true
+  try {
+    const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${postId}/mark-done`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
+    })
+    if (!res.ok) throw new Error('فشل إتمام الطلب')
+    await fetchProposals()
+  } catch (err: any) {
+    alert(err.message || 'حدث خطأ')
+  } finally {
+    isMarkingDone.value = false
+  }
+}
+
+const markAsDone = (requestId: string) => {
+  showMarkDoneDialog.value = true
+}
+
+const isProcessingPayment = ref(false)
+const payCommission = async (requestId: string) => {
+  // البحث عن العرض المقبول للحصول على القيمة
+  const acceptedProposal = proposals.value.find(p => 
+    p.statusValue === 2 || p.statusValue === 3 || 
+    ['accepted', 'completed', 'awaitingcommissionpayment'].includes((p.statusName || p.status || '').toLowerCase())
+  )
+  
+  if (!acceptedProposal) {
+    alert('لم يتم العثور على العرض المقبول لحساب العمولة')
+    return
+  }
+
+  selectedPaymentAmount.value = (acceptedProposal.proposedAmount || 0) * 0.025
+  selectedPaymentRequestId.value = requestId
+  showPaymentConfirmDialog.value = true
+}
+
+const confirmAndPay = async () => {
+  showPaymentConfirmDialog.value = false
+  isProcessingPayment.value = true
+  try {
+    localStorage.setItem('pending_payment_project_id', selectedPaymentRequestId.value)
+    const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${selectedPaymentRequestId.value}/commission-payment/checkout`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    if (!res.ok) throw new Error('فشل إنشاء طلب الدفع')
+    const response = await res.json()
+    if (response.isSuccess && response.data.checkoutUrl) {
+      window.open(response.data.checkoutUrl, '_blank')
+    }
+  } catch (err: any) {
+    alert(err.message)
+  } finally {
+    isProcessingPayment.value = false
+  }
+}
+
 defineExpose({ fetchProposals })
 </script>
 
@@ -165,6 +235,16 @@ defineExpose({ fetchProposals })
                {{ (proposal.statusName || proposal.status)?.toLowerCase() === 'completed' || proposal.statusValue === 3 ? $t('Completed') : $t('Accepted') }}
             </div>
             
+            <!-- زر إتمام الطلب: يظهر لمقدم الخدمة إذا كان العرض مقبولاً -->
+            <button
+              v-if="(proposal.statusValue === 2 || (proposal.statusName || proposal.status)?.toLowerCase() === 'accepted') && proposal.creatorEmail?.toLowerCase() === currentUser?.email?.toLowerCase()"
+              @click.stop="markAsDone(postId)"
+              class="w-full md:w-auto px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+            >
+              <Icon name="ph:check-circle-bold" />
+              {{ $t('Mark as Done') }}
+            </button>
+
             <!-- زر المراسلة: يظهر لصاحب الطلب أو صاحب العرض المقبول -->
             <button
               v-if="(proposal.statusValue === 2 || proposal.statusValue === 3 || (proposal.statusName || proposal.status)?.toLowerCase() === 'accepted' || (proposal.statusName || proposal.status)?.toLowerCase() === 'completed') && (isRequestOwner() || proposal.creatorEmail?.toLowerCase() === currentUser?.email?.toLowerCase())"
@@ -183,6 +263,18 @@ defineExpose({ fetchProposals })
             >
               <Icon name="ph:check-bold" />
               {{ $t('Accept') }}
+            </button>
+
+            <!-- زر دفع العمولة: يظهر لصاحب الطلب إذا انتهت المهمة -->
+            <button
+              v-if="(proposal.statusValue === 3 || (proposal.statusName || proposal.status)?.toLowerCase() === 'completed') && isRequestOwner()"
+              @click.stop="payCommission(postId)"
+              :disabled="isProcessingPayment"
+              class="w-full md:w-auto px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"
+            >
+              <Icon v-if="isProcessingPayment" name="ph:circle-notch-bold" class="animate-spin" />
+              <Icon v-else name="ph:credit-card-bold" />
+              {{ $t('Pay Commission') }}
             </button>
           </div>
         </div>
@@ -230,6 +322,66 @@ defineExpose({ fetchProposals })
             @click="confirmSelection"
           >
             {{ $t('Yes, Confirm') }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dialog إتمام المهمة الاحترافي -->
+    <div v-if="showMarkDoneDialog" class="fixed inset-0 z-[100] flex items-center justify-center p-6">
+      <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md" @click="showMarkDoneDialog = false"></div>
+      <div class="relative bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-2xl border border-white/10 max-w-md w-full text-center space-y-8 animate-in fade-in zoom-in duration-300">
+        <div class="w-20 h-20 bg-green-500/10 text-green-500 rounded-3xl flex items-center justify-center mx-auto shadow-lg">
+           <Icon name="ph:check-circle-bold" class="text-4xl" />
+        </div>
+        <div class="space-y-2">
+          <h3 class="text-2xl font-black text-slate-900 dark:text-white italic">{{ $t('Complete Request') }}</h3>
+          <p class="text-slate-500 dark:text-slate-400 font-medium">{{ $t('Are you sure you have completed the task and want to mark it as done?') }}</p>
+        </div>
+        <div class="flex gap-4">
+          <button
+            class="flex-1 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-6 py-4 rounded-2xl font-black transition-all hover:bg-slate-200"
+            @click="showMarkDoneDialog = false"
+          >
+            {{ $t('Cancel') }}
+          </button>
+          <button
+            class="flex-1 bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+            @click="confirmMarkAsDone"
+          >
+            {{ $t('Yes, Done') }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dialog تأكيد الدفع الاحترافي -->
+    <div v-if="showPaymentConfirmDialog" class="fixed inset-0 z-[100] flex items-center justify-center p-6">
+      <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md" @click="showPaymentConfirmDialog = false"></div>
+      <div class="relative bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-2xl border border-white/10 max-w-md w-full text-center space-y-8 animate-in fade-in zoom-in duration-300">
+        <div class="w-20 h-20 bg-yellow-400/10 text-yellow-500 rounded-3xl flex items-center justify-center mx-auto shadow-lg">
+           <Icon name="ph:credit-card-bold" class="text-4xl" />
+        </div>
+        <div class="space-y-2">
+          <h3 class="text-2xl font-black text-slate-900 dark:text-white italic">{{ $t('Commission Payment') }}</h3>
+          <p class="text-slate-500 dark:text-slate-400 font-medium">{{ $t('The commission amount to be paid is:') }}</p>
+          <div class="text-4xl font-black text-indigo-600 py-4">
+            {{ selectedPaymentAmount.toFixed(2) }} {{ $t('SAR') }}
+          </div>
+          <p class="text-xs text-slate-400 italic">{{ $t('2.5% of the total proposal amount') }}</p>
+        </div>
+        <div class="flex gap-4">
+          <button
+            class="flex-1 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-6 py-4 rounded-2xl font-black transition-all hover:bg-slate-200"
+            @click="showPaymentConfirmDialog = false"
+          >
+            {{ $t('Cancel') }}
+          </button>
+          <button
+            class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+            @click="confirmAndPay"
+          >
+            {{ $t('Confirm & Pay') }}
           </button>
         </div>
       </div>

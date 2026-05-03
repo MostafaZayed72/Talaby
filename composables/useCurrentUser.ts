@@ -8,7 +8,7 @@ let loadingPromise: Promise<any> | null = null
 
 export const useCurrentUser = async () => {
   const config = useRuntimeConfig()
-  const token = useLocalStorage('token', '')
+  const token = useCookie('token')
   const user = useState('user', () => null)
 
   // If we already have a user, return it

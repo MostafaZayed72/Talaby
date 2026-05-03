@@ -91,13 +91,23 @@
                   </div>
                 </td>
                 <td class="px-4 md:px-8 py-4 md:py-6 text-center">
-                   <div 
-                    @click.stop="(item.status.toLowerCase() === 'accepted' || item.status.toLowerCase() === 'completed') ? router.push(`/replies/${item.id}`) : null"
-                    class="flex items-center justify-center gap-2 text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer"
-                    :title="(item.status.toLowerCase() === 'accepted' || item.status.toLowerCase() === 'completed') ? $t('Open Chat') : ''"
-                   >
-                      <Icon name="ph:chat-circle-dots-fill" :class="{'text-indigo-600': item.status.toLowerCase() === 'accepted' || item.status.toLowerCase() === 'completed'}" />
-                      <span class="text-xs font-black">{{ item.repliesCount }}</span>
+                   <div class="flex items-center justify-center gap-3">
+                     <button
+                       v-if="item.status.toLowerCase() === 'accepted'"
+                       @click.stop="markAsDone(item.projectRequestId)"
+                       :title="$t('Mark as Done')"
+                       class="w-8 h-8 flex items-center justify-center bg-green-500/10 text-green-600 hover:bg-green-600 hover:text-white rounded-lg transition-colors"
+                     >
+                       <Icon name="ph:check-circle-bold" />
+                     </button>
+                     <div 
+                      @click.stop="(item.status.toLowerCase() === 'accepted' || item.status.toLowerCase() === 'completed') ? router.push(`/replies/${item.id}`) : null"
+                      class="flex items-center justify-center gap-2 text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer"
+                      :title="(item.status.toLowerCase() === 'accepted' || item.status.toLowerCase() === 'completed') ? $t('Open Chat') : ''"
+                     >
+                        <Icon name="ph:chat-circle-dots-fill" :class="{'text-indigo-600': item.status.toLowerCase() === 'accepted' || item.status.toLowerCase() === 'completed'}" />
+                        <span class="text-xs font-black">{{ item.repliesCount }}</span>
+                     </div>
                    </div>
                 </td>
               </tr>
@@ -149,6 +159,34 @@
         </div>
       </div>
     </div>
+
+    <!-- Dialog إتمام المهمة الاحترافي -->
+    <div v-if="showMarkDoneDialog" class="fixed inset-0 z-[100] flex items-center justify-center p-6">
+      <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md" @click="showMarkDoneDialog = false"></div>
+      <div class="relative bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-2xl border border-white/10 max-w-md w-full text-center space-y-8 animate-in fade-in zoom-in duration-300">
+        <div class="w-20 h-20 bg-green-500/10 text-green-500 rounded-3xl flex items-center justify-center mx-auto shadow-lg">
+           <Icon name="ph:check-circle-bold" class="text-4xl" />
+        </div>
+        <div class="space-y-2">
+          <h3 class="text-2xl font-black text-slate-900 dark:text-white italic">{{ $t('Complete Request') }}</h3>
+          <p class="text-slate-500 dark:text-slate-400 font-medium">{{ $t('Are you sure you have completed the task and want to mark it as done?') }}</p>
+        </div>
+        <div class="flex gap-4">
+          <button
+            class="flex-1 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-6 py-4 rounded-2xl font-black transition-all hover:bg-slate-200"
+            @click="showMarkDoneDialog = false"
+          >
+            {{ $t('Cancel') }}
+          </button>
+          <button
+            class="flex-1 bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+            @click="confirmMarkAsDone"
+          >
+            {{ $t('Yes, Done') }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -167,6 +205,8 @@ const loading = ref(true)
 const items = ref([])
 const totalPages = ref(0)
 const totalItemsCount = ref(0)
+const showMarkDoneDialog = ref(false)
+const selectedRequestId = ref(null)
 
 const filters = reactive({
   SearchPhrase: '',
@@ -197,6 +237,33 @@ const fetchData = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const isMarkingDone = ref(false)
+const confirmMarkAsDone = async () => {
+  if (!selectedRequestId.value) return
+  showMarkDoneDialog.value = false
+  isMarkingDone.value = true
+  try {
+    const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${selectedRequestId.value}/mark-done`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
+    })
+    if (!res.ok) throw new Error('فشل إتمام الطلب')
+    await fetchData()
+  } catch (err) {
+    alert(err.message || 'حدث خطأ')
+  } finally {
+    isMarkingDone.value = false
+    selectedRequestId.value = null
+  }
+}
+
+const markAsDone = (requestId) => {
+  selectedRequestId.value = requestId
+  showMarkDoneDialog.value = true
 }
 
 let searchTimeout = null

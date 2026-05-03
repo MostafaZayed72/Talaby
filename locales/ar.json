@@ -440,5 +440,8 @@
     "Talaby provides a platform for users to request services and for stores to offer them. We act as a mediator to facilitate these interactions. We do not provide the services directly and are not responsible for the quality of services provided by third-party stores.": "يوفر طلبي منصة للمستخدمين لطلب الخدمات وللمتاجر لتقديمها. نحن نعمل كوسيط لتسهيل هذه التفاعلات. نحن لا نقدم الخدمات مباشرة ولسنا مسؤولين عن جودة الخدمات التي تقدمها المتاجر الخارجية.",
     "Users agree not to use the service for any unlawful purpose. You are responsible for all content you post and all activities that occur under your account.": "يوافق المستخدمون على عدم استخدام الخدمة لأي غرض غير قانوني. أنت مسؤول عن جميع المحتويات التي تنشرها وجميع الأنشطة التي تحدث تحت حسابك.",
     "All payments made through the platform are subject to our payment terms. Refunds are handled according to the specific service provider policy and platform guidelines.": "تخضع جميع المدفوعات التي تتم من خلال المنصة لشروط الدفع الخاصة بنا. يتم التعامل مع عمليات الاسترداد وفقاً لسياسة مقدم الخدمة وإرشادات المنصة.",
-    "We reserve the right to terminate or suspend your account and access to the services at our sole discretion, without notice, for conduct that we believe violates these Terms of Service.": "نحتفظ بالحق في إنهاء أو تعليق حسابك ووصولك إلى الخدمات وفقاً لتقديرنا الخاص، دون إشعار، بسبب السلوك الذي نعتقد أنه ينتهك شروط الخدمة هذه."
+    "We reserve the right to terminate or suspend your account and access to the services at our sole discretion, without notice, for conduct that we believe violates these Terms of Service.": "نحتفظ بالحق في إنهاء أو تعليق حسابك ووصولك إلى الخدمات وفقاً لتقديرنا الخاص، دون إشعار، بسبب السلوك الذي نعتقد أنه ينتهك شروط الخدمة هذه.",
+    "Complete Request": "إتمام الطلب",
+    "Are you sure you have completed the task and want to mark it as done?": "هل أنت متأكد من أنك قمت بإنهاء المهمة وتريد تعليم الطلب كمكتمل؟",
+    "Yes, Done": "نعم، تم الإنجاز"
 }

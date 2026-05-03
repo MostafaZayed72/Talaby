@@ -24,6 +24,7 @@ const editedContent = ref('')
 const currentUserEmail = ref('')
 const currentUserId = ref('')
 const proposalData = ref<any>(null)
+const showMarkDoneDialog = ref(false)
 
 const fetchCurrentUser = async () => {
   try {
@@ -82,9 +83,8 @@ const fetchReplies = async () => {
   }
 }
 
-const isMarkingDone = ref(false)
-const markAsDone = async () => {
-  if (!confirm('هل أنت متأكد من إتمام المهمة؟')) return
+const confirmMarkAsDone = async () => {
+  showMarkDoneDialog.value = false
   isMarkingDone.value = true
   try {
     const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${proposalData.value.projectRequestId}/mark-done`, {
@@ -94,7 +94,6 @@ const markAsDone = async () => {
       },
     })
     if (!res.ok) throw new Error('فشل إتمام المهمة')
-    alert('تم إتمام المهمة بنجاح!')
     await fetchReplies()
   } catch (err: any) {
     alert(err.message)
@@ -103,7 +102,20 @@ const markAsDone = async () => {
   }
 }
 
+const markAsDone = () => {
+  showMarkDoneDialog.value = true
+}
+
 const payCommission = async () => {
+  if (!proposalData.value) return
+  
+  // حساب العمولة 2.5%
+  selectedPaymentAmount.value = (proposalData.value.proposedAmount || 0) * 0.025
+  showPaymentConfirmDialog.value = true
+}
+
+const confirmAndPay = async () => {
+  showPaymentConfirmDialog.value = false
   isProcessingPayment.value = true
   try {
     // حفظ معرف المشروع للتحقق منه في صفحة النتيجة
@@ -119,7 +131,7 @@ const payCommission = async () => {
     if (!res.ok) throw new Error('فشل إنشاء طلب الدفع')
     const response = await res.json()
     if (response.isSuccess && response.data.checkoutUrl) {
-      window.location.href = response.data.checkoutUrl
+      window.open(response.data.checkoutUrl, '_blank')
     }
   } catch (err: any) {
     alert(err.message)
@@ -208,7 +220,7 @@ const startPolling = () => {
       <div class="flex items-center gap-4">
         <!-- زر إتمام المهمة: يظهر لمقدم الخدمة إذا كان العرض مقبولاً والطلب لم ينتهِ بعد -->
         <button 
-          v-if="proposalData && currentUserId === proposalData.proposalCreatorId && proposalData.proposalStatusValue === 2"
+          v-if="proposalData && (currentUserId === proposalData.proposalCreatorId || currentUserEmail === proposalData.proposalCreatorEmail) && (proposalData.proposalStatusValue === 2 || String(proposalData.proposalStatus).toLowerCase() === 'accepted')"
           @click="markAsDone"
           :disabled="isMarkingDone"
           class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center gap-2 disabled:opacity-50"
@@ -220,7 +232,7 @@ const startPolling = () => {
 
         <!-- زر دفع العمولة: يظهر لصاحب الطلب إذا انتهت المهمة -->
         <button 
-          v-if="proposalData && currentUserId === proposalData.projectRequestCreatorId && proposalData.proposalStatusValue === 2"
+          v-if="proposalData && (currentUserId === proposalData.projectRequestCreatorId || currentUserEmail === proposalData.projectRequestCreatorEmail) && (proposalData.proposalStatusValue === 3 || String(proposalData.proposalStatus).toLowerCase() === 'completed')"
           @click="payCommission"
           :disabled="isProcessingPayment"
           class="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center gap-2 disabled:opacity-50"
@@ -326,6 +338,66 @@ const startPolling = () => {
       >
         <Icon name="ph:caret-left-bold" />
       </button>
+    </div>
+
+    <!-- Dialog إتمام المهمة الاحترافي -->
+    <div v-if="showMarkDoneDialog" class="fixed inset-0 z-[100] flex items-center justify-center p-6">
+      <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md" @click="showMarkDoneDialog = false"></div>
+      <div class="relative bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-2xl border border-white/10 max-w-md w-full text-center space-y-8 animate-in fade-in zoom-in duration-300">
+        <div class="w-20 h-20 bg-green-500/10 text-green-500 rounded-3xl flex items-center justify-center mx-auto shadow-lg">
+           <Icon name="ph:check-circle-bold" class="text-4xl" />
+        </div>
+        <div class="space-y-2">
+          <h3 class="text-2xl font-black text-slate-900 dark:text-white italic">{{ $t('Complete Request') }}</h3>
+          <p class="text-slate-500 dark:text-slate-400 font-medium">{{ $t('Are you sure you have completed the task and want to mark it as done?') }}</p>
+        </div>
+        <div class="flex gap-4">
+          <button
+            class="flex-1 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-6 py-4 rounded-2xl font-black transition-all hover:bg-slate-200"
+            @click="showMarkDoneDialog = false"
+          >
+            {{ $t('Cancel') }}
+          </button>
+          <button
+            class="flex-1 bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+            @click="confirmMarkAsDone"
+          >
+            {{ $t('Yes, Done') }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dialog تأكيد الدفع الاحترافي -->
+    <div v-if="showPaymentConfirmDialog" class="fixed inset-0 z-[100] flex items-center justify-center p-6">
+      <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md" @click="showPaymentConfirmDialog = false"></div>
+      <div class="relative bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-2xl border border-white/10 max-w-md w-full text-center space-y-8 animate-in fade-in zoom-in duration-300">
+        <div class="w-20 h-20 bg-yellow-400/10 text-yellow-500 rounded-3xl flex items-center justify-center mx-auto shadow-lg">
+           <Icon name="ph:credit-card-bold" class="text-4xl" />
+        </div>
+        <div class="space-y-2">
+          <h3 class="text-2xl font-black text-slate-900 dark:text-white italic">{{ $t('Commission Payment') }}</h3>
+          <p class="text-slate-500 dark:text-slate-400 font-medium">{{ $t('The commission amount to be paid is:') }}</p>
+          <div class="text-4xl font-black text-indigo-600 py-4">
+            {{ selectedPaymentAmount.toFixed(2) }} {{ $t('SAR') }}
+          </div>
+          <p class="text-xs text-slate-400 italic">{{ $t('2.5% of the total proposal amount') }}</p>
+        </div>
+        <div class="flex gap-4">
+          <button
+            class="flex-1 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300 px-6 py-4 rounded-2xl font-black transition-all hover:bg-slate-200"
+            @click="showPaymentConfirmDialog = false"
+          >
+            {{ $t('Cancel') }}
+          </button>
+          <button
+            class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
+            @click="confirmAndPay"
+          >
+            {{ $t('Confirm & Pay') }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>

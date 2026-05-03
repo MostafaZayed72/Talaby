@@ -1,18 +1,19 @@
 // middleware/auth.js
 export default defineNuxtRouteMiddleware((to) => {
-    const token = useLocalStorage('token', '');
-    const roles = useLocalStorage('roles', []);
+    const token = useCookie('token');
+    const roles = useCookie('roles');
   
     if (!token.value) {
       return navigateTo('/login');
     }
 
     if (process.client) {
-      if (roles.value.includes('Admin')) {
+      const rolesValue = roles.value || [];
+      if (rolesValue.includes('Admin')) {
         setPageLayout('admin')
-      } else if (roles.value.includes('Store')) {
+      } else if (rolesValue.includes('Store')) {
         setPageLayout('provider')
-      } else if (roles.value.includes('Client')) {
+      } else if (rolesValue.includes('Client')) {
         setPageLayout('client')
       }
     }

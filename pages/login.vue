@@ -111,9 +111,9 @@ const loading = ref(false)
 const toast = useToast()
 const router = useRouter()
 
-const token = useLocalStorage('token', '')
-const userID = useLocalStorage('userID', '')
-const roles = useLocalStorage('roles', [])
+const token = useCookie('token', { maxAge: 60 * 60 * 24 * 7 }) // 7 days
+const userID = useCookie('userID', { maxAge: 60 * 60 * 24 * 7 })
+const roles = useCookie('roles', { maxAge: 60 * 60 * 24 * 7 })
 
 const loginUser = async () => {
   loading.value = true
