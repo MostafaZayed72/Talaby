@@ -134,7 +134,6 @@
       </div>
     </transition>
 
-    <Loader v-if="loading" />
     <main class="p-0">
       <slot />
     </main>
@@ -217,14 +216,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('click', closeDropdownOnClickOutside);
 });
 
-router.beforeEach((to, from, next) => {
-  loading.value = true;
-  next();
-});
 
-router.afterEach(() => {
-  loading.value = false;
-});
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;

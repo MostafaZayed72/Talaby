@@ -61,7 +61,7 @@ const steps = [
   {
     title: 'Enjoy Results',
     desc: 'Our professionals handle the rest. Sit back and relax.',
-    icon: 'ph:sparkles-fill',
+    icon: 'ph:seal-check-fill',
   }
 ];
 </script>

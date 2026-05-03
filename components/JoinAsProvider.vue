@@ -18,7 +18,7 @@
               {{ $t('Register as a service provider') }}
               <Icon name="ph:briefcase-bold" class="text-xl" />
             </NuxtLink>
-            <NuxtLink to="/signup/client" class="bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white hover:text-violet-950 font-black px-10 py-5 rounded-2xl transition-all shadow-xl flex items-center justify-center gap-3">
+            <NuxtLink to="/signup/client" class="bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 font-black px-10 py-5 rounded-2xl transition-all transform hover:scale-105 shadow-xl flex items-center justify-center gap-3">
               {{ $t('Register as a client') }}
               <Icon name="ph:user-plus-fill" class="text-xl" />
             </NuxtLink>

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen relative flex items-center justify-center p-6 overflow-hidden">
+  <div class="min-h-[calc(100vh-6rem)] relative flex items-start lg:items-center justify-center p-6 py-12 lg:py-6 overflow-hidden">
     <!-- Animated Background -->
     <div class="absolute inset-0 z-0">
       <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-600/20 rounded-full blur-[120px]"></div>
@@ -172,12 +172,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useToast } from 'primevue/usetoast'
-import { useRouter } from 'vue-router'
-import { useLocalStorage } from '@vueuse/core'
 import axios from 'axios'
-
 const { locale } = useI18n()
 const config = useRuntimeConfig()
 const toast = useToast()

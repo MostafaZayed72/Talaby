@@ -1,5 +1,6 @@
 <template>
   <div :style="{ direction: isRtl ? 'rtl' : 'ltr' }">
+    <Loader v-if="loading" />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
@@ -7,17 +8,27 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
-import { useLocalStorage } from '@vueuse/core'
-import { useI18n } from 'vue-i18n'
-
 const { locale } = useI18n()
 const preferredLanguage = useLocalStorage('preferredLanguage', 'en-US')
+const loading = ref(false)
+const router = useRouter()
 
-// ⬅️ حساب الاتجاه بناءً على اللغة
+// Global navigation guards for loading state
+router.beforeEach((to, from, next) => {
+  loading.value = true
+  next()
+})
+
+router.afterEach(() => {
+  setTimeout(() => {
+    loading.value = false
+  }, 300) // Small delay for smooth transition
+})
+
+// RTL calculation
 const isRtl = computed(() => locale.value.startsWith('ar'))
 
-// ⬅️ تحديث سمات HTML لضمان عمل الـ RTL في كل مكان (بما في ذلك الـ Teleport)
+// HTML attributes for SEO and RTL
 useHead({
   htmlAttrs: {
     dir: computed(() => isRtl.value ? 'rtl' : 'ltr'),
@@ -25,17 +36,18 @@ useHead({
   }
 })
 
-// ⬅️ تغيير اللغة عند تحديث الـ localStorage
+// Sync language with localStorage
 watch(preferredLanguage, (newValue) => {
   if (newValue) {
     locale.value = newValue
   }
 })
 
-// ⬅️ تعيين اللغة الافتراضية عند التحميل
-if (!preferredLanguage.value) {
-  preferredLanguage.value = 'en-US'
-}
+onMounted(() => {
+  if (!preferredLanguage.value) {
+    preferredLanguage.value = 'en-US'
+  }
+})
 </script>
 
 

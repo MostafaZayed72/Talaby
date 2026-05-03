@@ -35,8 +35,7 @@
       </div>
     </header>
 
-    <Loader v-if="loading" />
-    <main>
+    <main class="pt-24 min-h-screen">
       <slot />
     </main>
   </div>
@@ -48,6 +47,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useLocalStorage } from '@vueuse/core'; // استيراد useLocalStorage
 
 const { locale } = useI18n();
+const isDarkMode = ref(false);
 const loading = ref(true);
 const router = useRouter();
 
@@ -109,14 +109,7 @@ onBeforeUnmount(() => {
 });
 
 // التحكم في حالة الـ loading عند التنقل بين الصفحات
-router.beforeEach((to, from, next) => {
-  loading.value = true;
-  next();
-});
 
-router.afterEach(() => {
-  loading.value = false;
-});
 
 const isSidebarOpen = ref(false);
 const isDropdownOpen = ref(false);
