@@ -9,6 +9,10 @@
 import { ref, onMounted } from 'vue'
 import { useLocalStorage } from '@vueuse/core'
 
+definePageMeta({
+  middleware: 'auth'
+})
+
 const userRole = ref('')
 const roles = useLocalStorage('roles', [])
 

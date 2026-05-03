@@ -116,9 +116,9 @@ const submitRequest = async () => {
             <!-- Decorative Light -->
             <div class="absolute top-0 right-0 w-48 h-48 bg-indigo-600/10 rounded-full blur-[80px]"></div>
             
-            <div class="relative z-10 flex flex-col h-full">
+            <div class="relative z-10 flex flex-col h-full min-h-0">
               <!-- Header -->
-              <div class="flex justify-between items-center mb-6 md:mb-8">
+              <div class="flex justify-between items-center mb-6 md:mb-8 shrink-0">
                 <div>
                   <h2 class="text-xl md:text-3xl font-black text-slate-900 dark:text-white italic tracking-tight mb-1 md:mb-2">{{ t('Add New Request') }}</h2>
                   <div class="flex items-center gap-2">
@@ -132,7 +132,7 @@ const submitRequest = async () => {
               </div>
 
               <!-- Body (Scrollable) -->
-              <div class="flex-1 overflow-y-auto pr-1 md:pr-2 space-y-6 md:space-y-8 custom-scrollbar">
+              <div class="flex-1 overflow-y-auto px-1 md:px-2 space-y-6 md:space-y-8 custom-scrollbar min-h-0">
                 <div v-if="error" class="p-3 md:p-4 rounded-xl md:rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 font-bold flex items-center gap-3 text-xs md:text-sm">
                   <Icon name="ph:warning-circle-bold" />
                   {{ error }}
@@ -168,18 +168,18 @@ const submitRequest = async () => {
                         @change="handleFileChange" 
                         accept="image/*" 
                       />
-                      <div class="w-full border-2 border-dashed border-slate-200 dark:border-white/10 rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-8 flex flex-col items-center justify-center gap-2 md:gap-4 group-hover:border-indigo-500 transition-all bg-slate-50/50 dark:bg-white/5 relative overflow-hidden">
+                      <div class="w-full border-2 border-dashed border-slate-200 dark:border-white/10 rounded-[1.5rem] md:rounded-[2rem] p-4 flex flex-col items-center justify-center gap-2 md:gap-4 group-hover:border-indigo-500 transition-all bg-slate-50/50 dark:bg-white/5 relative overflow-hidden">
                         <!-- Loading Overlay -->
                         <div v-if="isUploadingImage" class="absolute inset-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm z-30 flex flex-col items-center justify-center">
                           <Icon name="ph:circle-notch-bold" class="text-4xl text-indigo-600 animate-spin mb-2" />
                           <p class="text-xs font-black text-indigo-600 animate-pulse">{{ t('Uploading...') }}</p>
                         </div>
 
-                        <div v-if="!requestData.imageUrl && !isUploadingImage" class="text-center">
+                        <div v-if="!requestData.imageUrl && !isUploadingImage" class="text-center py-4">
                           <Icon name="ph:image-square-bold" class="text-3xl md:text-4xl text-slate-400 mb-1 md:mb-2" />
                           <p class="text-xs md:text-sm font-bold text-slate-500">{{ t('Click to upload image') }}</p>
                         </div>
-                        <div v-if="requestData.imageUrl" class="relative w-full max-h-[300px] aspect-video rounded-xl md:rounded-2xl overflow-hidden bg-slate-100 dark:bg-white/5">
+                        <div v-if="requestData.imageUrl" class="relative w-full h-32 md:h-40 rounded-xl md:rounded-2xl overflow-hidden bg-slate-100 dark:bg-white/5">
                           <img :src="requestData.imageUrl" class="w-full h-full object-contain" />
                           <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                             <Icon name="ph:arrows-clockwise-bold" class="text-2xl md:text-3xl text-white animate-spin-slow" />
@@ -192,7 +192,7 @@ const submitRequest = async () => {
               </div>
 
               <!-- Footer -->
-              <div class="mt-6 md:mt-10 flex flex-col sm:flex-row gap-3 md:gap-4 pt-5 md:pt-6 border-t border-slate-100 dark:border-white/5">
+              <div class="mt-6 md:mt-10 flex flex-col sm:flex-row gap-3 md:gap-4 pt-5 md:pt-6 border-t border-slate-100 dark:border-white/5 shrink-0">
                 <button 
                   class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 md:py-5 rounded-xl md:rounded-2xl transition-all transform hover:scale-[1.02] shadow-xl active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50 text-sm md:text-base order-1 sm:order-2"
                   :disabled="loading" 
