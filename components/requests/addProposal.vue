@@ -36,7 +36,8 @@ const projectRequestId = route.params.id as string
 const canSubmit = computed(() => {
   if (!props.project || !user.value) return false
 
-  const isStore = roles.value.some((r: any) => String(r).toLowerCase() === 'store')
+  const rolesArr = Array.isArray(roles.value) ? roles.value : []
+  const isStore = rolesArr.some((r: any) => String(r).toLowerCase() === 'store')
   
   const postCategoryId = props.project.storeCategoryId || props.project.categoryId
   const userCategoryId = user.value.storeCategoryId
