@@ -117,10 +117,11 @@
           {{ $t('A link has been sent to your email to confirm your account') }}
         </p>
         <button 
-          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl transition-all shadow-xl active:scale-95"
+          class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl transition-all shadow-xl active:scale-95 flex items-center justify-center gap-3"
           @click="goToHome"
         >
           {{ $t('Explore Talaby') }}
+          <span v-if="countdown > 0" class="text-xs opacity-70">({{ countdown }}s)</span>
         </button>
       </div>
     </Dialog>
@@ -144,6 +145,7 @@ const email = ref('')
 const password = ref('')
 const mobile = ref('')
 const location = ref('')
+const countdown = ref(0)
 
 const token = useLocalStorage('token', '')
 const userID = useLocalStorage('userID', '')
@@ -163,18 +165,9 @@ const loginUser = async (userEmail: string, userPassword: string) => {
     userID.value = userData.userID || userData.id || ''
     roles.value = newRoles || []
 
-    toast.add({ severity: 'success', summary: 'نجاح', detail: 'تم تسجيل الدخول بنجاح' })
+    toast.add({ severity: 'success', summary: locale.value === 'ar' ? 'نجاح' : 'Success', detail: locale.value === 'ar' ? 'تم تسجيل الدخول تلقائياً' : 'Logged in automatically' })
   } catch (error: any) {
-    const data = error.response?.data
-    if (data?.errors && Array.isArray(data.errors)) {
-      data.errors.forEach((err: any) => {
-        toast.add({ severity: 'error', summary: 'خطأ', detail: err.message })
-      })
-    } else {
-      const errorMsg = data?.message || data?.title || 'حدث خطأ أثناء تسجيل الدخول'
-      toast.add({ severity: 'error', summary: 'خطأ', detail: errorMsg })
-    }
-    console.error('Login Error:', error)
+    console.error('Auto-login Error:', error)
   }
 }
 
@@ -219,6 +212,18 @@ const registerClient = async () => {
 
     isDialogVisible.value = true
     resetForm()
+
+    // Auto redirect after 3 seconds
+    countdown.value = 3
+    const timer = setInterval(() => {
+      countdown.value--
+      if (countdown.value <= 0) {
+        clearInterval(timer)
+        if (isDialogVisible.value) {
+          goToHome()
+        }
+      }
+    }, 1000)
   } catch (err) {
     toast.add({ severity: 'error', summary: 'خطأ داخلي', detail: 'تحقق من الاتصال بالخادم' })
     console.error(err)
