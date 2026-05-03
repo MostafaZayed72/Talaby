@@ -26,6 +26,8 @@ const emit = defineEmits(['proposal-added'])
 const showDialog = ref(false)
 const content = ref('')
 const proposedAmount = ref<number | null>(null)
+const errorMsg = ref('')
+const loading = ref(false)
 
 const projectRequestId = route.params.id as string
 
@@ -54,6 +56,9 @@ const canSubmit = computed(() => {
 const submitProposal = async () => {
   if (!content.value || proposedAmount.value === null) return
 
+  loading.value = true
+  errorMsg.value = ''
+
   const body = {
     projectRequestId,
     content: content.value,
@@ -70,14 +75,21 @@ const submitProposal = async () => {
       body: JSON.stringify(body),
     })
 
-    if (res.ok) {
+    const response = await res.json()
+
+    if (res.ok && (response.isSuccess === undefined || response.isSuccess)) {
       showDialog.value = false
       content.value = ''
       proposedAmount.value = null
       emit('proposal-added')
+    } else {
+      errorMsg.value = response.message || 'An error occurred'
     }
   } catch (err) {
     console.error(err)
+    errorMsg.value = 'Failed to connect to the server'
+  } finally {
+    loading.value = false
   }
 }
 
@@ -113,6 +125,10 @@ onMounted(() => {
               </div>
 
               <div class="space-y-6">
+                <div v-if="errorMsg" class="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 font-bold flex items-center gap-3 text-sm">
+                  <Icon name="ph:warning-circle-bold" />
+                  {{ $t(errorMsg) }}
+                </div>
                 <div class="space-y-2">
                   <label class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">{{ $t('Offer details') }}</label>
                   <textarea
@@ -144,9 +160,11 @@ onMounted(() => {
                 <div class="flex gap-4 pt-4">
                   <button 
                     @click="submitProposal" 
-                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl transition-all transform hover:scale-[1.02] shadow-lg active:scale-95 flex items-center justify-center gap-2"
+                    :disabled="loading"
+                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-2xl transition-all transform hover:scale-[1.02] shadow-lg active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"
                   >
-                    <Icon name="ph:check-circle-bold" class="text-xl" />
+                    <Icon v-if="loading" name="ph:circle-notch-bold" class="text-xl animate-spin" />
+                    <Icon v-else name="ph:check-circle-bold" class="text-xl" />
                     {{ $t('Send') }}
                   </button>
                   <button 

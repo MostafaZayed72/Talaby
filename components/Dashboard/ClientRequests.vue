@@ -46,6 +46,7 @@
               </th>
               <th class="px-4 md:px-8 py-4 md:py-6 text-center">{{ $t('Proposals') }}</th>
               <th class="px-4 md:px-8 py-4 md:py-6 text-center">{{ $t('Status') }}</th>
+              <th class="px-4 md:px-8 py-4 md:py-6 text-center">{{ $t('Replies') }}</th>
               <th @click="toggleSort('CreatedAt')" class="px-4 md:px-8 py-4 md:py-6 text-center cursor-pointer hover:text-indigo-600 transition-colors hidden sm:table-cell">
                 <div class="flex items-center justify-center gap-2">
                   {{ $t('Date') }}
@@ -57,7 +58,7 @@
           
           <tbody class="divide-y divide-white/5">
             <tr v-if="loading" v-for="i in 5" :key="i" class="animate-pulse">
-               <td colspan="4" class="px-8 py-6">
+               <td colspan="5" class="px-8 py-6">
                   <div class="h-10 bg-slate-100 dark:bg-white/5 rounded-2xl w-full"></div>
                </td>
             </tr>
@@ -87,6 +88,16 @@
                     {{ $t(item.status) }}
                   </span>
                 </td>
+                <td class="px-4 md:px-8 py-4 md:py-6 text-center">
+                   <div 
+                    @click.stop="(item.status.toLowerCase() === 'accepted' || item.status.toLowerCase() === 'completed') ? router.push(item.acceptedProposalId ? `/replies/${item.acceptedProposalId}` : `/requests/${item.id}`) : null"
+                    class="flex items-center justify-center gap-2 text-slate-400 hover:text-indigo-600 transition-colors cursor-pointer"
+                    :title="(item.status.toLowerCase() === 'accepted' || item.status.toLowerCase() === 'completed') ? $t('Open Chat') : ''"
+                   >
+                      <Icon name="ph:chat-circle-dots-fill" :class="{'text-indigo-600': item.status.toLowerCase() === 'accepted' || item.status.toLowerCase() === 'completed'}" />
+                      <span class="text-xs font-black">{{ item.repliesCount || 0 }}</span>
+                   </div>
+                </td>
                 <td class="px-4 md:px-8 py-4 md:py-6 text-center hidden sm:table-cell">
                   <div class="flex flex-col items-center">
                     <span class="text-xs text-slate-900 dark:text-white font-bold">{{ new Date(item.createdAt).toLocaleDateString() }}</span>
@@ -97,7 +108,7 @@
             </template>
 
             <tr v-if="!loading && items.length === 0">
-               <td colspan="4" class="px-8 py-20 text-center">
+               <td colspan="5" class="px-8 py-20 text-center">
                   <div class="flex flex-col items-center gap-4">
                      <Icon name="ph:shopping-bag-light" class="text-6xl text-slate-300" />
                      <p class="text-slate-500 font-black italic uppercase">{{ $t('No requests found') }}</p>

@@ -73,7 +73,7 @@ const fetchReplies = async () => {
     const result = response.data
     proposalData.value = result // تخزين البيانات كاملة
     proposalContent.value = result.proposalContent
-    replies.value = result.replies.items || []
+    replies.value = (result.replies.items || []).reverse()
     totalPages.value = result.replies.totalPages || 1
   } catch (err: any) {
     error.value = err.message || 'حدث خطأ أثناء تحميل الردود'
@@ -254,30 +254,38 @@ const startPolling = () => {
       <p class="text-slate-500 dark:text-slate-400 font-bold">{{ $t('No replies yet.') }}</p>
     </div>
 
-    <div class="space-y-6">
+    <div class="flex flex-col space-y-6">
       <div
         v-for="reply in replies"
         :key="reply.id"
-        class="bg-white/10 dark:bg-slate-900/40 backdrop-blur-xl border border-white/20 rounded-[2.5rem] p-8 shadow-lg hover:shadow-2xl transition-all border-r-4 border-r-indigo-600/30"
+        class="w-full rounded-[2rem] p-6 md:p-8 shadow-md hover:shadow-xl transition-all relative flex flex-col"
+        :class="[
+          reply.creatorEmail === currentUserEmail 
+            ? 'bg-indigo-600 text-white border-r-4 border-r-indigo-400/50' 
+            : 'bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white border-r-4 border-r-slate-400/50'
+        ]"
       >
         <div class="flex justify-between items-start mb-4">
           <div class="flex items-center gap-3">
-             <div class="w-10 h-10 rounded-xl bg-violet-600/20 flex items-center justify-center text-violet-600">
+             <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                  :class="reply.creatorEmail === currentUserEmail ? 'bg-white/20 text-white' : 'bg-indigo-600/10 text-indigo-600'">
                 <Icon name="ph:user-bold" />
              </div>
              <div>
-                <p class="text-sm font-black text-slate-900 dark:text-white">{{ reply.creatorEmail }}</p>
-                <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">
+                <p class="text-sm font-black" :class="reply.creatorEmail === currentUserEmail ? 'text-white' : 'text-slate-900 dark:text-white'">
+                  {{ reply.creatorEmail }}
+                </p>
+                <p class="text-[10px] uppercase tracking-widest font-bold mt-0.5" :class="reply.creatorEmail === currentUserEmail ? 'text-indigo-200' : 'text-slate-400'">
                    {{ new Date(reply.createdAt).toLocaleString() }}
                 </p>
              </div>
           </div>
           
-          <div v-if="reply.creatorEmail === currentUserEmail" class="flex gap-2">
-            <button @click="startEdit(reply)" class="p-2 rounded-lg hover:bg-indigo-500/10 text-indigo-500 transition-colors">
+          <div v-if="reply.creatorEmail === currentUserEmail" class="flex gap-2 shrink-0">
+            <button @click="startEdit(reply)" class="p-2 rounded-lg hover:bg-white/20 text-white transition-colors">
               <Icon name="ph:pencil-simple-bold" />
             </button>
-            <button @click="deleteReply(reply.id)" class="p-2 rounded-lg hover:bg-red-500/10 text-red-500 transition-colors">
+            <button @click="deleteReply(reply.id)" class="p-2 rounded-lg hover:bg-red-400/20 text-red-200 transition-colors">
               <Icon name="ph:trash-bold" />
             </button>
           </div>
@@ -286,14 +294,14 @@ const startPolling = () => {
         <div v-if="editingReplyId === reply.id" class="space-y-4">
           <textarea
             v-model="editedContent"
-            class="w-full bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-indigo-500 dark:text-white min-h-[100px] resize-none"
+            class="w-full bg-black/10 border border-white/20 rounded-2xl p-4 outline-none focus:ring-2 focus:ring-white text-white min-h-[100px] resize-none"
           ></textarea>
           <div class="flex gap-3">
-            <button @click="saveEdit" class="bg-indigo-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-indigo-700 transition-all">حفظ</button>
-            <button @click="editingReplyId = null" class="bg-slate-200 dark:bg-white/10 text-slate-700 dark:text-white px-6 py-2 rounded-xl font-bold hover:bg-slate-300 transition-all">إلغاء</button>
+            <button @click="saveEdit" class="bg-white text-indigo-600 px-6 py-2 rounded-xl font-black hover:bg-indigo-50 transition-all">حفظ</button>
+            <button @click="editingReplyId = null" class="bg-indigo-500/50 text-white px-6 py-2 rounded-xl font-bold hover:bg-indigo-400 transition-all">إلغاء</button>
           </div>
         </div>
-        <div v-else class="text-lg text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+        <div v-else class="text-base md:text-lg leading-relaxed font-medium whitespace-pre-wrap" :class="reply.creatorEmail === currentUserEmail ? 'text-white/95' : 'text-slate-700 dark:text-slate-300'">
           {{ reply.content }}
         </div>
       </div>
