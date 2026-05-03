@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'dark': isDarkMode }" :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr' }">
+  <div :style="{ direction: locale === 'ar' ? 'rtl' : 'ltr' }">
     <img src="/22.png" class="fixed top-10  left-[-20px] z-[-1] md:w-[30%]" alt="">
     <img src="/11.png" class="fixed bottom-0  left-[-20px] z-[-1] md:w-[30%]" alt="">
     <img src="/33.png" class="fixed bottom-0  right-[-20px] z-[-1] w-[50%] md:w-[30%]" alt="">
@@ -159,11 +159,6 @@ const roles = ref();
 const isSidebarOpen = ref(false);
 const isDropdownOpen = ref(false);
 const isAtTop = ref(true);
-const isDarkMode = ref(false);
-
-const syncDarkMode = () => {
-  isDarkMode.value = document.documentElement.classList.contains('dark');
-};
 
 const navLinks = computed(() => {
   const links = [
@@ -204,16 +199,11 @@ onMounted(() => {
   window.addEventListener('scroll', handleScroll);
   document.addEventListener('click', closeDropdownOnClickOutside);
   
-  // Sync dark mode state
+  // Restore dark mode on page load by applying 'dark' class to <html>
   const savedColorMode = localStorage.getItem('colorMode');
   if (savedColorMode === 'dark') {
-    isDarkMode.value = true;
     document.documentElement.classList.add('dark');
   }
-  
-  // Listen for changes (optional but good for consistency)
-  const observer = new MutationObserver(syncDarkMode);
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 });
 
 onBeforeUnmount(() => {
