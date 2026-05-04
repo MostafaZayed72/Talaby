@@ -11,8 +11,10 @@ const { user } = await useCurrentUser()
 const postId = route.params.id as string
 const project = ref<any>(null)
 const projectLoading = ref(true)
+const globalLoading = useState('globalLoading')
 
 const fetchProject = async () => {
+  globalLoading.value = true
   projectLoading.value = true
   try {
     const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${postId}`, {
@@ -26,6 +28,7 @@ const fetchProject = async () => {
     console.error(err)
   } finally {
     projectLoading.value = false
+    globalLoading.value = false
   }
 }
 

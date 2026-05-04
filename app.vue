@@ -9,8 +9,8 @@
 
 <script setup>
 const { locale } = useI18n()
-const preferredLanguage = useLocalStorage('preferredLanguage', 'en-US')
-const loading = ref(false)
+const preferredLanguage = useLocalStorage('preferredLanguage', 'ar-SA')
+const loading = useState('globalLoading', () => true) // Start as true for initial load
 const router = useRouter()
 
 // Global navigation guards for loading state
@@ -22,7 +22,14 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
   setTimeout(() => {
     loading.value = false
-  }, 300) // Small delay for smooth transition
+  }, 500) // Slightly longer for smoother feel
+})
+
+onMounted(() => {
+  // Initial load finish
+  setTimeout(() => {
+    loading.value = false
+  }, 800)
 })
 
 // RTL calculation

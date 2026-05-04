@@ -21,6 +21,7 @@ const pageSize = ref(10)
 const totalPages = ref(1)
 const searchPhrase = ref('')
 
+const globalLoading = useState('globalLoading')
 const loading = ref(false)
 const error = ref('')
 
@@ -30,6 +31,7 @@ const isClient = computed(() => {
 })
 
 const fetchRequests = async () => {
+  globalLoading.value = true
   loading.value = true
   error.value = ''
 
@@ -78,6 +80,7 @@ const fetchRequests = async () => {
     error.value = err.message || 'حدث خطأ أثناء تحميل البيانات'
   } finally {
     loading.value = false
+    globalLoading.value = false
   }
 }
 
