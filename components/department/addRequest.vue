@@ -174,7 +174,7 @@ const submitRequest = async () => {
       v-if="dueCommissions.length > 0"
       @click="payCommission(dueCommissions[0].projectRequestId)"
       :disabled="loading"
-      class="px-10 py-4 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl transition-all transform hover:scale-[1.05] shadow-xl active:scale-95 flex items-center gap-3 animate-pulse"
+      class="px-6 md:px-10 py-4 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl transition-all transform hover:scale-[1.05] shadow-xl active:scale-95 flex items-center gap-3 animate-pulse whitespace-nowrap overflow-hidden max-w-full"
     >
       <Icon v-if="loading" name="ph:circle-notch-bold" class="animate-spin" />
       <Icon v-else name="ph:credit-card-bold" class="text-xl" />
