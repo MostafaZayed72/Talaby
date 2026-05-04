@@ -42,10 +42,9 @@ const fetchRequests = async () => {
     
     url.searchParams.set('PageNumber', pageNumber.value.toString())
     url.searchParams.set('PageSize', pageSize.value.toString())
-    
-    // إذا لم يكن العميل، نفلتر بالقسم برمجياً في الرابط (إذا كان الإيندبوينت يدعم ذلك)
-    // أو نفلتر لاحقاً إذا كان إيندبوينت /me لا يدعم StoreCategoryId
     url.searchParams.set('StoreCategoryId', departmentId.toString())
+    url.searchParams.set('SortBy', 'CreatedAt')
+    url.searchParams.set('SortDirection', 'Descending')
     
     if (searchPhrase.value) {
       url.searchParams.set('SearchPhrase', searchPhrase.value)
