@@ -56,6 +56,8 @@ onUnmounted(() => {
   if (pollingInterval.value) clearInterval(pollingInterval.value)
 })
 
+const projectStatus = ref('')
+
 const fetchReplies = async () => {
   // loading.value = true // Commented out to prevent flicker during polling
   error.value = ''
@@ -80,6 +82,18 @@ const fetchReplies = async () => {
     proposalContent.value = result.proposalContent
     replies.value = (result.replies.items || []).reverse()
     totalPages.value = result.replies.totalPages || 1
+
+    // جلب حالة المشروع بشكل منفصل للتأكد
+    const projId = result.projectRequestId
+    if (projId) {
+      const projRes = await fetch(`${config.public.API_BASE_URL}/project-requests/${projId}`, {
+        headers: { Authorization: `Bearer ${token.value}` }
+      })
+      if (projRes.ok) {
+        const projData = await projRes.json()
+        projectStatus.value = projData.data.status || projData.data.statusName || ''
+      }
+    }
   } catch (err: any) {
     error.value = err.message || 'حدث خطأ أثناء تحميل الردود'
   } finally {
@@ -195,15 +209,31 @@ const saveEdit = async () => {
   }
 }
 
-watch(pageNumber, fetchReplies)
+const isRequestOwner = computed(() => {
+  if (!proposalData.value || (!currentUserId.value && !currentUserEmail.value)) return false
+  
+  const rolesArr = Array.isArray(useCookie('roles').value) ? useCookie('roles').value : []
+  const isAdmin = rolesArr.some((r: any) => String(r).toLowerCase() === 'admin')
+  if (isAdmin) return true
+
+  return String(currentUserId.value) === String(proposalData.value.projectRequestCreatorId) ||
+         String(currentUserEmail.value).toLowerCase() === String(proposalData.value.projectRequestCreatorEmail).toLowerCase()
+})
+
+const isAwaitingPayment = computed(() => {
+  const status = String(projectStatus.value || proposalData.value?.projectRequestStatus || proposalData.value?.status || '').toLowerCase()
+  return status.includes('awaitingcommissionpayment')
+})
 
 // ⏱️ تحديث الردود تلقائيًا كل 5 ثوانٍ
 const pollingInterval = ref<any>(null)
 
+watch(pageNumber, fetchReplies)
+
 const startPolling = () => {
   pollingInterval.value = setInterval(() => {
     fetchReplies()
-  }, 10000) // كل 5 ثوانٍ
+  }, 10000) // كل 10 ثوانٍ
 }
 </script>
 
@@ -235,7 +265,7 @@ const startPolling = () => {
 
         <!-- زر دفع العمولة: يظهر لصاحب الطلب فقط إذا كانت الحالة بانتظار الدفع -->
         <button 
-          v-if="proposalData && (currentUserId === proposalData.projectRequestCreatorId || currentUserEmail === proposalData.projectRequestCreatorEmail) && (String(proposalData.projectRequestStatus).toLowerCase() === 'awaitingcommissionpayment')"
+          v-if="isRequestOwner && isAwaitingPayment"
           @click="payCommission"
           :disabled="isProcessingPayment"
           class="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center gap-2 disabled:opacity-50"
