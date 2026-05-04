@@ -62,7 +62,12 @@ const fetchProposals = async () => {
   }
 }
 
-const isRequestOwner = () => currentUser.value?.id === props.project?.creatorId
+const isRequestOwner = () => {
+  if (!currentUser.value || !props.project) return false
+  const rolesArr = Array.isArray(useCookie('roles').value) ? useCookie('roles').value : []
+  const isAdmin = rolesArr.some((r: any) => String(r).toLowerCase() === 'admin')
+  return isAdmin || String(currentUser.value.id) === String(props.project.creatorId)
+}
 
 const openSelectDialog = (proposalId: string) => {
   selectedProposalId.value = proposalId
@@ -266,7 +271,7 @@ defineExpose({ fetchProposals })
 
             <!-- زر القبول: يظهر إذا كان العرض غير مقبول أو مكتمل بعد والمستخدم هو صاحب الطلب -->
             <button
-              v-if="isRequestOwner() && proposal.statusValue !== 2 && proposal.statusValue !== 3 && (proposal.statusName || proposal.status)?.toLowerCase() !== 'accepted' && (proposal.statusName || proposal.status)?.toLowerCase() !== 'completed'"
+              v-if="isRequestOwner() && (proposal.statusValue === 0 || proposal.statusValue === 1 || !(proposal.statusValue >= 2)) && !['accepted', 'completed'].includes((proposal.statusName || proposal.status || '').toLowerCase())"
               @click.stop="openSelectDialog(proposal.id)"
               class="w-full md:w-auto px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2"
             >
@@ -274,9 +279,9 @@ defineExpose({ fetchProposals })
               {{ $t('Accept') }}
             </button>
 
-            <!-- زر دفع العمولة: يظهر لصاحب الطلب إذا انتهت المهمة ولم يتم الدفع بعد -->
+            <!-- زر دفع العمولة: يظهر لصاحب الطلب فقط إذا كانت الحالة بانتظار الدفع -->
             <button
-              v-if="(proposal.statusValue === 3 || (proposal.statusName || proposal.status)?.toLowerCase() === 'completed') && isRequestOwner() && (project?.status || project?.statusName)?.toLowerCase() !== 'completed'"
+              v-if="isRequestOwner() && (project?.status || project?.statusName)?.toLowerCase() === 'awaitingcommissionpayment'"
               @click.stop="payCommission(postId)"
               :disabled="isProcessingPayment"
               class="w-full md:w-auto px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"

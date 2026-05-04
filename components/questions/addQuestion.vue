@@ -41,13 +41,19 @@ const canSubmit = computed(() => {
   if (!isStoreOrProvider && !isAdmin) return false
 
   // فحص مطابقة القسم (إلا إذا كان أدمن)
-  const postCategoryId = props.project.storeCategoryId || props.project.categoryId
-  const userCategoryId = user.value.storeCategoryId || user.value.categoryId
+  const getCatId = (obj: any) => {
+    if (!obj) return null
+    return obj.storeCategoryId || obj.categoryId || obj.StoreCategoryId || obj.CategoryId || obj.storeCategory?.id || obj.category?.id
+  }
+
+  const postCatId = getCatId(props.project)
+  const userCatId = getCatId(user.value)
   
+  // إذا كان أدمن نظهر الزر دائماً، وإذا كان مقدم خدمة نتحقق من مطابقة القسم
   const isSameCategory = isAdmin || (
-    postCategoryId != null && 
-    userCategoryId != null && 
-    String(postCategoryId) === String(userCategoryId)
+    postCatId != null && 
+    userCatId != null && 
+    String(postCatId) === String(userCatId)
   )
   
   const statusVal = props.project.statusValue !== undefined ? props.project.statusValue : props.project.status

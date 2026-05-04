@@ -233,9 +233,9 @@ const startPolling = () => {
           {{ $t('Mark as Done') }}
         </button>
 
-        <!-- زر دفع العمولة: يظهر لصاحب الطلب إذا انتهت المهمة -->
+        <!-- زر دفع العمولة: يظهر لصاحب الطلب فقط إذا كانت الحالة بانتظار الدفع -->
         <button 
-          v-if="proposalData && (currentUserId === proposalData.projectRequestCreatorId || currentUserEmail === proposalData.projectRequestCreatorEmail) && (proposalData.proposalStatusValue !== 3 && String(proposalData.proposalStatus).toLowerCase() !== 'completed' && String(proposalData.proposalStatus).toLowerCase() !== 'finished')"
+          v-if="proposalData && (currentUserId === proposalData.projectRequestCreatorId || currentUserEmail === proposalData.projectRequestCreatorEmail) && (String(proposalData.projectRequestStatus).toLowerCase() === 'awaitingcommissionpayment')"
           @click="payCommission"
           :disabled="isProcessingPayment"
           class="px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center gap-2 disabled:opacity-50"

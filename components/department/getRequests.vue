@@ -22,6 +22,7 @@ const totalPages = ref(1)
 const searchPhrase = ref('')
 
 const globalLoading = useState('globalLoading')
+const refreshTrigger = useState('refreshRequestsTrigger', () => 0)
 const loading = ref(false)
 const error = ref('')
 
@@ -96,6 +97,12 @@ const resetPageAndFetch = async () => {
   pageNumber.value = 1
   await fetchRequests()
 }
+
+watch(refreshTrigger, () => {
+  if (refreshTrigger.value > 0) {
+    resetPageAndFetch()
+  }
+})
 
 defineExpose({ fetchRequests, resetPageAndFetch })
 </script>

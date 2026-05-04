@@ -12,6 +12,7 @@ const route = useRoute()
 const { t } = useI18n()
 
 const emit = defineEmits(['requestAdded'])
+const refreshTrigger = useState('refreshRequestsTrigger', () => 0)
 
 const storeCategoryId = route.params.department
 
@@ -97,6 +98,7 @@ const submitRequest = async () => {
     showAgreementDialog.value = false
     agreementChecked.value = false
     emit('requestAdded')
+    refreshTrigger.value++
 
     requestData.value = {
       title: '',
@@ -254,8 +256,8 @@ const submitRequest = async () => {
                 بسم الله الرحمن الرحيم قال الله تعالى: " وَأَوْفُواْ بِعَهْدِ اللهِ إِذَا عَاهَدتُّمْ وَلاَ تَنقُضُواْ الأَيْمَانَ بَعْدَ تَوْكِيدِهَا وَقَدْ جَعَلْتُمُ اللهَ عَلَيْكُمْ كَفِيلاً " صدق الله العظيم.
               </p>
               <div class="space-y-3 text-sm font-bold text-slate-700 dark:text-slate-300 leading-loose">
-                <p>- أتعهد وأقسم بالله أنا المعلن أن أدفع رسوم الموقع وهي 2.5% من قيمة البيع سواء تم البيع عن طريق الموقع أو بسببه.</p>
-                <p>- كما أتعهد بدفع الرسوم خلال 5 أيام من استلام مبلغ المبايعة.</p>
+                <p>- أتعهد وأقسم بالله أنا صاحب الطلب أن أدفع رسوم الموقع وهي 2.5% من قيمة الشراء سواء تم الشراء عن طريق الموقع أو بسببه.</p>
+                <p>- كما أتعهد بدفع الرسوم خلال 5 أيام من تنفيذ المبايعة.</p>
               </div>
             </div>
 
