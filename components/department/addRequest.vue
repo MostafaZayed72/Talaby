@@ -178,7 +178,7 @@ const submitRequest = async () => {
     >
       <Icon v-if="loading" name="ph:circle-notch-bold" class="animate-spin" />
       <Icon v-else name="ph:credit-card-bold" class="text-xl" />
-      {{ $t('Pay Outstanding Commission') }} ({{ dueCommissions[0].projectTitle }})
+      {{ $t('Pay Outstanding Commission') }} ({{ dueCommissions[0].projectTitle.length > 20 ? dueCommissions[0].projectTitle.substring(0, 20) + '...' : dueCommissions[0].projectTitle }})
     </button>
 
     <button 
