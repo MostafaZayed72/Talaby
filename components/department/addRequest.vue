@@ -16,6 +16,8 @@ const emit = defineEmits(['requestAdded'])
 const storeCategoryId = route.params.department
 
 const showDialog = ref(false)
+const showAgreementDialog = ref(false)
+const agreementChecked = ref(false)
 const loading = ref(false)
 const success = ref(false)
 const isUploadingImage = ref(false)
@@ -59,7 +61,16 @@ const handleFileChange = async (event: Event) => {
   }
 }
 
+const openAgreement = () => {
+  if (!requestData.value.title || !requestData.value.description) {
+    error.value = t('Please fill in all required fields.')
+    return
+  }
+  showAgreementDialog.value = true
+}
+
 const submitRequest = async () => {
+  if (!agreementChecked.value) return
   if (!storeCategoryId) {
     error.value = 'Category ID not found.'
     return
@@ -83,6 +94,8 @@ const submitRequest = async () => {
 
     success.value = true
     showDialog.value = false
+    showAgreementDialog.value = false
+    agreementChecked.value = false
     emit('requestAdded')
 
     requestData.value = {
@@ -96,6 +109,7 @@ const submitRequest = async () => {
   } catch (err: any) {
     const msg = err?.response?.data?.message || 'An error occurred while submitting the request.'
     error.value = t(msg.trim())
+    showAgreementDialog.value = false
   } finally {
     loading.value = false
   }
@@ -203,7 +217,7 @@ const submitRequest = async () => {
                 <button 
                   class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 md:py-5 rounded-xl md:rounded-2xl transition-all transform hover:scale-[1.02] shadow-xl active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50 text-sm md:text-base order-1 sm:order-2"
                   :disabled="loading" 
-                  @click="submitRequest"
+                  @click="openAgreement"
                 >
                   <Icon v-if="loading" name="ph:circle-notch-bold" class="animate-spin" />
                   <Icon v-else name="ph:check-circle-bold" />
@@ -217,6 +231,55 @@ const submitRequest = async () => {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      </transition>
+    </Teleport>
+
+    <!-- Agreement Dialog -->
+    <Teleport to="body">
+      <transition name="modal">
+        <div v-if="showAgreementDialog" class="fixed inset-0 z-[110] flex items-center justify-center p-6">
+          <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-md" @click="showAgreementDialog = false"></div>
+          
+          <div class="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl border border-white/20 p-8 md:p-10 animate-modal-in text-center space-y-6">
+            <button @click="showAgreementDialog = false" class="absolute top-6 right-6 p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
+              <Icon name="ph:x-bold" class="text-xl dark:text-white" />
+            </button>
+
+            <h3 class="text-2xl font-black text-slate-900 dark:text-white italic">{{ t('Commission Pledge') }}</h3>
+            
+            <div class="bg-slate-50 dark:bg-white/5 p-6 rounded-2xl text-right space-y-4">
+              <p class="text-[10px] md:text-xs text-slate-400 leading-relaxed font-bold italic">
+                بسم الله الرحمن الرحيم قال الله تعالى: " وَأَوْفُواْ بِعَهْدِ اللهِ إِذَا عَاهَدتُّمْ وَلاَ تَنقُضُواْ الأَيْمَانَ بَعْدَ تَوْكِيدِهَا وَقَدْ جَعَلْتُمُ اللهَ عَلَيْكُمْ كَفِيلاً " صدق الله العظيم.
+              </p>
+              <div class="space-y-3 text-sm font-bold text-slate-700 dark:text-slate-300 leading-loose">
+                <p>- أتعهد وأقسم بالله أنا المعلن أن أدفع رسوم الموقع وهي 2.5% من قيمة البيع سواء تم البيع عن طريق الموقع أو بسببه.</p>
+                <p>- كما أتعهد بدفع الرسوم خلال 5 أيام من استلام مبلغ المبايعة.</p>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-center gap-3 py-2">
+              <input 
+                type="checkbox" 
+                id="agreement" 
+                v-model="agreementChecked"
+                class="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+              />
+              <label for="agreement" class="text-sm font-black text-slate-700 dark:text-white cursor-pointer">
+                {{ t('I pledge that') }}
+              </label>
+            </div>
+
+            <button 
+              @click="submitRequest"
+              :disabled="!agreementChecked || loading"
+              class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 dark:disabled:bg-white/10 text-white font-black py-4 rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-3"
+            >
+              <Icon v-if="loading" name="ph:circle-notch-bold" class="animate-spin" />
+              <Icon v-else name="ph:paper-plane-tilt-bold" />
+              {{ t('Submit Request') }}
+            </button>
           </div>
         </div>
       </transition>

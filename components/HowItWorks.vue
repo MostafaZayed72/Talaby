@@ -54,7 +54,7 @@ const steps = [
   },
   {
     title: 'Place Order',
-    desc: 'Provide details, set your location, and confirm your request.',
+    desc: 'Provide details and confirm your request.',
     icon: 'ph:cursor-click-fill',
   }
 ];

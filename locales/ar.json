@@ -473,5 +473,9 @@
     "My Orders": "طلباتي",
     "Visit Website": "زيارة الموقع",
     "Stores": "المتاجر",
-    "You have a project awaiting commission payment. Please complete the payment before creating a new request.": "لديك مشروع بانتظار دفع العمولة. يرجى إتمام عملية الدفع قبل إنشاء طلب جديد."
+    "You have a project awaiting commission payment. Please complete the payment before creating a new request.": "لديك مشروع بانتظار دفع العمولة. يرجى إتمام عملية الدفع قبل إنشاء طلب جديد.",
+    "Provide details and confirm your request.": "قدم التفاصيل، وأكد طلبك.",
+    "Commission Pledge": "تعهد العمولة",
+    "I pledge that": "أتعهد بذلك",
+    "Submit Request": "إرسال الطلب"
 }

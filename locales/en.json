@@ -346,5 +346,9 @@
     "Are you sure you have completed the task and want to mark it as done?": "Are you sure you have completed the task and want to mark it as done?",
     "Yes, Done": "Yes, Done",
     "Stores": "Stores",
-    "You have a project awaiting commission payment. Please complete the payment before creating a new request.": "You have a project awaiting commission payment. Please complete the payment before creating a new request."
+    "You have a project awaiting commission payment. Please complete the payment before creating a new request.": "You have a project awaiting commission payment. Please complete the payment before creating a new request.",
+    "Provide details and confirm your request.": "Provide details and confirm your request.",
+    "Commission Pledge": "Commission Pledge",
+    "I pledge that": "I pledge that",
+    "Submit Request": "Submit Request"
 }
