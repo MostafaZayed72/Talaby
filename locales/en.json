@@ -345,5 +345,6 @@
     "Complete Request": "Complete Request",
     "Are you sure you have completed the task and want to mark it as done?": "Are you sure you have completed the task and want to mark it as done?",
     "Yes, Done": "Yes, Done",
-    "Stores": "Stores"
+    "Stores": "Stores",
+    "You have a project awaiting commission payment. Please complete the payment .before creating a new request": "You have a project awaiting commission payment. Please complete the payment before creating a new request"
 }

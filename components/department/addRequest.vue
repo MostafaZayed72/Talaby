@@ -11,7 +11,7 @@ const token = useCookie('token')
 const route = useRoute()
 const { t } = useI18n()
 
-const emit = defineEmits(['request-added'])
+const emit = defineEmits(['requestAdded'])
 
 const storeCategoryId = route.params.department
 
@@ -83,7 +83,7 @@ const submitRequest = async () => {
 
     success.value = true
     showDialog.value = false
-    emit('request-added')
+    emit('requestAdded')
 
     requestData.value = {
       title: '',
@@ -94,7 +94,7 @@ const submitRequest = async () => {
     }
 
   } catch (err: any) {
-    error.value = err?.response?.data?.message || t('An error occurred while submitting the request.')
+    error.value = t(err?.response?.data?.message || 'An error occurred while submitting the request.')
   } finally {
     loading.value = false
   }

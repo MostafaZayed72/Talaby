@@ -9,6 +9,8 @@ const route = useRoute()
 const router = useRouter()
 
 const token = useCookie('token')
+const { user: currentUser } = await useCurrentUser()
+const roles = useCookie('roles')
 
 // استخرج departmentId من الرابط وحوله لرقم
 const departmentId = Number(route.params.department)
@@ -22,21 +24,32 @@ const searchPhrase = ref('')
 const loading = ref(false)
 const error = ref('')
 
+const isClient = computed(() => {
+  const rolesArr = Array.isArray(roles.value) ? roles.value : []
+  return rolesArr.some((r: any) => String(r).toLowerCase() === 'client')
+})
+
 const fetchRequests = async () => {
   loading.value = true
   error.value = ''
 
   try {
-    const url = new URL(`${config.public.API_BASE_URL}/project-requests`)
+    // استخدم إيندبوينت /me إذا كان المستخدم صاحب خدمة (Client)
+    const endpoint = isClient.value ? 'project-requests/me' : 'project-requests'
+    const url = new URL(`${config.public.API_BASE_URL}/${endpoint}`)
+    
     url.searchParams.set('PageNumber', pageNumber.value.toString())
     url.searchParams.set('PageSize', pageSize.value.toString())
+    
+    // إذا لم يكن العميل، نفلتر بالقسم برمجياً في الرابط (إذا كان الإيندبوينت يدعم ذلك)
+    // أو نفلتر لاحقاً إذا كان إيندبوينت /me لا يدعم StoreCategoryId
     url.searchParams.set('StoreCategoryId', departmentId.toString())
+    
     if (searchPhrase.value) {
       url.searchParams.set('SearchPhrase', searchPhrase.value)
     }
 
     if (!token.value) {
-      console.warn('No token found in cookies, skipping fetch.')
       loading.value = false
       return
     }
@@ -53,8 +66,13 @@ const fetchRequests = async () => {
     const response = await res.json()
     const data = response.data
 
-    // تحديث قائمة الطلبات
-    requests.value = data.items || []
+    // إذا كان العميل، قد يعيد إيندبوينت /me كل طلباته، لذا نفلترها هنا للتأكد أنها تابعة للقسم الحالي فقط
+    let items = data.items || []
+    if (isClient.value) {
+      items = items.filter((item: any) => Number(item.storeCategoryId) === departmentId)
+    }
+
+    requests.value = items
     totalPages.value = data.totalPages || 1
   } catch (err: any) {
     error.value = err.message || 'حدث خطأ أثناء تحميل البيانات'
@@ -72,7 +90,12 @@ const goToRequest = (id: string) => {
   router.push(`/requests/${id}`)
 }
 
-defineExpose({ fetchRequests })
+const resetPageAndFetch = async () => {
+  pageNumber.value = 1
+  await fetchRequests()
+}
+
+defineExpose({ fetchRequests, resetPageAndFetch })
 </script>
 
 <template>

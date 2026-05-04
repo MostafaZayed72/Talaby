@@ -32,7 +32,7 @@
 
             <!-- Action Button -->
             <div v-if="isClient" class="flex justify-center transform hover:scale-105 transition-transform">
-              <DepartmentAddRequest @request-added="handleRequestAdded" />
+              <DepartmentAddRequest @requestAdded="handleRequestAdded" />
             </div>
           </div>
         </div>
@@ -77,7 +77,10 @@ const loading = ref(true)
 const requestsRef = ref<any>(null)
 
 const handleRequestAdded = () => {
-  requestsRef.value?.fetchRequests()
+  // إضافة مهلة بسيطة للتأكد من أن السيرفر قد قام بتحديث البيانات قبل الجلب
+  setTimeout(() => {
+    requestsRef.value?.resetPageAndFetch()
+  }, 1000)
 }
 
 const fetchDepartment = async () => {

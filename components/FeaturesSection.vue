@@ -13,7 +13,7 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
         <div 
           v-for="(feature, index) in features" 
           :key="index"
@@ -39,12 +39,6 @@
 
 <script setup>
 const features = [
-  {
-    title: 'Fast Delivery',
-    description: 'We prioritize your time. Get your needs delivered in record time with our optimized logistics.',
-    icon: 'ph:lightning-fill',
-    color: 'bg-amber-500',
-  },
   {
     title: 'Verified Professionals',
     description: 'Every service provider is thoroughly vetted to ensure you get only the best quality and security.',

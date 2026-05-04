@@ -33,19 +33,24 @@ const canSubmit = computed(() => {
   if (!props.project || !user.value) return false
 
   const rolesArr = Array.isArray(roles.value) ? roles.value : []
-  const isStore = rolesArr.some((r: any) => String(r).toLowerCase() === 'store')
+  const isStoreOrProvider = rolesArr.some((r: any) => 
+    ['store', 'provider', 'admin'].includes(String(r).toLowerCase())
+  )
   
+  if (!isStoreOrProvider) return false
+
   const postCategoryId = props.project.storeCategoryId || props.project.categoryId
-  const userCategoryId = user.value.storeCategoryId
+  const userCategoryId = user.value.storeCategoryId || user.value.categoryId
   
-  const hasCategories = postCategoryId != null && userCategoryId != null
-  const isSameCategory = String(postCategoryId) === String(userCategoryId)
+  const isSameCategory = postCategoryId == null || userCategoryId == null || String(postCategoryId) === String(userCategoryId)
   
   const statusVal = props.project.statusValue !== undefined ? props.project.statusValue : props.project.status
-  const statusNm = (props.project.statusName || props.project.status)?.toLowerCase()
-  const isOpen = statusVal === 1 || statusVal === 0 || statusNm === 'open' || statusNm === undefined || statusNm === '' || statusNm === 'string'
+  const statusNm = (props.project.statusName || props.project.status || '').toLowerCase()
   
-  return isStore && hasCategories && isSameCategory && isOpen
+  // نعتبر المشروع مفتوحاً إذا كانت القيمة 0 أو 1 أو النص "open" أو إذا كانت الحالة فارغة
+  const isOpen = statusVal === 0 || statusVal === 1 || statusNm === 'open' || statusNm === '' || statusNm === 'string'
+  
+  return isSameCategory && isOpen
 })
 
 

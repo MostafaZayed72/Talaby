@@ -274,9 +274,9 @@ defineExpose({ fetchProposals })
               {{ $t('Accept') }}
             </button>
 
-            <!-- زر دفع العمولة: يظهر لصاحب الطلب إذا انتهت المهمة -->
+            <!-- زر دفع العمولة: يظهر لصاحب الطلب إذا انتهت المهمة ولم يتم الدفع بعد -->
             <button
-              v-if="(proposal.statusValue === 3 || (proposal.statusName || proposal.status)?.toLowerCase() === 'completed') && isRequestOwner()"
+              v-if="(proposal.statusValue === 3 || (proposal.statusName || proposal.status)?.toLowerCase() === 'completed') && isRequestOwner() && (project?.status || project?.statusName)?.toLowerCase() !== 'completed'"
               @click.stop="payCommission(postId)"
               :disabled="isProcessingPayment"
               class="w-full md:w-auto px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black rounded-2xl shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"
