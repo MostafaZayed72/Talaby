@@ -94,7 +94,8 @@ const submitRequest = async () => {
     }
 
   } catch (err: any) {
-    error.value = t(err?.response?.data?.message || 'An error occurred while submitting the request.')
+    const msg = err?.response?.data?.message || 'An error occurred while submitting the request.'
+    error.value = t(msg.trim())
   } finally {
     loading.value = false
   }
