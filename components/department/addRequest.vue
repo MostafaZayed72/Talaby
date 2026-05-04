@@ -32,6 +32,51 @@ const requestData = ref({
   maxBudget: 0
 })
 
+const dueCommissions = ref<any[]>([])
+const isCheckingCommissions = ref(true)
+
+const fetchDueCommissions = async () => {
+  try {
+    const res = await fetch(`${config.public.API_BASE_URL}/project-requests/me/commission-payments/due`, {
+      headers: { Authorization: `Bearer ${token.value}` }
+    })
+    if (res.ok) {
+      const response = await res.json()
+      dueCommissions.value = response.data || []
+    }
+  } catch (err) {
+    console.error('Failed to fetch due commissions')
+  } finally {
+    isCheckingCommissions.value = false
+  }
+}
+
+const payCommission = async (projectId: string) => {
+  loading.value = true
+  try {
+    const res = await fetch(`${config.public.API_BASE_URL}/project-requests/${projectId}/commission-payment/checkout`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    if (!res.ok) throw new Error('Failed to create checkout session')
+    const response = await res.json()
+    if (response.isSuccess && response.data.checkoutUrl) {
+      window.open(response.data.checkoutUrl, '_blank')
+    }
+  } catch (err: any) {
+    alert(err.message)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchDueCommissions()
+})
+
 const handleFileChange = async (event: Event) => {
   const file = (event.target as HTMLInputElement)?.files?.[0]
   if (!file) return
@@ -112,6 +157,10 @@ const submitRequest = async () => {
     const msg = err?.response?.data?.message || 'An error occurred while submitting the request.'
     error.value = t(msg.trim())
     showAgreementDialog.value = false
+    // Refresh commissions if we got a commission error
+    if (msg.includes('commission')) {
+      fetchDueCommissions()
+    }
   } finally {
     loading.value = false
   }
@@ -120,13 +169,32 @@ const submitRequest = async () => {
 
 <template>
   <div>
+    <!-- زر دفع العمولة المستحقة (يظهر فقط إذا كان هناك مستحقات) -->
     <button 
+      v-if="dueCommissions.length > 0"
+      @click="payCommission(dueCommissions[0].projectRequestId)"
+      :disabled="loading"
+      class="px-10 py-4 bg-red-600 hover:bg-red-700 text-white font-black rounded-2xl transition-all transform hover:scale-[1.05] shadow-xl active:scale-95 flex items-center gap-3 animate-pulse"
+    >
+      <Icon v-if="loading" name="ph:circle-notch-bold" class="animate-spin" />
+      <Icon v-else name="ph:credit-card-bold" class="text-xl" />
+      {{ $t('Pay Outstanding Commission') }} ({{ dueCommissions[0].projectTitle }})
+    </button>
+
+    <button 
+      v-else-if="!isCheckingCommissions"
       @click="showDialog = true" 
       class="px-10 py-4 bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black rounded-2xl transition-all transform hover:scale-[1.05] shadow-xl active:scale-95 flex items-center gap-3"
     >
       <Icon name="ph:plus-circle-bold" class="text-xl" />
-      {{ t('Add New Request') }}
+      {{ $t('Add New Request') }}
     </button>
+
+    <!-- لودر بسيط أثناء التحقق من العمولات -->
+    <div v-else class="flex items-center gap-2 text-slate-400 font-bold px-4 py-2">
+      <Icon name="ph:circle-notch-bold" class="animate-spin" />
+      <span>{{ $t('Checking account status...') }}</span>
+    </div>
 
     <Teleport to="body">
       <transition name="modal">
