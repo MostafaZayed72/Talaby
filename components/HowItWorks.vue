@@ -12,9 +12,9 @@
         <h3 class="text-4xl md:text-5xl font-black">{{ $t('How It Works') }}</h3>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-16 relative">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-16 relative max-w-4xl mx-auto">
         <!-- Connecting Line (Desktop) -->
-        <div class="hidden md:block absolute top-1/3 left-1/4 right-1/4 h-0.5 border-t-2 border-dashed border-white/20"></div>
+        <div class="hidden md:block absolute top-1/3 left-1/3 right-1/3 h-0.5 border-t-2 border-dashed border-white/20"></div>
 
         <div 
           v-for="(step, index) in steps" 
@@ -39,7 +39,6 @@
       <div class="mt-20 text-center">
          <NuxtLink to="/signup" class="inline-flex items-center gap-3 bg-yellow-400 hover:bg-yellow-500 text-violet-950 font-black px-10 py-5 rounded-2xl transition-all transform hover:scale-105 shadow-2xl">
             {{ $t('Get Started Now') }}
-            <Icon name="ph:rocket-launch-fill" class="text-xl" />
          </NuxtLink>
       </div>
     </div>
@@ -57,11 +56,6 @@ const steps = [
     title: 'Place Order',
     desc: 'Provide details, set your location, and confirm your request.',
     icon: 'ph:cursor-click-fill',
-  },
-  {
-    title: 'Enjoy Results',
-    desc: 'Our professionals handle the rest. Sit back and relax.',
-    icon: 'ph:seal-check-fill',
   }
 ];
 </script>

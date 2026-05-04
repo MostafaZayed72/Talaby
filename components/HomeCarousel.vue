@@ -60,36 +60,6 @@
         </div>
       </v-carousel-item>
 
-      <!-- Slide 3: Diverse Services -->
-      <v-carousel-item>
-        <div class="relative w-full h-full flex items-center justify-center bg-gradient-to-r from-purple-900 to-fuchsia-900 overflow-hidden">
-          <div class="absolute inset-0 opacity-20">
-            <img class="w-full h-full object-cover" src="/imgs/hero3.png" alt="Hero 3" />
-          </div>
-          <div class="relative z-1 text-center px-6 animate-zoom-in">
-            <h2 class="text-2xl sm:text-3xl md:text-7xl font-black text-white mb-4 md:mb-8 tracking-tighter italic leading-tight">
-              {{ $t('Everything You Need, Delivered') }}
-            </h2>
-            <p class="text-sm sm:text-lg md:text-3xl text-slate-100 mb-8 md:mb-12 max-w-4xl mx-auto font-medium leading-relaxed opacity-90">
-              {{ $t('From daily essentials to professional maintenance, we handle it all.') }}
-            </p>
-            <div class="flex flex-wrap justify-center gap-4 md:gap-8">
-               <div class="bg-white/10 backdrop-blur-xl p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/20 shadow-2xl hover:scale-110 transition-transform">
-                  <span class="text-yellow-400 block font-black text-2xl md:text-4xl mb-1">100+</span>
-                  <span class="text-slate-300 text-xs md:text-sm font-bold uppercase tracking-widest">{{ $t('Services') }}</span>
-               </div>
-               <div class="bg-white/10 backdrop-blur-xl p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/20 shadow-2xl hover:scale-110 transition-transform">
-                  <span class="text-yellow-400 block font-black text-2xl md:text-4xl mb-1">24/7</span>
-                  <span class="text-slate-300 text-xs md:text-sm font-bold uppercase tracking-widest">{{ $t('Support') }}</span>
-               </div>
-               <div class="bg-white/10 backdrop-blur-xl p-4 md:p-6 rounded-2xl md:rounded-3xl border border-white/20 shadow-2xl hover:scale-110 transition-transform">
-                  <span class="text-yellow-400 block font-black text-2xl md:text-4xl mb-1">50k+</span>
-                  <span class="text-slate-300 text-xs md:text-sm font-bold uppercase tracking-widest">{{ $t('Users') }}</span>
-               </div>
-            </div>
-          </div>
-        </div>
-      </v-carousel-item>
     </v-carousel>
   </div>
 </template>
@@ -134,7 +104,7 @@ onUnmounted(() => {
 <style scoped>
 .hero-container {
   max-width: 95%;
-  margin: 0 auto;
+  margin: 1.5rem auto 0;
 }
 
 @keyframes fadeInUp {

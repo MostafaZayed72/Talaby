@@ -1,5 +1,5 @@
 <template>
-  <section class="py-24 relative overflow-hidden bg-white dark:bg-slate-900">
+  <section class="py-24 relative overflow-hidden bg-slate-50/50 dark:bg-transparent">
     <div class="container mx-auto px-6 relative z-10">
       <div class="text-center max-w-3xl mx-auto mb-16">
         <h2 class="text-indigo-600 dark:text-indigo-400 font-bold tracking-widest uppercase text-sm mb-3">

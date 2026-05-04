@@ -42,15 +42,15 @@ body {
 }
 
 /* إعداد اللون للخلفية والنصوص عند تفعيل الوضع الليلي */
-body.dark {
-  background-color: #1e1e1e; /* لون خلفية الوضع الليلي */
-  color: white; /* لون النص في الوضع الليلي */
+.dark body {
+  background-color: #020617 !important; /* التوافق مع app.vue */
+  color: #f8fafc !important;
 }
 
 /* إعداد اللون للخلفية والنصوص في الوضع النهاري */
 body {
-  background-color: #ffffff; /* لون خلفية الوضع النهاري */
-  color: black; /* لون النص في الوضع النهاري */
+  background-color: #ffffff;
+  color: #0f172a;
 }
 
 .Menubar .dark {
