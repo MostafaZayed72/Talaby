@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-6 font-sans">
+  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center p-6">
     <div v-if="loading" class="text-center space-y-6">
       <div class="w-24 h-24 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto shadow-2xl"></div>
       <h2 class="text-2xl font-black text-slate-900 dark:text-white italic animate-pulse">
