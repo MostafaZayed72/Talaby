@@ -352,5 +352,11 @@
     "I pledge that": "I pledge that",
     "Submit Request": "Submit Request",
     "Pay Outstanding Commission": "Pay Outstanding Commission",
-    "Checking account status...": "Checking account status..."
+    "Checking account status...": "Checking account status...",
+    "Payment Status": "Payment Status",
+    "Project Status": "Project Status",
+    "Paid At": "Paid At",
+    "Payment Verification Failed": "Payment Verification Failed",
+    "Payment Successful!": "Payment Successful!",
+    "Verifying Payment...": "Verifying Payment..."
 }
