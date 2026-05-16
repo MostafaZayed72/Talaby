@@ -46,7 +46,7 @@
       <div class="space-y-4">
         <h1 class="text-3xl font-black text-slate-900 dark:text-white italic">{{ $t('Payment Verification Failed') }}</h1>
         <p class="text-slate-600 dark:text-slate-400 font-bold leading-relaxed">
-          {{ errorMsg || $t('We could not verify your payment. Please contact support if you believe this is an error.') }}
+          {{ $t(errorMsg) || $t('We could not verify your payment. Please contact support if you believe this is an error.') }}
         </p>
       </div>
       <div class="pt-4 flex flex-col gap-4">
@@ -123,7 +123,11 @@ const verifyPayment = async () => {
       paymentInfo.value = data.data
     } else {
       status.value = 'error'
-      errorMsg.value = data.message || (data.data && !data.data.isPaid ? 'Payment not yet confirmed.' : 'Verification failed.')
+      if (data.errorCode === 'CONCURRENCY_CONFLICT') {
+        errorMsg.value = data.message
+      } else {
+        errorMsg.value = data.message || (data.data && !data.data.isPaid ? 'Payment not yet confirmed.' : 'Verification failed.')
+      }
     }
   } catch (err) {
     status.value = 'error'
